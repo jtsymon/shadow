@@ -1,0 +1,9 @@
+*~
+*.swp
+BERGS/bin
+BERGS/bin/*
+BERGS-android/bin
+BERGS-android/bin/*
+BERGS-desktop/bin
+BERGS-desktop/bin/*
+BERGS-android/gen/*
