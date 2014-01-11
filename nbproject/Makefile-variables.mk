@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=sdl_game
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/sdl_game
+CND_ARTIFACT_NAME_Debug=shadow
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/shadow
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=sdlgame.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/sdlgame.tar
+CND_PACKAGE_NAME_Debug=shadow.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/shadow.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=sdl_game
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/sdl_game
+CND_ARTIFACT_NAME_Release=shadow
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/shadow
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=sdlgame.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/sdlgame.tar
+CND_PACKAGE_NAME_Release=shadow.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/shadow.tar
 #
 # include compiler specific variables
 #

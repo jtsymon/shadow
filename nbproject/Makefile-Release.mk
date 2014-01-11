@@ -64,11 +64,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sdl_game
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sdl_game: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sdl_game ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/button.o: button.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -121,7 +121,7 @@ ${OBJECTDIR}/screens/menu.o: screens/menu.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sdl_game
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow
 
 # Subprojects
 .clean-subprojects:
