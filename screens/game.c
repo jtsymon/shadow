@@ -59,8 +59,13 @@ void screen_game_render() {
 	GLOBALS.last_tick = SDL_GetTicks();
 }
 
-void (*screen_game_vtable[])() = {&screen_game_create, &screen_game_destroy, &screen_game_show, &screen_game_hide, &screen_game_render};
+void (*screen_game_vtable[])() = { &screen_game_create,
+                                   &screen_game_destroy,
+                                   &screen_game_show,
+                                   &screen_game_hide,
+                                   &screen_game_render };
 screen_t* screen_game() {
 	screen_t* screen = malloc(sizeof(screen_t));
 	screen->f = screen_game_vtable;
+    return screen;
 }

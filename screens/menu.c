@@ -70,8 +70,13 @@ void screen_menu_render() {
 	GLOBALS.last_tick = SDL_GetTicks();
 }
 
-void (*screen_menu_vtable[])() = {&screen_menu_create, &screen_menu_destroy, &screen_menu_show, &screen_menu_hide, &screen_menu_render};
+void (*screen_menu_vtable[])() = { &screen_menu_create,
+                                   &screen_menu_destroy,
+                                   &screen_menu_show,
+                                   &screen_menu_hide,
+                                   &screen_menu_render };
 screen_t* screen_menu() {
 	screen_t* screen = malloc(sizeof(screen_t));
 	screen->f = screen_menu_vtable;
+    return screen;
 }

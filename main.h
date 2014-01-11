@@ -8,6 +8,7 @@
 
 #include "screens/menu.h"
 #include "screens/game.h"
+#include "map.h"
 
 // commonly used variables
 // (used frequently enough to warrant keeping them outside of a struct)

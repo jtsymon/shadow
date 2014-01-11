@@ -20,4 +20,4 @@ struct {
 	pthread_t* shading;
 } GAME_DATA;
 
-#endif
+#endif /* screen_game_h */
