@@ -1,5 +1,15 @@
 #include "main.h"
 
+screen_t* screen;
+
+void set_screen(screen_t* newScreen) {
+    if(screen != newScreen) {
+        screen->f[screen_HIDE]();
+        screen = newScreen;
+        screen->f[screen_SHOW]();
+    }
+}
+
 int main(void) {
 
     // Initialize SDL.
@@ -14,7 +24,7 @@ int main(void) {
     // Create the window where we will draw.
     RENDER.window = SDL_CreateWindow("SDL_RenderClear",
                     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                    512, 512,
+                    640, 640,
                     0);
 
     // We must call SDL_CreateRenderer in order for draw calls to affect this window.
@@ -37,22 +47,16 @@ int main(void) {
 	while(running) {
 		screen->f[screen_RENDER]();
 	}
-
-    map_t *m = map_init(5, 5, (unsigned char[]) { 0, 1, 2, 3, 5,
-                                                  5, 6, 7, 8, 9 });
-    
-    
-    printf("width:%d, height:%d\n", m->width, m->height);
-    printf("data:%p\n", m->data);
-    int x = 1, y = 1;
-    printf("%d,%d: %d\n", x, y, m->data[x + m->width * y]);
     
     // clean up
 	printf("Exiting...\n");
+    GLOBALS.screen_menu->f[screen_DESTROY]();
+    GLOBALS.screen_game->f[screen_DESTROY]();
 	if(RENDER.font) {
 		TTF_CloseFont(RENDER.font);
 	}
 	TTF_Quit();
-        SDL_Quit();
-        return 0;
+    SDL_Quit();
+    printf("Bye\n");
+    return 0;
 }

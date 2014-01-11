@@ -37,6 +37,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/map.o \
+	${OBJECTDIR}/misc.o \
+	${OBJECTDIR}/screen.o \
 	${OBJECTDIR}/screens/game.o \
 	${OBJECTDIR}/screens/menu.o
 
@@ -67,23 +69,33 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sdl_game: ${OBJECTFILES}
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/map.o: map.c 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/map.o map.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map.o map.c
+
+${OBJECTDIR}/misc.o: misc.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/misc.o misc.c
+
+${OBJECTDIR}/screen.o: screen.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screen.o screen.c
 
 ${OBJECTDIR}/screens/game.o: screens/game.c 
 	${MKDIR} -p ${OBJECTDIR}/screens
-	${RM} $@.d
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/screens/game.o screens/game.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screens/game.o screens/game.c
 
 ${OBJECTDIR}/screens/menu.o: screens/menu.c 
 	${MKDIR} -p ${OBJECTDIR}/screens
-	${RM} $@.d
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/screens/menu.o screens/menu.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screens/menu.o screens/menu.c
 
 # Subprojects
 .build-subprojects:

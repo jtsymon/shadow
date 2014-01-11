@@ -4,7 +4,7 @@ void screen_menu_create() {
 	
 }
 void screen_menu_destroy() {
-
+    
 }
 void screen_menu_show() {
 
@@ -19,7 +19,7 @@ void screen_menu_render() {
 				running = SDL_FALSE;
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				screen = GLOBALS.screen_game;
+				set_screen(GLOBALS.screen_game);
 				break;
 			case SDL_KEYUP:
 				switch(RENDER.e.key.keysym.scancode) {
@@ -62,7 +62,7 @@ void screen_menu_render() {
 
 	if(sleep_time <= GLOBALS.sleep_time) {
 		SDL_Delay(sleep_time);
-		printf("%llu\n", sleep_time);
+		// printf("%llu\n", sleep_time);
 	} else {
 		printf("LAG!\n");
 	}

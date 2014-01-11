@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="90">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f1" displayName="src" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="src" projectFiles="true">
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>screens/game.c</itemPath>
         <itemPath>screens/game.h</itemPath>
@@ -12,6 +12,9 @@
       <itemPath>main.h</itemPath>
       <itemPath>map.c</itemPath>
       <itemPath>game/map.h</itemPath>
+      <itemPath>misc.c</itemPath>
+      <itemPath>misc.h</itemPath>
+      <itemPath>screen.c</itemPath>
       <itemPath>screen.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -41,7 +44,8 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx</commandLine>
+          <standard>10</standard>
+          <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm</commandLine>
         </cTool>
       </compileType>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
@@ -51,6 +55,12 @@
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="map.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="misc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="misc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="screen.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="screen.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -94,6 +104,12 @@
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="map.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="misc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="misc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="screen.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="screen.h" ex="false" tool="3" flavor2="0">
       </item>

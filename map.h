@@ -5,10 +5,12 @@
  * Created on 11 January 2014, 1:37 PM
  */
 
-#include <stdlib.h>
+#ifndef MAP_H
+#define	MAP_H
 
-#ifndef map_h
-#define	map_h
+#include <stdlib.h>
+#include <stdio.h>
+#include <SDL2/SDL.h>
 
 typedef struct {
     int width, height;
@@ -17,7 +19,23 @@ typedef struct {
 
 } map_t;
 
+typedef struct {
+    int x, y;   // position of the tile in the map
+    int id;     // id of the tile
+    int side;   // side of the tile that was hit
+    int pX, pY; // pixel position of the spot on the tile
+} map_tile_collision;
+
+enum {
+    map_tile_left,
+    map_tile_top,
+    map_tile_right,
+    map_tile_bottom
+} map_tile_side;
+
 extern map_t* map_init();
 
-#endif	/* map_h */
+extern map_tile_collision map_raycast(double angle, double x, double y);
+
+#endif	/* MAP_H */
 

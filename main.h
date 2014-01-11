@@ -1,11 +1,20 @@
-#ifndef main_h
-#define main_h
+/* 
+ * File:   main.h
+ * Author: jts
+ *
+ * Created on 10 Nov 2013
+ */
+
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "misc.h"
 #include "screens/menu.h"
 #include "screens/game.h"
 #include "map.h"
@@ -15,7 +24,6 @@
 const Uint8* keys;
 SDL_Keymod keymod;
 SDL_bool running;
-screen_t* screen;
 
 // contains general stuff that needs to be globally accessible
 struct {
@@ -27,10 +35,12 @@ struct {
 
 // contains stuff used by screens to render
 struct {
-        SDL_Window* window;
-        SDL_Renderer* renderer;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
 	SDL_Event e;
 	TTF_Font* font;
 } RENDER;
 
-#endif
+extern void set_screen(screen_t* newScreen);
+
+#endif /* MAIN_H */

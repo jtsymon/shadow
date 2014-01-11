@@ -1,7 +1,16 @@
-#ifndef screen_h
-#define screen_h
+/* 
+ * File:   screen.h
+ * Author: jts
+ *
+ * Created on 10 Nov 2013
+ */
+
+#ifndef SCREEN_H
+#define SCREEN_H
 
 #include <SDL2/SDL.h>
+
+#include "misc.h"
 
 /* Screen_Functions
  *	indexes into vtable of functions a screen has
@@ -11,13 +20,12 @@ typedef enum {
 	screen_DESTROY = 1,	// called when destroying the screen
 	screen_SHOW = 2,	// called when the screen will start displaying
 	screen_HIDE = 3,	// called when the screen will be hidden (but not necessarily destroyed)
-	screen_RENDER = 4
+	screen_RENDER = 4   // called when the screen should draw
 } Screen_Functions;
 
 typedef struct {
 	void (**f)();
 	
-	
 } screen_t;
 
-#endif
+#endif /* SCREEN_H */
