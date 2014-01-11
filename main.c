@@ -45,6 +45,7 @@ int main(void) {
 	screen = GLOBALS.screen_menu;
 
 	while(running) {
+        SDL_GetMouseState(&mouse.x, &mouse.y);
 		screen->f[screen_RENDER]();
 	}
     

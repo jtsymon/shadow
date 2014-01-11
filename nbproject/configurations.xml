@@ -8,6 +8,12 @@
         <itemPath>screens/menu.c</itemPath>
         <itemPath>screens/menu.h</itemPath>
       </logicalFolder>
+      <itemPath>button.c</itemPath>
+      <itemPath>button.h</itemPath>
+      <itemPath>hsv.c</itemPath>
+      <itemPath>hsv.h</itemPath>
+      <itemPath>list.c</itemPath>
+      <itemPath>list.h</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>main.h</itemPath>
       <itemPath>map.c</itemPath>
@@ -48,7 +54,19 @@
           <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm</commandLine>
         </cTool>
       </compileType>
+      <item path="button.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="button.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="hsv.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="hsv.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -97,7 +115,19 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="button.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="button.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="hsv.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="hsv.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>

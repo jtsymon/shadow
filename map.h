@@ -33,7 +33,8 @@ enum {
     map_tile_bottom
 } map_tile_side;
 
-extern map_t* map_init();
+extern map_t* map_init(int width, int height, unsigned char data[]);
+extern map_t* map_open(char* filename);
 
 extern map_tile_collision map_raycast(double angle, double x, double y);
 

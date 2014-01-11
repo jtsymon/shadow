@@ -10,6 +10,7 @@
 
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -24,6 +25,11 @@
 const Uint8* keys;
 SDL_Keymod keymod;
 SDL_bool running;
+struct {
+    int x, y;
+    bool buttons[6];
+    SDL_Point click_start;
+} mouse;
 
 // contains general stuff that needs to be globally accessible
 struct {

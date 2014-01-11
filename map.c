@@ -1,9 +1,11 @@
 
+#include <sys/stat.h>
+
 #include "screens/game.h"
 #include "map.h"
 
 map_t* map_init(int width, int height, unsigned char data[]) {
-    map_t *map = malloc(sizeof(int) * 2 + sizeof(unsigned char*));
+    map_t* map = malloc(sizeof(map_t));
     map->width = width;
     map->height = height;
     map->data = malloc(width * height);
@@ -12,6 +14,39 @@ map_t* map_init(int width, int height, unsigned char data[]) {
             map->data[x + width * y] = data[x + width * y];
         }
     }
+    return map;
+}
+
+map_t* map_open(char* filename) {
+    struct stat st;
+    if(stat(filename, &st) != 0) {
+        fprintf(stderr, "Cannot determine size of %s: %s\n", filename, strerror(errno));
+        return NULL;
+    }
+    int file_size = st.st_size;
+    
+    FILE* map_file = fopen(filename, "rb");
+    if(map_file == NULL) {
+        fprintf(stderr, "Cannot open %s for binary reading: %s\n", filename, strerror(errno));
+    }
+    
+    char* data = malloc(file_size);
+    fread(data, 1, file_size, map_file);
+    fclose(map_file);
+    
+    int p = 0;
+    int width = data[p++] << 8 | data[p++];
+    int height = data[p++] << 8 | data[p++];
+    
+    map_t* map = malloc(sizeof(map_t));
+    map->width = width;
+    map->height = height;
+    int map_size = width * height;
+    map->data = malloc(map_size);
+    for(int i = 0; i < map_size; i++) {
+        map->data[i] = data[p++];
+    }
+    free(data);
     return map;
 }
 
