@@ -27,6 +27,7 @@ void screen_menu_hide() {
 }
 
 void screen_menu_render() {
+    
     while (SDL_PollEvent(&RENDER.e)) {
         switch (RENDER.e.type) {
             case SDL_QUIT:
@@ -67,36 +68,37 @@ void screen_menu_render() {
         printf("DEBUG ");
         SDL_Delay(5);
     }
-    // background color
-    background_color.h++;
-    SDL_Color tmp = HsvToRgb(background_color);
-    SDL_SetRenderDrawColor(RENDER.renderer, tmp.r, tmp.g, tmp.b, 255);
+    
+    /*SDL_SetRenderDrawColor(RENDER.renderer, tmp.r, tmp.g, tmp.b, 255);
     // clear the screen
     SDL_RenderClear(RENDER.renderer);
     // draw some text
 
     draw_text(10, 10, -1, -1, "Menu Screen", (SDL_Color) {0, 255, 0});
 
+    */
+    
+    // background color
+    background_color.h++;
+    SDL_Color tmp = HsvToRgb(background_color);
+    glClearColor((float)tmp.r / 255, (float)tmp.g / 255, (float)tmp.b / 255, 1.f);
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    
+    set_color_a(255, 0, 0, 255);
+    fill_rectangle(0, 0, 320, 640);
+    set_color_a(0, 255, 0, 128);
+    fill_triangle(0, 0, 640, 0, 640, 640);
+    
     // draw buttons
     list_item* button = list_get_first_item(menu_data.buttons);
     while (button != NULL) {
         button_draw(button->data);
         button = button->next;
     }
-
-    // draw to the screen
-    SDL_RenderPresent(RENDER.renderer);
-
-    Uint32 sleep_time = GLOBALS.sleep_time - (SDL_GetTicks() - GLOBALS.last_tick);
-
-    if (sleep_time <= GLOBALS.sleep_time) {
-        SDL_Delay(sleep_time);
-        // printf("%llu\n", sleep_time);
-    } else {
-        printf("LAG!\n");
-    }
-
-    GLOBALS.last_tick = SDL_GetTicks();
+    
+    SDL_GL_SwapWindow(RENDER.window);
 }
 
 void (*screen_menu_vtable[])() = {&screen_menu_create,

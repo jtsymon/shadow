@@ -22,11 +22,11 @@ void screen_game_create() {
 //        255, 255, 255, 255, 255, 255, 255, 255, 255, 255
 //    });
     game_data.map = map_open("test.map");
-    for(int y = 0; y < game_data.map->height; y++) {
-        for(int x = 0; x < game_data.map->width; x++) {
-            printf("%d,%d: %d\n", x, y, game_data.map->data[x + game_data.map->width * y]);
-        }
-    }
+//    for(int y = 0; y < game_data.map->height; y++) {
+//        for(int x = 0; x < game_data.map->width; x++) {
+//            printf("%d,%d: %d\n", x, y, game_data.map->data[x + game_data.map->width * y]);
+//        }
+//    }
 }
 
 void screen_game_destroy() {
@@ -39,11 +39,12 @@ void screen_game_destroy() {
     }
 }
 void screen_game_show() {
-
+    
 }
 void screen_game_hide() {
 
 }
+
 void screen_game_render() {
 	while(SDL_PollEvent(&RENDER.e)) {
 		switch(RENDER.e.type) {
@@ -77,22 +78,20 @@ void screen_game_render() {
     game_data.player.y += dY;
     
 	// background color
-	SDL_SetRenderDrawColor(RENDER.renderer, 0, 0, 255, 255);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	// clear the screen
-	SDL_RenderClear(RENDER.renderer);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // draw the map
     for(int y = 0; y < game_data.map->height; y++) {
         for(int x = 0; x < game_data.map->width; x++) {
-            boxRGBA(RENDER.renderer,
-                    x * game_data.tile_size,
+            set_color(255 - game_data.map->data[x + game_data.map->width * y],
+                    255 - game_data.map->data[x + game_data.map->width * y],
+                    255 - game_data.map->data[x + game_data.map->width * y]);
+            fill_rectangle(x * game_data.tile_size,
                     y * game_data.tile_size,
                     x * game_data.tile_size + game_data.tile_size,
-                    y * game_data.tile_size + game_data.tile_size,
-                    255 - game_data.map->data[x + game_data.map->width * y],
-                    255 - game_data.map->data[x + game_data.map->width * y],
-                    255 - game_data.map->data[x + game_data.map->width * y],
-                    255);
+                    y * game_data.tile_size + game_data.tile_size);
         }
     }
     
@@ -100,7 +99,8 @@ void screen_game_render() {
     
     for(double a = 0; a < M_PI * 2; a+=0.0002) {
         map_tile_collision hit = map_raycast(a, (double) game_data.player.x / game_data.tile_size, (double) game_data.player.y / game_data.tile_size);
-        boxRGBA(RENDER.renderer, hit.pX - 1, hit.pY - 1, hit.pX + 1, hit.pY + 1, 0, 255, 0, 255);
+        set_color(0, 255, 0);
+        fill_rectangle(hit.pX - 1, hit.pY - 1, hit.pX + 1, hit.pY + 1);
         // pixelRGBA(RENDER.renderer, hit.pX, hit.pY, 0, 255, 0, 255);
     }
     
@@ -108,26 +108,16 @@ void screen_game_render() {
     map_shadow(game_data.player.x, game_data.player.y);
     
     // draw player
-    boxRGBA(RENDER.renderer, game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5, 255, 0, 0, 255);
+    set_color(255, 0, 0);
+    fill_rectangle(game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5);
     
     // draw fps
-    sprintf(render_time, "Render time: %dms", GLOBALS.sleep_time - sleep_time);
-    draw_text(10, 10, -1, -1, render_time, (SDL_Color) { 0, 255, 0 });
+    sprintf(render_time, "Render time: %dms", (SDL_GetTicks() - GLOBALS.last_tick));
+    GLOBALS.last_tick = SDL_GetTicks();
+    set_color(0, 255, 0);
+    draw_text(10, 10, render_time);
 
-	// draw to the screen
-	SDL_RenderPresent(RENDER.renderer);
-	
-
-	sleep_time = GLOBALS.sleep_time - (SDL_GetTicks() - GLOBALS.last_tick);
-
-	if(sleep_time <= GLOBALS.sleep_time && sleep_time > 0) {
-		SDL_Delay(sleep_time);
-		// printf("%llu\n", sleep_time);
-	} else {
-		printf("LAG!\n");
-	}
-
-	GLOBALS.last_tick = SDL_GetTicks();
+    SDL_GL_SwapWindow(RENDER.window);
 }
 
 void (*screen_game_vtable[])() = { &screen_game_create,

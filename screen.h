@@ -25,7 +25,6 @@ typedef enum {
 
 typedef struct {
 	void (**f)();
-	
 } screen_t;
 
 #endif /* SCREEN_H */

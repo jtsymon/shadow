@@ -29,7 +29,6 @@ extern button_t* button_create_(char* text, int x, int y, void (*onclick)(), int
 extern button_t* button_create__(char* text, int x, int y, void (*onclick)(), int width, int height,
         SDL_Color foreground_color, SDL_Color background_color, SDL_Color hover_background_color, SDL_Color click_background_color);
 
-extern void draw_text(int x, int y, int width, int height, char* text, SDL_Color color);
 extern bool button_hover(button_t* this, int x, int y);
 extern void button_draw(button_t* this);
 extern void button_click(button_t* this);

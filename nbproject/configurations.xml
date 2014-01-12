@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="90">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
+      <itemPath>graphics/opengl.c</itemPath>
+      <itemPath>graphics/opengl.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="f1" displayName="src" projectFiles="true">
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>screens/game.c</itemPath>
@@ -39,6 +43,7 @@
   <sourceRootList>
     <Elem>game</Elem>
     <Elem>screens</Elem>
+    <Elem>graphics</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -51,7 +56,7 @@
       <compileType>
         <cTool>
           <standard>10</standard>
-          <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm</commandLine>
+          <commandLine>-lpthread -lSDL2 -lm -lGL</commandLine>
         </cTool>
       </compileType>
       <item path="button.c" ex="false" tool="0" flavor2="0">
@@ -59,6 +64,10 @@
       <item path="button.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphics/opengl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphics/opengl.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="hsv.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -103,7 +112,7 @@
           <incDir>
             <pElem>SDL2</pElem>
           </incDir>
-          <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx</commandLine>
+          <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm -lGL</commandLine>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -120,6 +129,10 @@
       <item path="button.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphics/opengl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphics/opengl.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="hsv.c" ex="false" tool="0" flavor2="0">
       </item>

@@ -1,7 +1,8 @@
-Execution
-	Probably just use a separate thread for execution, which runs at a fixed framerate
-Graphics
-	Thread running at lower priority than execution, at a non-fixed framerate (but possibly with a framerate cap?)
-Shadowing
-	Thread producing triangles onto a stack to be consumed (drawn) by the graphics thread
-
+- Set up separate thread for execution (input handling and entity control), running at a fixed framerate
+- Fix shadow calculation
+- Write code to support rendering to a texture and then blitting the texture to the screen
+- Write code to support sprite sheets
+- Write map editor
+- Write text drawing code
+    - Probably the easiest way is to make a spritemap image containing all the characters, and use OpenGL to get particular characters from the image
+    - For the above reason (and also to facilitate easily finding the width of a string), only monospace fonts will be supported

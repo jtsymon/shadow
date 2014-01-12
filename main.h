@@ -12,13 +12,12 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "misc.h"
 #include "screens/menu.h"
 #include "screens/game.h"
 #include "map.h"
+#include "graphics/opengl.h"
 
 // commonly used variables
 // (used frequently enough to warrant keeping them outside of a struct)
@@ -42,9 +41,8 @@ struct {
 // contains stuff used by screens to render
 struct {
     SDL_Window* window;
-    SDL_Renderer* renderer;
+    SDL_GLContext gl_context;
 	SDL_Event e;
-	TTF_Font* font;
     int width, height;
 } RENDER;
 

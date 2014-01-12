@@ -322,7 +322,6 @@ map_tile_collision map_raycast(double angle, double x, double y) {
         // We hit square ix, iy, we can use last calculated middle to work out
         // which side was hit.
         if (angle == middle) {
-            printf("YOLO SWAG\n");
             // Hit the corner of a tile,
             // so we check the angle to that tile to figure out what side we hit
             middle = vector_to_angle((double) ix - x, (double) iy + 1 - y);
@@ -332,7 +331,7 @@ map_tile_collision map_raycast(double angle, double x, double y) {
                     printf("Error calculating angle: %f - %d,%d\n", angle, ix, iy);
                 }
                 // Hit top side
-                printf("top\n");
+                // printf("top\n");
 
                 return (map_tile_collision) {
                     ix, iy,
@@ -396,8 +395,6 @@ void map_shadow(int x, int y) {
     map_tile_collision tile;
     double sx = (double) x / game_data.tile_size;
     double sy = (double) y / game_data.tile_size;
-    int maxX, maxY, minX, minY;
-    double Atimes2, s, t;
     double min_angle = 0, tmp_angle;
     int iter = 0;
 
@@ -409,6 +406,9 @@ void map_shadow(int x, int y) {
         tile = map_raycast(min_angle, sx, sy);
         // get the whole wall efficiently
         int ix, iy;
+        
+        set_color(255, 0, 255);
+        
         // printf("%d:%d %d:%d", tile.x, ix, tile.y, iy);
         switch (tile.side) {
             case map_tile_left: // right
@@ -418,8 +418,8 @@ void map_shadow(int x, int y) {
                 iy = (int) tile.y + 1;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[ix + game_data.map->width * --iy] == 0) {
@@ -445,8 +445,8 @@ void map_shadow(int x, int y) {
                 iy = (int) tile.y;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[ix + game_data.map->width * ++iy] == 0) {
@@ -474,8 +474,8 @@ void map_shadow(int x, int y) {
                 ix = (int) tile.x + 1;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[--ix + game_data.map->width * iy] == 0) {
@@ -501,8 +501,8 @@ void map_shadow(int x, int y) {
                 ix = (int) tile.x;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[++ix + game_data.map->width * iy] == 0) {
@@ -530,8 +530,8 @@ void map_shadow(int x, int y) {
                 iy = (int) tile.y + 1;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[ix + game_data.map->width * --iy] == 0) {
@@ -557,8 +557,8 @@ void map_shadow(int x, int y) {
                 iy = (int) tile.y;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[ix + game_data.map->width * ++iy] == 0) {
@@ -587,8 +587,8 @@ void map_shadow(int x, int y) {
                 ix = (int) tile.x + 1;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[--ix + game_data.map->width * iy] == 0) {
@@ -614,8 +614,8 @@ void map_shadow(int x, int y) {
                 ix = (int) tile.x;
                 while (true) {
                     if (debug_shadow) {
-                        boxRGBA(RENDER.renderer, ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
-                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1, 255, 0, 255, 255);
+                        fill_rectangle(ix * game_data.tile_size - 1, iy * game_data.tile_size - 1,
+                                ix * game_data.tile_size + 1, iy * game_data.tile_size + 1);
                     }
 
                     if (game_data.map->data[++ix + game_data.map->width * iy] == 0) {
@@ -647,8 +647,8 @@ void map_shadow(int x, int y) {
         // Atimes2 = (-p1y * p2x + y * (-p1x + p2x) + x * (p1y - p2y) + p1x * p2y);
         // System.out.println(Atimes2);
         
-        lineRGBA(RENDER.renderer, x, y, p1x, p1y, 255, 0, 0, 255);
-        lineRGBA(RENDER.renderer, x, y, p2x, p2y, 255, 0, 0, 255);
+        set_color_a(255, 0, 0, 60);
+        fill_triangle(x, y, p1x, p1y, p2x, p2y);
         
 
 //        maxY = min(RENDER.height, max(p0y, max(p2y, p1y)));

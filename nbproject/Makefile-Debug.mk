@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/button.o \
+	${OBJECTDIR}/graphics/opengl.o \
 	${OBJECTDIR}/hsv.o \
 	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/main.o \
@@ -47,7 +48,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm
+CFLAGS=-lpthread -lSDL2 -lm -lGL
 
 # CC Compiler Flags
 CCFLAGS=
@@ -74,6 +75,11 @@ ${OBJECTDIR}/button.o: button.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/button.o button.c
+
+${OBJECTDIR}/graphics/opengl.o: graphics/opengl.c 
+	${MKDIR} -p ${OBJECTDIR}/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/opengl.o graphics/opengl.c
 
 ${OBJECTDIR}/hsv.o: hsv.c 
 	${MKDIR} -p ${OBJECTDIR}

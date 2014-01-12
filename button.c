@@ -41,36 +41,20 @@ bool button_hover(button_t* this, int x, int y) {
     return this->x < x && this->x + this->width > x && this->y < y && this->y + this->height > y;
 }
 
-void draw_text(int x, int y, int width, int height, char* text, SDL_Color color) {
-    SDL_Surface* text_surface = TTF_RenderText_Solid(RENDER.font, text, color);
-    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(RENDER.renderer, text_surface);
-    if(width > 0) {
-        x += (width - text_surface->w) / 2;
-    }
-    if(height > 0) {
-        y += (height - text_surface->h) / 2;
-    }
-    const SDL_Rect bounds = { x, y, text_surface->w, text_surface->h };
-    SDL_FreeSurface(text_surface);
-    SDL_RenderCopy(RENDER.renderer, text_texture, NULL, &bounds);
-    SDL_DestroyTexture(text_texture);
-}
-
 void button_draw(button_t* this) {
     // draw background
     if(mouse.buttons[SDL_BUTTON_LEFT] && button_hover(this, mouse.click_start.x, mouse.click_start.y)) {
-        boxRGBA(RENDER.renderer, this->x, this->y, this->x + this->width, this->y + this->height,
-                this->click_background_color.r, this->click_background_color.g, this->click_background_color.b, this->click_background_color.a);
+        set_color_a(this->click_background_color.r, this->click_background_color.g, this->click_background_color.b, this->click_background_color.a);
     } else if(button_hover(this, mouse.x, mouse.y)) {
-        boxRGBA(RENDER.renderer, this->x, this->y, this->x + this->width, this->y + this->height,
-                this->hover_background_color.r, this->hover_background_color.g, this->hover_background_color.b, this->hover_background_color.a);
+        set_color_a(this->hover_background_color.r, this->hover_background_color.g, this->hover_background_color.b, this->hover_background_color.a);
     } else {
-        boxRGBA(RENDER.renderer, this->x, this->y, this->x + this->width, this->y + this->height,
-                this->background_color.r, this->background_color.g, this->background_color.b, this->background_color.a);
+        set_color_a(this->background_color.r, this->background_color.g, this->background_color.b, this->background_color.a);
     }
+    fill_rectangle(this->x, this->y, this->x + this->width, this->y + this->height);
     
     // draw text
-    draw_text(this->x, this->y, this->width, this->height, this->text, this->foreground_color);
+    set_color_a(this->foreground_color.r, this->foreground_color.g, this->foreground_color.b, this->foreground_color.a);
+    draw_text(this->x, this->y, this->text);
 }
 
 void button_click(button_t* this) {
