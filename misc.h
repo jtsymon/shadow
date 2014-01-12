@@ -32,5 +32,8 @@ typedef enum { false, true } bool;
 
 extern double vector_to_angle(double w, double h);
 
+extern int max(int a, int b);
+extern int min(int a, int b);
+
 #endif	/* DEF_H */
 

@@ -19,6 +19,10 @@ typedef struct {
 
 } map_t;
 
+/**
+ * struct containing details about a tile collision,
+ * including the side of the tile that was hit, and the pixel position of the collision
+ */
 typedef struct {
     int x, y;   // position of the tile in the map
     int id;     // id of the tile
@@ -37,6 +41,7 @@ extern map_t* map_init(int width, int height, unsigned char data[]);
 extern map_t* map_open(char* filename);
 
 extern map_tile_collision map_raycast(double angle, double x, double y);
+extern void map_shadow(int x, int y);
 
 #endif	/* MAP_H */
 

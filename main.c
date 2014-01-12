@@ -20,11 +20,14 @@ int main(void) {
 		printf("TTF_Init: %s\n", TTF_GetError());
 		return 2;
 	}
+    
+    RENDER.width = 640;
+    RENDER.height = 640;
 
     // Create the window where we will draw.
-    RENDER.window = SDL_CreateWindow("SDL_RenderClear",
+    RENDER.window = SDL_CreateWindow("shadow",
                     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                    640, 640,
+                    RENDER.width, RENDER.height,
                     0);
 
     // We must call SDL_CreateRenderer in order for draw calls to affect this window.

@@ -104,12 +104,15 @@ void screen_game_render() {
         // pixelRGBA(RENDER.renderer, hit.pX, hit.pY, 0, 255, 0, 255);
     }
     
+    // shadow
+    map_shadow(game_data.player.x, game_data.player.y);
+    
     // draw player
     boxRGBA(RENDER.renderer, game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5, 255, 0, 0, 255);
     
     // draw fps
     sprintf(render_time, "Render time: %dms", GLOBALS.sleep_time - sleep_time);
-    draw_text(10, 10, -1, -1, render_time, (SDL_Color) { 0,255,0 });
+    draw_text(10, 10, -1, -1, render_time, (SDL_Color) { 0, 255, 0 });
 
 	// draw to the screen
 	SDL_RenderPresent(RENDER.renderer);
@@ -117,7 +120,7 @@ void screen_game_render() {
 
 	sleep_time = GLOBALS.sleep_time - (SDL_GetTicks() - GLOBALS.last_tick);
 
-	if(sleep_time <= GLOBALS.sleep_time) {
+	if(sleep_time <= GLOBALS.sleep_time && sleep_time > 0) {
 		SDL_Delay(sleep_time);
 		// printf("%llu\n", sleep_time);
 	} else {

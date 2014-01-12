@@ -45,6 +45,7 @@ struct {
     SDL_Renderer* renderer;
 	SDL_Event e;
 	TTF_Font* font;
+    int width, height;
 } RENDER;
 
 extern void set_screen(screen_t* newScreen);
