@@ -82,14 +82,13 @@ void screen_menu_render() {
     background_color.h++;
     SDL_Color tmp = HsvToRgb(background_color);
     glClearColor((float)tmp.r / 255, (float)tmp.g / 255, (float)tmp.b / 255, 1.f);
-    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
-    set_color_a(255, 0, 0, 255);
-    fill_rectangle(0, 0, 320, 640);
-    set_color_a(0, 255, 0, 128);
-    fill_triangle(0, 0, 640, 0, 640, 640);
+    // glColor4ub(255, 0, 0, 255);
+    // fill_rectangle(320, 0, 640, 640);
+    // set_color_a(0, 255, 0, 128);
+    // fill_triangle(0, 0, 640, 0, 640, 640);
     
     // draw buttons
     list_item* button = list_get_first_item(menu_data.buttons);
@@ -97,6 +96,9 @@ void screen_menu_render() {
         button_draw(button->data);
         button = button->next;
     }
+    
+    glColor3ub(0, 255, 0);
+    draw_text(100, 60, "a");
     
     SDL_GL_SwapWindow(RENDER.window);
 }

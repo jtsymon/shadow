@@ -2,8 +2,10 @@
 <configurationDescriptor version="90">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
-      <itemPath>graphics/opengl.c</itemPath>
-      <itemPath>graphics/opengl.h</itemPath>
+      <itemPath>graphics/graphics.c</itemPath>
+      <itemPath>graphics/graphics.h</itemPath>
+      <itemPath>graphics/text.c</itemPath>
+      <itemPath>graphics/text.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="src" projectFiles="true">
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
@@ -65,9 +67,13 @@
       </item>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/opengl.c" ex="false" tool="0" flavor2="0">
+      <item path="graphics/graphics.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/opengl.h" ex="false" tool="3" flavor2="0">
+      <item path="graphics/graphics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphics/text.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphics/text.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="hsv.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -130,9 +136,13 @@
       </item>
       <item path="game/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/opengl.c" ex="false" tool="0" flavor2="0">
+      <item path="graphics/graphics.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/opengl.h" ex="false" tool="3" flavor2="0">
+      <item path="graphics/graphics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="graphics/text.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphics/text.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="hsv.c" ex="false" tool="0" flavor2="0">
       </item>

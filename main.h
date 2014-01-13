@@ -17,7 +17,7 @@
 #include "screens/menu.h"
 #include "screens/game.h"
 #include "map.h"
-#include "graphics/opengl.h"
+#include "graphics/graphics.h"
 
 // commonly used variables
 // (used frequently enough to warrant keeping them outside of a struct)

@@ -407,7 +407,7 @@ void map_shadow(int x, int y) {
         // get the whole wall efficiently
         int ix, iy;
         
-        set_color(255, 0, 255);
+        glColor3ub(255, 0, 255);
         
         // printf("%d:%d %d:%d", tile.x, ix, tile.y, iy);
         switch (tile.side) {
@@ -647,7 +647,7 @@ void map_shadow(int x, int y) {
         // Atimes2 = (-p1y * p2x + y * (-p1x + p2x) + x * (p1y - p2y) + p1x * p2y);
         // System.out.println(Atimes2);
         
-        set_color_a(255, 0, 0, 60);
+        glColor4ub(255, 0, 0, 60);
         fill_triangle(x, y, p1x, p1y, p2x, p2y);
         
 
