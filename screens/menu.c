@@ -86,10 +86,10 @@ void screen_menu_render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
-    set_color_a(255, 0, 0, 255);
-    fill_rectangle(0, 0, 320, 640);
-    set_color_a(0, 255, 0, 128);
-    fill_triangle(0, 0, 640, 0, 640, 640);
+//    set_color_a(255, 0, 0, 255);
+//    fill_rectangle(0, 0, 320, 640);
+//    set_color_a(0, 255, 0, 128);
+//    fill_triangle(0, 0, 640, 0, 640, 640);
     
     // draw buttons
     list_item* button = list_get_first_item(menu_data.buttons);
