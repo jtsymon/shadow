@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <string.h>
+
 #include "misc.h"
 
 double vector_to_angle(double w, double h) {
@@ -25,4 +31,29 @@ int max(int a, int b) {
 }
 int min(int a, int b) {
     return a < b ? a : b;
+}
+
+/**
+ * Reads a file and returns the data from the file
+ * The receiver is responsible for free()ing the returned char* array
+ */
+char* read_file(char* filename) {
+    struct stat st;
+    if (stat(filename, &st) != 0) {
+        fprintf(stderr, "Cannot determine size of %s: %s\n", filename, strerror(errno));
+        return NULL;
+    }
+    int file_size = st.st_size;
+
+    FILE* file = fopen(filename, "rb");
+    if (!file) {
+        fprintf(stderr, "Cannot open %s for binary reading: %s\n", filename, strerror(errno));
+        return NULL;
+    }
+
+    char* data = malloc(file_size);
+    fread(data, 1, file_size, file);
+    fclose(file);
+    
+    return data;
 }

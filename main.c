@@ -19,7 +19,7 @@ int setup() {
 }
 
 int main(void) {
-
+    
     RENDER.width = 640;
     RENDER.height = 640;
     
@@ -32,7 +32,7 @@ int main(void) {
         GLOBALS.screen_menu = screen_menu();
         GLOBALS.screen_game = screen_game();
         screen = GLOBALS.screen_menu;
-
+        
         while(running) {
             SDL_GetMouseState(&mouse.x, &mouse.y);
             screen->f[screen_RENDER]();

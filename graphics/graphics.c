@@ -147,9 +147,10 @@ void fill_rectangle(int x1, int y1, int x2, int y2) {
     glEnd();
 }
 
-GLuint texture;
-
 void draw_texture() {
+    
+    glBindTexture( GL_TEXTURE_2D, font->texture );
+    
     glEnable(GL_TEXTURE_2D);
     
     glBegin( GL_QUADS );
@@ -173,11 +174,12 @@ void draw_texture() {
 }
 
 void draw_text(int x, int y, char* text) {
+    
     // Bind the texture to which subsequent calls refer to
-    glBindTexture( GL_TEXTURE_2D, texture );
+    glBindTexture( GL_TEXTURE_2D, font->texture );
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glEnable(GL_TEXTURE_2D);
-    glPrint(x, y, text, 0);
+    //glEnable(GL_TEXTURE_2D);
+    glPrint(x, y, text);
     glDisable(GL_TEXTURE_2D);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

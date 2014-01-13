@@ -18,21 +18,10 @@ map_t* map_init(int width, int height, unsigned char data[]) {
 }
 
 map_t* map_open(char* filename) {
-    struct stat st;
-    if (stat(filename, &st) != 0) {
-        fprintf(stderr, "Cannot determine size of %s: %s\n", filename, strerror(errno));
+    char* data = read_file(filename);
+    if(!data) {
         return NULL;
     }
-    int file_size = st.st_size;
-
-    FILE* map_file = fopen(filename, "rb");
-    if (map_file == NULL) {
-        fprintf(stderr, "Cannot open %s for binary reading: %s\n", filename, strerror(errno));
-    }
-
-    char* data = malloc(file_size);
-    fread(data, 1, file_size, map_file);
-    fclose(map_file);
 
     int p = 0;
     int width = data[p++] << 8 | data[p++];

@@ -11,6 +11,7 @@ void screen_menu_create() {
     list_add(menu_data.buttons, button_create("Play", 100, 100, play_game));
     list_add(menu_data.buttons, button_create("Create map", 100, 160, NULL));
     background_color = (HsvColor) { 0, 100, 100 };
+    printf("created menu\n");
 }
 
 void screen_menu_destroy() {
@@ -91,14 +92,16 @@ void screen_menu_render() {
     // fill_triangle(0, 0, 640, 0, 640, 640);
     
     // draw buttons
-    list_item* button = list_get_first_item(menu_data.buttons);
-    while (button != NULL) {
-        button_draw(button->data);
-        button = button->next;
-    }
+//    list_item* button = list_get_first_item(menu_data.buttons);
+//    while (button != NULL) {
+//        button_draw(button->data);
+//        button = button->next;
+//    }
     
     glColor3ub(0, 255, 0);
     draw_text(100, 60, "a");
+    
+    draw_texture();
     
     SDL_GL_SwapWindow(RENDER.window);
 }

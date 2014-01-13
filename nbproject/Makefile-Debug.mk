@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/button.o \
+	${OBJECTDIR}/graphics/font.o \
 	${OBJECTDIR}/graphics/graphics.o \
 	${OBJECTDIR}/graphics/text.o \
 	${OBJECTDIR}/hsv.o \
@@ -76,6 +77,11 @@ ${OBJECTDIR}/button.o: button.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/button.o button.c
+
+${OBJECTDIR}/graphics/font.o: graphics/font.c 
+	${MKDIR} -p ${OBJECTDIR}/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/font.o graphics/font.c
 
 ${OBJECTDIR}/graphics/graphics.o: graphics/graphics.c 
 	${MKDIR} -p ${OBJECTDIR}/graphics

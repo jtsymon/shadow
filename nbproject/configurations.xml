@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="90">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
-      <itemPath>graphics/graphics.c</itemPath>
-      <itemPath>graphics/graphics.h</itemPath>
-      <itemPath>graphics/text.c</itemPath>
-      <itemPath>graphics/text.h</itemPath>
-    </logicalFolder>
     <logicalFolder name="f1" displayName="src" projectFiles="true">
+      <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
+        <itemPath>graphics/font.c</itemPath>
+        <itemPath>graphics/font.h</itemPath>
+        <itemPath>graphics/graphics.c</itemPath>
+        <itemPath>graphics/graphics.h</itemPath>
+        <itemPath>graphics/text.c</itemPath>
+        <itemPath>graphics/text.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>screens/game.c</itemPath>
         <itemPath>screens/game.h</itemPath>
@@ -23,7 +25,7 @@
       <itemPath>main.c</itemPath>
       <itemPath>main.h</itemPath>
       <itemPath>map.c</itemPath>
-      <itemPath>game/map.h</itemPath>
+      <itemPath>map.h</itemPath>
       <itemPath>misc.c</itemPath>
       <itemPath>misc.h</itemPath>
       <itemPath>screen.c</itemPath>
@@ -65,7 +67,9 @@
       </item>
       <item path="button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="game/map.h" ex="false" tool="3" flavor2="0">
+      <item path="graphics/font.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphics/font.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphics/graphics.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -88,6 +92,8 @@
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="map.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="map.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="misc.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -134,7 +140,9 @@
       </item>
       <item path="button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="game/map.h" ex="false" tool="3" flavor2="0">
+      <item path="graphics/font.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphics/font.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphics/graphics.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -157,6 +165,8 @@
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="map.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="map.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="misc.c" ex="false" tool="0" flavor2="0">
       </item>

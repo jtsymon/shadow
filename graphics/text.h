@@ -8,8 +8,13 @@
 #ifndef TEXT_H
 #define	TEXT_H
 
+#include "graphics.h"
+#include "font.h"
+
+font_t* font;
+
 extern bool initFont();
-extern void glPrint(int x, int y, char *string, int set);
+extern void glPrint(int x, int y, char *string);
 
 #endif	/* TEXT_H */
 

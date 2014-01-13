@@ -38,5 +38,7 @@ extern double vector_to_angle(double w, double h);
 extern int max(int a, int b);
 extern int min(int a, int b);
 
+extern char* read_file(char* filename);
+
 #endif	/* DEF_H */
 
