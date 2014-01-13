@@ -10,8 +10,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "misc.h"
-
 /* Screen_Functions
  *	indexes into vtable of functions a screen has
  */

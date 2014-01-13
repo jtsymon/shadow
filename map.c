@@ -1,8 +1,8 @@
 
 #include <sys/stat.h>
 
-#include "screens/game.h"
 #include "map.h"
+#include "screens/game.h"
 
 map_t* map_init(int width, int height, unsigned char data[]) {
     map_t* map = malloc(sizeof (map_t));

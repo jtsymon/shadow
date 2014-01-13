@@ -76,62 +76,62 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow: ${OBJECTFILES}
 ${OBJECTDIR}/button.o: button.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/button.o button.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/button.o button.c
 
 ${OBJECTDIR}/graphics/font.o: graphics/font.c 
 	${MKDIR} -p ${OBJECTDIR}/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/font.o graphics/font.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/font.o graphics/font.c
 
 ${OBJECTDIR}/graphics/graphics.o: graphics/graphics.c 
 	${MKDIR} -p ${OBJECTDIR}/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/graphics.o graphics/graphics.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/graphics.o graphics/graphics.c
 
 ${OBJECTDIR}/graphics/text.o: graphics/text.c 
 	${MKDIR} -p ${OBJECTDIR}/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/text.o graphics/text.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/text.o graphics/text.c
 
 ${OBJECTDIR}/hsv.o: hsv.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hsv.o hsv.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hsv.o hsv.c
 
 ${OBJECTDIR}/list.o: list.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/map.o: map.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map.o map.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map.o map.c
 
 ${OBJECTDIR}/misc.o: misc.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/misc.o misc.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/misc.o misc.c
 
 ${OBJECTDIR}/screen.o: screen.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screen.o screen.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screen.o screen.c
 
 ${OBJECTDIR}/screens/game.o: screens/game.c 
 	${MKDIR} -p ${OBJECTDIR}/screens
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screens/game.o screens/game.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screens/game.o screens/game.c
 
 ${OBJECTDIR}/screens/menu.o: screens/menu.c 
 	${MKDIR} -p ${OBJECTDIR}/screens
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screens/menu.o screens/menu.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/screens/menu.o screens/menu.c
 
 # Subprojects
 .build-subprojects:

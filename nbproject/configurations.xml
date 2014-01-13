@@ -18,6 +18,7 @@
       </logicalFolder>
       <itemPath>button.c</itemPath>
       <itemPath>button.h</itemPath>
+      <itemPath>global.h</itemPath>
       <itemPath>hsv.c</itemPath>
       <itemPath>hsv.h</itemPath>
       <itemPath>list.c</itemPath>
@@ -60,12 +61,17 @@
       <compileType>
         <cTool>
           <standard>10</standard>
-          <commandLine>-lpthread -lSDL2 -lm -lGL</commandLine>
+          <incDir>
+            <pElem>/research/jts21/deps/include</pElem>
+          </incDir>
+          <commandLine>-lpthread -lSDL2 -lSDL2_image -lm -lGL</commandLine>
         </cTool>
       </compileType>
       <item path="button.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="button.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="global.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphics/font.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -121,9 +127,6 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <incDir>
-            <pElem>SDL2</pElem>
-          </incDir>
           <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm -lGL</commandLine>
         </cTool>
         <ccTool>
@@ -139,6 +142,8 @@
       <item path="button.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="button.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="global.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="graphics/font.c" ex="false" tool="0" flavor2="0">
       </item>

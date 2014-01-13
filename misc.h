@@ -9,8 +9,13 @@
 #ifndef DEF_H
 #define	DEF_H
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_opengl.h>
 #include <math.h>
 #include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
 
 #ifndef M_PI
     #define M_E         2.7182818284590452354	/* e */

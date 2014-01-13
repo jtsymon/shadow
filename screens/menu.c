@@ -92,16 +92,16 @@ void screen_menu_render() {
     // fill_triangle(0, 0, 640, 0, 640, 640);
     
     // draw buttons
-//    list_item* button = list_get_first_item(menu_data.buttons);
-//    while (button != NULL) {
-//        button_draw(button->data);
-//        button = button->next;
-//    }
+    list_item* button = list_get_first_item(menu_data.buttons);
+    while (button != NULL) {
+        button_draw(button->data);
+        button = button->next;
+    }
     
     glColor3ub(0, 255, 0);
-    draw_text(100, 60, "a");
+    draw_text(100, 300, "Testing Text _ <- underscore");
     
-    draw_texture();
+    draw_texture(100, 400, 256, 256);
     
     SDL_GL_SwapWindow(RENDER.window);
 }

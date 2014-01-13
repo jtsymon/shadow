@@ -11,7 +11,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-
+#include "../misc.h"
 #include "../screen.h"
 #include "../map.h"
 #include "../main.h"

@@ -54,7 +54,9 @@ void button_draw(button_t* this) {
     
     // draw text
     glColor4ub(this->foreground_color.r, this->foreground_color.g, this->foreground_color.b, this->foreground_color.a);
-    draw_text(this->x, this->y, this->text);
+    draw_text(this->x + (this->width - text_width(this->text)) / 2,
+            this->y + (this->height - text_height(this->text) / 2) / 2,
+            this->text);
 }
 
 void button_click(button_t* this) {

@@ -8,7 +8,8 @@
 #ifndef BUTTON_H
 #define	BUTTON_H
 
-#include "main.h"
+#include "global.h"
+#include "graphics/graphics.h"
 
 typedef struct {
     int x;

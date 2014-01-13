@@ -8,16 +8,17 @@
 #ifndef FONT_H
 #define	FONT_H
 
-#include "graphics.h"
+#include "../misc.h"
 
 typedef struct {
-    int x, y, w, h;
+    int x, y, w;
 } font_char;
 
 typedef struct {
     char* name;
     int min_char, max_char;
     int tex_size;
+    int h;
     font_char* chars;
     GLuint base;        // Base Display List For The Font
     GLuint texture;     // Storage For Our Font Texture

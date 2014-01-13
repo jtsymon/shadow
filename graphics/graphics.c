@@ -2,7 +2,6 @@
 #include <SDL2/SDL_rect.h>
 
 #include "graphics.h"
-#include "text.h"
 
 double two_over_width, two_over_height;
 
@@ -87,7 +86,7 @@ int initGL() {
         return 3;
     }
     
-    if(!initFont()) {
+    if(!initFonts()) {
         printf("Failed to load font\n");
         return 4;
     }
@@ -148,39 +147,42 @@ void fill_rectangle(int x1, int y1, int x2, int y2) {
     glEnd();
 }
 
-void draw_texture() {
+void draw_texture(int x, int y, int w, int h) {
     
-    glBindTexture( GL_TEXTURE_2D, font->texture );
+    double xa = game_to_gl_x(x),     ya = game_to_gl_y(y),
+           xb = game_to_gl_x(x + w), yb = game_to_gl_y(y + h);
+    
+    glBindTexture( GL_TEXTURE_2D, font_default->texture );
     
     glEnable(GL_TEXTURE_2D);
     
     glBegin( GL_QUADS );
         //Bottom-left vertex (corner)
-        glTexCoord2i( 0, 0 );
-        glVertex2f( 0.f, 0.f );
+        glTexCoord2i(0, 0);
+        glVertex2f(xa, ya);
 
         //Bottom-right vertex (corner)
-        glTexCoord2i( 1, 0 );
-        glVertex2f( 1.f, 0.f );
+        glTexCoord2i(1, 0);
+        glVertex2f(xb, ya);
 
         //Top-right vertex (corner)
-        glTexCoord2i( 1, 1 );
-        glVertex2f( 1.f, 1.f );
+        glTexCoord2i(1, 1);
+        glVertex2f(xb, yb);
 
         //Top-left vertex (corner)
-        glTexCoord2i( 0, 1 );
-        glVertex2f( 0.f, 1.f );
+        glTexCoord2i(0, 1);
+        glVertex2f(xa, yb);
     glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void draw_text_font(int x, int y, char* text, font_t* font) {
+    glEnable(GL_TEXTURE_2D);
+    glPrint(x, y, text, font);
     glDisable(GL_TEXTURE_2D);
 }
 
 void draw_text(int x, int y, char* text) {
     
-    // Bind the texture to which subsequent calls refer to
-    glBindTexture( GL_TEXTURE_2D, font->texture );
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    //glEnable(GL_TEXTURE_2D);
-    glPrint(x, y, text);
-    glDisable(GL_TEXTURE_2D);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    draw_text_font(x, y, text, font_default);
 }
