@@ -36,7 +36,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/button.o \
-	${OBJECTDIR}/graphics/opengl.o \
+	${OBJECTDIR}/graphics/font.o \
+	${OBJECTDIR}/graphics/graphics.o \
+	${OBJECTDIR}/graphics/text.o \
 	${OBJECTDIR}/hsv.o \
 	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/main.o \
@@ -76,10 +78,20 @@ ${OBJECTDIR}/button.o: button.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/button.o button.c
 
-${OBJECTDIR}/graphics/opengl.o: graphics/opengl.c 
+${OBJECTDIR}/graphics/font.o: graphics/font.c 
 	${MKDIR} -p ${OBJECTDIR}/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/opengl.o graphics/opengl.c
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/font.o graphics/font.c
+
+${OBJECTDIR}/graphics/graphics.o: graphics/graphics.c 
+	${MKDIR} -p ${OBJECTDIR}/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/graphics.o graphics/graphics.c
+
+${OBJECTDIR}/graphics/text.o: graphics/text.c 
+	${MKDIR} -p ${OBJECTDIR}/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -ISDL2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics/text.o graphics/text.c
 
 ${OBJECTDIR}/hsv.o: hsv.c 
 	${MKDIR} -p ${OBJECTDIR}

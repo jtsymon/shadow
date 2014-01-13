@@ -18,21 +18,10 @@ map_t* map_init(int width, int height, unsigned char data[]) {
 }
 
 map_t* map_open(char* filename) {
-    struct stat st;
-    if (stat(filename, &st) != 0) {
-        fprintf(stderr, "Cannot determine size of %s: %s\n", filename, strerror(errno));
+    char* data = read_file(filename);
+    if(!data) {
         return NULL;
     }
-    int file_size = st.st_size;
-
-    FILE* map_file = fopen(filename, "rb");
-    if (map_file == NULL) {
-        fprintf(stderr, "Cannot open %s for binary reading: %s\n", filename, strerror(errno));
-    }
-
-    char* data = malloc(file_size);
-    fread(data, 1, file_size, map_file);
-    fclose(map_file);
 
     int p = 0;
     int width = data[p++] << 8 | data[p++];
@@ -407,7 +396,7 @@ void map_shadow(int x, int y) {
         // get the whole wall efficiently
         int ix, iy;
         
-        set_color(255, 0, 255);
+        glColor3ub(255, 0, 255);
         
         // printf("%d:%d %d:%d", tile.x, ix, tile.y, iy);
         switch (tile.side) {
@@ -647,7 +636,7 @@ void map_shadow(int x, int y) {
         // Atimes2 = (-p1y * p2x + y * (-p1x + p2x) + x * (p1y - p2y) + p1x * p2y);
         // System.out.println(Atimes2);
         
-        set_color_a(255, 0, 0, 60);
+        glColor4ub(255, 0, 0, 60);
         fill_triangle(x, y, p1x, p1y, p2x, p2y);
         
 

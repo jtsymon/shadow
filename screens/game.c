@@ -21,7 +21,7 @@ void screen_game_create() {
 //        255,   0,   0,   0,   0,   0,   0,   0,   0, 255,
 //        255, 255, 255, 255, 255, 255, 255, 255, 255, 255
 //    });
-    game_data.map = map_open("test.map");
+    game_data.map = map_open("data/test.map");
 //    for(int y = 0; y < game_data.map->height; y++) {
 //        for(int x = 0; x < game_data.map->width; x++) {
 //            printf("%d,%d: %d\n", x, y, game_data.map->data[x + game_data.map->width * y]);
@@ -85,7 +85,7 @@ void screen_game_render() {
     // draw the map
     for(int y = 0; y < game_data.map->height; y++) {
         for(int x = 0; x < game_data.map->width; x++) {
-            set_color(255 - game_data.map->data[x + game_data.map->width * y],
+            glColor3ub(255 - game_data.map->data[x + game_data.map->width * y],
                     255 - game_data.map->data[x + game_data.map->width * y],
                     255 - game_data.map->data[x + game_data.map->width * y]);
             fill_rectangle(x * game_data.tile_size,
@@ -99,7 +99,7 @@ void screen_game_render() {
     
     for(double a = 0; a < M_PI * 2; a+=0.0002) {
         map_tile_collision hit = map_raycast(a, (double) game_data.player.x / game_data.tile_size, (double) game_data.player.y / game_data.tile_size);
-        set_color(0, 255, 0);
+        glColor3ub(0, 255, 0);
         fill_rectangle(hit.pX - 1, hit.pY - 1, hit.pX + 1, hit.pY + 1);
         // pixelRGBA(RENDER.renderer, hit.pX, hit.pY, 0, 255, 0, 255);
     }
@@ -108,13 +108,13 @@ void screen_game_render() {
     map_shadow(game_data.player.x, game_data.player.y);
     
     // draw player
-    set_color(255, 0, 0);
+    glColor3ub(255, 0, 0);
     fill_rectangle(game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5);
     
     // draw fps
     sprintf(render_time, "Render time: %dms", (SDL_GetTicks() - GLOBALS.last_tick));
     GLOBALS.last_tick = SDL_GetTicks();
-    set_color(0, 255, 0);
+    glColor3ub(0, 255, 0);
     draw_text(10, 10, render_time);
 
     SDL_GL_SwapWindow(RENDER.window);

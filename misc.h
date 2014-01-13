@@ -28,12 +28,17 @@
     #define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
 #endif
 
-typedef enum { false, true } bool;
+#define false 0
+#define true 1
+#define bool int
+// typedef enum { false, true } bool;
 
 extern double vector_to_angle(double w, double h);
 
 extern int max(int a, int b);
 extern int min(int a, int b);
+
+extern char* read_file(char* filename);
 
 #endif	/* DEF_H */
 
