@@ -93,6 +93,7 @@ int initGL() {
     }
     
     SDL_GL_MakeCurrent(RENDER.window, RENDER.gl_context); 
+    SDL_GL_SetSwapInterval(1);
     
     glViewport(0,0, RENDER.width, RENDER.height);
 
