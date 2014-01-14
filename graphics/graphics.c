@@ -3,8 +3,6 @@
 
 #include "graphics.h"
 
-double two_over_width, two_over_height;
-
 void update_dimensions() {
     two_over_width  = 2.0 / RENDER.width;
     two_over_height = 2.0 / RENDER.height;

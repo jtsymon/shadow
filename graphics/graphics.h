@@ -12,6 +12,11 @@
 #include "text.h"
 #include "font.h"
 
+double two_over_width, two_over_height;
+
+extern double game_to_gl_x(int x);
+extern double game_to_gl_y(int y);
+
 extern int initGL();
 
 extern void fill_triangle(int x1, int y1, int x2, int y2, int x3, int y3);

@@ -399,9 +399,16 @@ void map_shadow(int x, int y) {
     double min_angle = 0, max_angle = M_PI * 2, tmp_angle;
     int iter = 0;
     int dir = 1;
+    
+    glColor4ub(255, 0, 0, 100);
+    
+    glBegin(GL_POLYGON);
+    
+    glVertex2d(game_to_gl_x(x), game_to_gl_y(y));
 
     // unmask the regions that should be visible
     while (min_angle < max_angle) {
+        
         dir *= -1;
         iter++;
         // printf("%d\n", min_angle);
@@ -619,20 +626,24 @@ void map_shadow(int x, int y) {
 
         if(!changed_angle) min_angle += d;
         
-        if (debug_shadow) {
-            glColor3ub(0, 255, 255); // cyan
-            fill_rectangle(p1x - 3, p1y - 3, p1x + 3, p1y + 3);
-            glColor3ub(255, 255, 0); // yellow
-            fill_rectangle(p2x - 3, p2y - 3, p2x + 3, p2y + 3);
-            
-            // printf("%d,%d,%d,%d,%d,%d\n", x, y, p1x, p1y, p2x, p2y);
-        }
-        if(dir == 1) {
-            glColor4ub(255, 0, 0, 100);
-        } else {
-            glColor4ub(0, 0, 255, 100);
-        }
-        fill_triangle(x, y, p1x, p1y, p2x, p2y);
+//        if (debug_shadow) {
+//            glColor3ub(0, 255, 255); // cyan
+//            fill_rectangle(p1x - 3, p1y - 3, p1x + 3, p1y + 3);
+//            glColor3ub(255, 255, 0); // yellow
+//            fill_rectangle(p2x - 3, p2y - 3, p2x + 3, p2y + 3);
+//            
+//            // printf("%d,%d,%d,%d,%d,%d\n", x, y, p1x, p1y, p2x, p2y);
+//        }
+//        if(dir == 1) {
+//            glColor4ub(255, 0, 0, 100);
+//        } else {
+//            glColor4ub(0, 0, 255, 100);
+//        }
+        glVertex2d(game_to_gl_x(p1x), game_to_gl_y(p1y));
+        glVertex2d(game_to_gl_x(p2x), game_to_gl_y(p2y));
+        // fill_triangle(x, y, p1x, p1y, p2x, p2y);
     }
     printf("iterations: %d\n", iter);
+    
+    glEnd();
 }
