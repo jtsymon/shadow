@@ -47,12 +47,13 @@ map_t* map_open(char* filename) {
  * @param y
  * @return details about the collision
  */
-map_tile_collision map_raycast(double angle, double x, double y) {
+map_tile_collision map_raycast_ignore(double angle, double x, double y, int ignore_index) {
 
     int ix = (int) x, iy = (int) y;
     double dx = cos(angle);
     double dy = sin(angle);
     double middle = 0;
+    int index;
 
     // printf("%f - %f,%f (%d,%d)\n", angle, x, y, ix, iy);
 
@@ -61,7 +62,8 @@ map_tile_collision map_raycast(double angle, double x, double y) {
         // Top right quadrant
         // printf("TopRight\n");
 
-        while (ix < game_data.map->width && iy >= 0 && game_data.map->data[ix + game_data.map->width * iy] == 0) {
+        while (ix < game_data.map->width && iy >= 0 && (index = ix + game_data.map->width * iy) != ignore_index &&
+                game_data.map->data[index] == 0) {
 
             middle = vector_to_angle((double) ix + 1 - x, (double) iy - y);
 
@@ -139,7 +141,8 @@ map_tile_collision map_raycast(double angle, double x, double y) {
             ix--;
         }
 
-        while (ix >= 0 && iy >= 0 && game_data.map->data[ix + game_data.map->width * iy] == 0) {
+        while (ix >= 0 && iy >= 0 && (index = ix + game_data.map->width * iy) != ignore_index &&
+                game_data.map->data[index] == 0) {
 
             middle = vector_to_angle((double) ix - x, (double) iy - y);
 
@@ -219,7 +222,8 @@ map_tile_collision map_raycast(double angle, double x, double y) {
             ix--;
         }
 
-        while (ix >= 0 && iy < game_data.map->height && game_data.map->data[ix + game_data.map->width * iy] == 0) {
+        while (ix >= 0 && iy < game_data.map->height && (index = ix + game_data.map->width * iy) != ignore_index &&
+                game_data.map->data[index] == 0) {
 
             middle = vector_to_angle((double) ix - x, (double) iy + 1 - y);
 
@@ -293,7 +297,8 @@ map_tile_collision map_raycast(double angle, double x, double y) {
         // Bottom right quadrant
         // printf("BottomRight\n");
 
-        while (ix < game_data.map->width && iy < game_data.map->height && game_data.map->data[ix + game_data.map->width * iy] == 0) {
+        while (ix < game_data.map->width && iy < game_data.map->height && (index = ix + game_data.map->width * iy) != ignore_index &&
+                game_data.map->data[index] == 0) {
 
             middle = vector_to_angle((double) ix + 1 - x, (double) iy + 1 - y);
 
@@ -366,6 +371,10 @@ map_tile_collision map_raycast(double angle, double x, double y) {
 
     } // End of finding square collision.
 
+}
+
+map_tile_collision map_raycast(double angle, double x, double y) {
+    return map_raycast_ignore(angle, x, y, -1);
 }
 
 bool debug_shadow = true;
@@ -444,8 +453,9 @@ void map_shadow(int x, int y) {
         int ix = tile.x, iy = tile.y, side = tile.side;
         
         bool changed_angle = false;
+        bool avoid_tile = true;
         
-        while (true) {
+        for(;;) {
             iy += dY;
             ix += dX;
             // printf("%d,%d\n", ix, iy);
@@ -504,48 +514,77 @@ void map_shadow(int x, int y) {
                     }
                 }
                 // skip the loop to fix position, since we already fixed it
-                tile.x = ix;
-                tile.y = iy;
-                tile.side = side;
+                avoid_tile = false;
                 // printf("end of wall\n");
                 break;
             }
         }
-        int c = 0;
-        while((!dX && tile.x != ix) || (!dY && tile.y != iy) || tile.side != side) {
-            if(c++ > 5) break;
-            if(dir == 1) {
-                switch(tile.side) {
-                    case map_tile_left: // go down
-                        tmp_angle = vector_to_angle(tile.x - sx, tile.y + 1 + d - sy);
-                        break;
-                    case map_tile_right:  // go up
-                        tmp_angle = vector_to_angle(tile.x + 1 - sx, tile.y - d - sy);
-                        break;
-                    case map_tile_bottom: // go right
-                        tmp_angle = vector_to_angle(tile.x + 1 + d - sx, tile.y + 1 - sy);
-                        break;
-                    case map_tile_top:    // go left
-                        tmp_angle = vector_to_angle(tile.x - d - sx, tile.y - sy);
-                        break;
+        if(avoid_tile) {
+            double aw, ah, arw, arh;
+            int tile_index = tile.x + game_data.map->width * tile.y;
+            int c = 0;
+            while((!dX && tile.x != ix) || (!dY && tile.y != iy) || tile.side != side) {
+                if(c++ > 5) break;
+                if(dir == 1) {
+                    switch(tile.side) {
+                        case map_tile_left: // go down
+                            arw = tile.x - sx;
+                            arh = tile.y + 1 - sy;
+                            aw = arw;
+                            ah = arh + d;
+                            break;
+                        case map_tile_right:  // go up
+                            arw = tile.x + 1 - sx;
+                            arh = tile.y - sy;
+                            aw = arw;
+                            ah = arh - d;
+                            break;
+                        case map_tile_bottom: // go right
+                            arw = tile.x + 1 - sx;
+                            arh = tile.y + 1 - sy;
+                            aw = arw + d;
+                            ah = arh;
+                            break;
+                        case map_tile_top:    // go left
+                            arw = tile.x - sx;
+                            arh = tile.y - sy;
+                            aw = arw - d;
+                            ah = arh;
+                            break;
+                    }
+                } else {
+                    switch(tile.side) {
+                        case map_tile_left: // go up
+                            arw = tile.x - sx;
+                            arh = tile.y - sy;
+                            aw = arw;
+                            ah = arh - d;
+                            break;
+                        case map_tile_right:  // go down
+                            arw = tile.x + 1 - sx;
+                            arh = tile.y + 1 - sy;
+                            aw = arw;
+                            ah = arh + d;
+                            break;
+                        case map_tile_bottom: // go left
+                            arw = tile.x - sx;
+                            arh = tile.y + 1 - sy;
+                            aw = arw - d;
+                            ah = arh;
+                            break;
+                        case map_tile_top:    // go right
+                            arw = tile.x + 1 - sx;
+                            arh = tile.y - sy;
+                            aw = arw + d;
+                            ah = arh;
+                            break;
+                    }
                 }
-            } else {
-                switch(tile.side) {
-                    case map_tile_left: // go up
-                        tmp_angle = vector_to_angle(tile.x - sx, tile.y - d - sy);
-                        break;
-                    case map_tile_right:  // go down
-                        tmp_angle = vector_to_angle(tile.x + 1 - sx, tile.y + 1 + d - sy);
-                        break;
-                    case map_tile_bottom: // go left
-                        tmp_angle = vector_to_angle(tile.x - d - sx, tile.y + 1 - sy);
-                        break;
-                    case map_tile_top:    // go right
-                        tmp_angle = vector_to_angle(tile.x + 1 + d - sx, tile.y - sy);
-                        break;
-                }
+                tmp_angle = vector_to_angle(aw, ah);
+                tile = map_raycast(tmp_angle, sx, sy);
             }
-            tile = map_raycast(tmp_angle, sx, sy);
+            tmp_angle = vector_to_angle(arw, arh);
+            tile = map_raycast_ignore(tmp_angle, sx, sy, tile_index);
         }
         
         if(dir == 1) {
@@ -563,20 +602,20 @@ void map_shadow(int x, int y) {
         p2x = tile.pX;
         p2y = tile.pY;
         
-        switch(side) {
-            case map_tile_left: // go up
-                p2y -= game_data.tile_size / 8;
-                break;
-            case map_tile_right:  // go down
-                p2y += game_data.tile_size / 8;
-                break;
-            case map_tile_bottom: // go left
-                p2x -= game_data.tile_size / 8;
-                break;
-            case map_tile_top:    // go right
-                p2x += game_data.tile_size / 8;
-                break;
-        }
+//        switch(side) {
+//            case map_tile_left: // go up
+//                p2y -= game_data.tile_size / 8;
+//                break;
+//            case map_tile_right:  // go down
+//                p2y += game_data.tile_size / 8;
+//                break;
+//            case map_tile_bottom: // go left
+//                p2x -= game_data.tile_size / 8;
+//                break;
+//            case map_tile_top:    // go right
+//                p2x += game_data.tile_size / 8;
+//                break;
+//        }
 
         if(!changed_angle) min_angle += d;
         
