@@ -61,11 +61,11 @@
       <compileType>
         <cTool>
           <standard>10</standard>
-          <incDir>
-            <pElem>/research/jts21/deps/include</pElem>
-          </incDir>
-          <commandLine>-lpthread -lSDL2 -lSDL2_image -lm -lGL</commandLine>
+          <commandLine>-lpthread -lSDL2 -lSDL2_image -lm -lGL ${varCOMPILE}</commandLine>
         </cTool>
+        <linkerTool>
+          <commandLine>${varLINK}</commandLine>
+        </linkerTool>
       </compileType>
       <item path="button.c" ex="false" tool="0" flavor2="0">
       </item>

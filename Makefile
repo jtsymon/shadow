@@ -49,7 +49,6 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 
-
 # build
 build: .build-post
 
@@ -126,3 +125,7 @@ include nbproject/Makefile-impl.mk
 
 # include project make variables
 include nbproject/Makefile-variables.mk
+
+ifeq (${USER},jts21)
+varCOMPILE=-I/research/jts21/deps/include 
+endif

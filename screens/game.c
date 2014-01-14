@@ -2,10 +2,10 @@
 
 int player_speed = 2;
 int sleep_time;
-char* render_time = NULL;
+char* string_buffer = NULL;
 
 void screen_game_create() {
-    render_time = malloc(100);
+    string_buffer = malloc(100);
     game_data.player.x = 320;
     game_data.player.y = 320;
     game_data.tile_size = 64;
@@ -31,8 +31,8 @@ void screen_game_create() {
 
 void screen_game_destroy() {
     printf("Cleaning up game screen...\n");
-    if(render_time != NULL) {
-        free(render_time);
+    if(string_buffer != NULL) {
+        free(string_buffer);
     }
     if(game_data.map != NULL) {
         free(game_data.map);
@@ -101,6 +101,9 @@ void screen_game_render() {
         map_tile_collision hit = map_raycast(a, (double) game_data.player.x / game_data.tile_size, (double) game_data.player.y / game_data.tile_size);
         glColor3ub(0, 255, 0);
         fill_rectangle(hit.pX - 1, hit.pY - 1, hit.pX + 1, hit.pY + 1);
+        glColor3ub(255, 0, 255);
+        fill_rectangle((hit.x + 0.5) * game_data.tile_size - 5, (hit.y + 0.5) * game_data.tile_size - 5,
+                                (hit.x + 0.5) * game_data.tile_size + 5, (hit.y + 0.5) * game_data.tile_size + 5);
         // pixelRGBA(RENDER.renderer, hit.pX, hit.pY, 0, 255, 0, 255);
     }
     
@@ -108,14 +111,19 @@ void screen_game_render() {
     map_shadow(game_data.player.x, game_data.player.y);
     
     // draw player
-    glColor3ub(255, 0, 0);
+    glColor3ub(128, 128, 128);
     fill_rectangle(game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5);
     
     // draw fps
-    sprintf(render_time, "Render time: %dms", (SDL_GetTicks() - GLOBALS.last_tick));
+    sprintf(string_buffer, "Render time: %dms", (SDL_GetTicks() - GLOBALS.last_tick));
     GLOBALS.last_tick = SDL_GetTicks();
     glColor3ub(0, 255, 0);
-    draw_text(10, 10, render_time);
+    draw_text(10, 10, string_buffer);
+    
+    sprintf(string_buffer, "Player: %d,%d (%-1.2f,%-1.2f)", game_data.player.x, game_data.player.y,
+            (float) game_data.player.x / game_data.tile_size, (float) game_data.player.y / game_data.tile_size);
+    draw_text(350, 10, string_buffer);
+    
 
     SDL_GL_SwapWindow(RENDER.window);
 }

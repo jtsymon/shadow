@@ -18,7 +18,7 @@ int setup() {
     return initGL();
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
     
     RENDER.width = 640;
     RENDER.height = 640;
