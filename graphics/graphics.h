@@ -10,13 +10,15 @@
 
 #include "../main.h"
 #include "text.h"
+#include "font.h"
 
 extern int initGL();
 
 extern void fill_triangle(int x1, int y1, int x2, int y2, int x3, int y3);
 extern void fill_rectangle(int x1, int y1, int x2, int y2);
-extern void draw_text(int x, int y, char* text);
 extern void draw_texture(int x, int y, int w, int h);
+extern void draw_text_font(int x, int y, char* text, font_t* font);
+extern void draw_text(int x, int y, char* text);
 
 #endif	/* OPENGL_H */
 

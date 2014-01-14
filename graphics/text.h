@@ -11,15 +11,18 @@
 #include "../main.h"
 #include "font.h"
 
-font_t* font_default;
+font_t* default_font;
 font_t* font_bold_oblique;
+
+typedef struct {
+    int w, h;
+    char* text;
+    font_t* font;
+} text_t;
 
 extern bool initFonts();
 extern void glPrint(int x, int y, char *string, font_t* font);
-extern int text_height_font(char* text, font_t* font);
-extern int text_height(char* text);
-extern int text_width_font(char* text, font_t* font);
-extern int text_width(char* text);
+extern int text_width(char* text, font_t* font);
 
 #endif	/* TEXT_H */
 

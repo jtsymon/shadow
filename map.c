@@ -36,6 +36,7 @@ map_t* map_open(char* filename) {
         map->data[i] = data[p++];
     }
     free(data);
+    printf("loaded %s\n", filename);
     return map;
 }
 

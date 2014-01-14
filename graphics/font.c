@@ -6,8 +6,6 @@ bool font_load_fnt(font_t* font, char* filename, char* extension) {
     extension[1] = 'n';
     extension[2] = 't';
     
-    printf("filename: %s\n", filename);
-    
     // Load font info
     unsigned char* data = read_file(filename);
     if(!data) {
@@ -29,7 +27,7 @@ bool font_load_fnt(font_t* font, char* filename, char* extension) {
     }
     free(data);
     
-    printf("loaded .fnt\n");
+    printf("loaded %s\n", filename);
     return true;
 }
 
@@ -37,8 +35,6 @@ bool font_load_img(font_t* font, char* filename, char* extension) {
     extension[0] = 'p';
     extension[1] = 'n';
     extension[2] = 'g';
-
-    printf("filename: %s\n", filename);
     
     // Load font bitmap
     SDL_Surface *font_bitmap = IMG_Load(filename);
@@ -62,7 +58,7 @@ bool font_load_img(font_t* font, char* filename, char* extension) {
     
     SDL_FreeSurface(font_bitmap);
     
-    printf("loaded .png\n");
+    printf("loaded %s\n", filename);
     return true;
 }
 

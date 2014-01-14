@@ -2,9 +2,9 @@
 #include "text.h"
 
 bool initFonts() {
-    font_default = font_open("data/default");
+    default_font = font_open("data/default");
     font_bold_oblique = font_open("data/bold_oblique");
-    return font_default && font_bold_oblique;
+    return default_font && font_bold_oblique;
 }
 
 /*
@@ -34,20 +34,10 @@ void glPrint(int x, int y, char *string, font_t* font) {
     glPopMatrix();
 }
 
-int text_height_font(char* text, font_t* font) {
-    return font->h;
-}
-int text_height(char* text) {
-    return text_height_font(text, font_default);
-}
-
-int text_width_font(char* text, font_t* font) {
+int text_width(char* text, font_t* font) {
     int w = 0, p = 0;
     for(; text[p] != 0 ;) {
         w += font->chars[text[p++] - font->min_char].w;
     }
     return w;
-}
-int text_width(char* text) {
-    return text_width_font(text, font_default);
 }

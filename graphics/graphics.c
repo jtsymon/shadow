@@ -152,7 +152,7 @@ void draw_texture(int x, int y, int w, int h) {
     double xa = game_to_gl_x(x),     ya = game_to_gl_y(y),
            xb = game_to_gl_x(x + w), yb = game_to_gl_y(y + h);
     
-    glBindTexture( GL_TEXTURE_2D, font_default->texture );
+    glBindTexture( GL_TEXTURE_2D, default_font->texture );
     
     glEnable(GL_TEXTURE_2D);
     
@@ -184,5 +184,5 @@ void draw_text_font(int x, int y, char* text, font_t* font) {
 
 void draw_text(int x, int y, char* text) {
     
-    draw_text_font(x, y, text, font_default);
+    draw_text_font(x, y, text, default_font);
 }
