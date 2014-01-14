@@ -387,15 +387,21 @@ void map_shadow(int x, int y) {
     map_tile_collision tile;
     double sx = (double) x / game_data.tile_size;
     double sy = (double) y / game_data.tile_size;
-    double min_angle = 0, tmp_angle;
+    double min_angle = 0, max_angle = M_PI * 2, tmp_angle;
     int iter = 0;
+    int dir = 1;
 
     // unmask the regions that should be visible
-    while (min_angle < 2 * M_PI) {
+    while (min_angle < max_angle) {
+        dir *= -1;
         iter++;
         // printf("%d\n", min_angle);
 
-        tile = map_raycast(min_angle, sx, sy);
+        if(dir == 1) {
+            tile = map_raycast(min_angle + d, sx, sy);
+        } else {
+            tile = map_raycast(max_angle - d, sx, sy);
+        }
         // get the whole wall efficiently
         
         // printf("%d:%d %d:%d", tile.x, ix, tile.y, iy);
@@ -423,13 +429,17 @@ void map_shadow(int x, int y) {
                 dY2 = 1;
                 break;
         }
+        dX *= dir;
+        dY *= dir;
+//        dX2 *= dir;
+//        dY2 *= dir;
         
-        printf("dX:%d,dY:%d,dX2:%d,dY2:%d\n", dX, dY, dX2, dY2);
+        // printf("dX:%d,dY:%d,dX2:%d,dY2:%d\n", dX, dY, dX2, dY2);
         
         p1x = tile.pX;
         p1y = tile.pY;
         
-        printf("start side:%d, x:%d, y:%d\n", tile.side, tile.x, tile.y);
+        // printf("start side:%d, x:%d, y:%d\n", tile.side, tile.x, tile.y);
         
         int ix = tile.x, iy = tile.y, side = tile.side;
         
@@ -438,17 +448,14 @@ void map_shadow(int x, int y) {
         while (true) {
             iy += dY;
             ix += dX;
-            printf("%d,%d\n", ix, iy);
+            // printf("%d,%d\n", ix, iy);
             
             tmp_angle = vector_to_angle(ix - (d * dX) - sx, iy - (d * dY) - sy);
-            if (tmp_angle > min_angle && tmp_angle < min_angle + M_PI) {
-                min_angle = tmp_angle;
-                changed_angle = true;
-            }
+            
             tile = map_raycast(tmp_angle, sx, sy);
             if(tile.side != side || (!dX && tile.x != ix) || (!dY && tile.y != iy)) {
-                printf("angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
-                printf("failed raycast\n");
+                // printf("angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
+                // printf("failed raycast\n");
                 break;
             }
             
@@ -457,69 +464,121 @@ void map_shadow(int x, int y) {
                     game_data.map->data[ix + dX2 + game_data.map->width * (iy + dY2)]) {
                 iy -= dY;
                 ix -= dX;
-                switch(tile.side) {
-                    case map_tile_left:
-                        tile.pX = ix * game_data.tile_size;
-                        tile.pY = iy * game_data.tile_size;
-                        break;
-                    case map_tile_right:
-                        tile.pX = (ix + 1) * game_data.tile_size;
-                        tile.pY = (iy + 1) * game_data.tile_size;
-                        break;
-                    case map_tile_bottom:
-                        tile.pX = ix * game_data.tile_size;
-                        tile.pY = (iy + 1) * game_data.tile_size;
-                        break;
-                    case map_tile_top:    // go left
-                        tile.pX = (ix + 1) * game_data.tile_size;
-                        tile.pY = iy * game_data.tile_size;
-                        break;
+                if(dir == 1) {
+                    switch(side) {
+                        case map_tile_left:
+                            tile.pX = ix * game_data.tile_size;
+                            tile.pY = iy * game_data.tile_size;
+                            break;
+                        case map_tile_right:
+                            tile.pX = (ix + 1) * game_data.tile_size;
+                            tile.pY = (iy + 1) * game_data.tile_size;
+                            break;
+                        case map_tile_bottom:
+                            tile.pX = ix * game_data.tile_size;
+                            tile.pY = (iy + 1) * game_data.tile_size;
+                            break;
+                        case map_tile_top:
+                            tile.pX = (ix + 1) * game_data.tile_size;
+                            tile.pY = iy * game_data.tile_size;
+                            break;
+                    }
+                } else {
+                    switch(side) {
+                        case map_tile_left:
+                            tile.pX = ix * game_data.tile_size;
+                            tile.pY = (iy + 1) * game_data.tile_size;
+                            break;
+                        case map_tile_right:
+                            tile.pX = (ix + 1) * game_data.tile_size;
+                            tile.pY = iy * game_data.tile_size;
+                            break;
+                        case map_tile_bottom:
+                            tile.pX = (ix + 1) * game_data.tile_size;
+                            tile.pY = (iy + 1) * game_data.tile_size;
+                            break;
+                        case map_tile_top:
+                            tile.pX = ix * game_data.tile_size;
+                            tile.pY = iy * game_data.tile_size;
+                            break;
+                    }
                 }
-                tile.side = side; // skip the loop to fix position, since we already fixed it
-                printf("end of wall\n");
+                // skip the loop to fix position, since we already fixed it
+                tile.x = ix;
+                tile.y = iy;
+                tile.side = side;
+                // printf("end of wall\n");
                 break;
             }
         }
         int c = 0;
         while((!dX && tile.x != ix) || (!dY && tile.y != iy) || tile.side != side) {
             if(c++ > 5) break;
-            switch(tile.side) {
-                case map_tile_left: // go down
-                    // printf("left\n");
-                    tmp_angle = vector_to_angle(tile.x - sx, tile.y + 1 + d - sy);
-                    break;
-                case map_tile_right:  // go up
-                    // printf("right\n");
-                    tmp_angle = vector_to_angle(tile.x + 1 - sx, tile.y - d - sy);
-                    break;
-                case map_tile_bottom: // go right
-                    // printf("bottom\n");
-                    tmp_angle = vector_to_angle(tile.x + 1 + d - sx, tile.y + 1 - sy);
-                    break;
-                case map_tile_top:    // go left
-                    // printf("top\n");
-                    tmp_angle = vector_to_angle(tile.x - d - sx, tile.y - sy);
-                    break;
+            if(dir == 1) {
+                switch(tile.side) {
+                    case map_tile_left: // go down
+                        tmp_angle = vector_to_angle(tile.x - sx, tile.y + 1 + d - sy);
+                        break;
+                    case map_tile_right:  // go up
+                        tmp_angle = vector_to_angle(tile.x + 1 - sx, tile.y - d - sy);
+                        break;
+                    case map_tile_bottom: // go right
+                        tmp_angle = vector_to_angle(tile.x + 1 + d - sx, tile.y + 1 - sy);
+                        break;
+                    case map_tile_top:    // go left
+                        tmp_angle = vector_to_angle(tile.x - d - sx, tile.y - sy);
+                        break;
+                }
+            } else {
+                switch(tile.side) {
+                    case map_tile_left: // go up
+                        tmp_angle = vector_to_angle(tile.x - sx, tile.y - d - sy);
+                        break;
+                    case map_tile_right:  // go down
+                        tmp_angle = vector_to_angle(tile.x + 1 - sx, tile.y + 1 + d - sy);
+                        break;
+                    case map_tile_bottom: // go left
+                        tmp_angle = vector_to_angle(tile.x - d - sx, tile.y + 1 - sy);
+                        break;
+                    case map_tile_top:    // go right
+                        tmp_angle = vector_to_angle(tile.x + 1 + d - sx, tile.y - sy);
+                        break;
+                }
             }
             tile = map_raycast(tmp_angle, sx, sy);
+        }
+        
+        if(dir == 1) {
+            if (tmp_angle > min_angle) {
+                min_angle = tmp_angle;
+                changed_angle = true;
+            }
+        } else {
+            if (tmp_angle < max_angle) {
+                max_angle = tmp_angle;
+                changed_angle = true;
+            }
         }
         
         p2x = tile.pX;
         p2y = tile.pY;
 
-        if(!changed_angle) min_angle += 0.01f;
+        if(!changed_angle) min_angle += d;
         
         if (debug_shadow) {
-            glColor3ub(0, 255, 255);
+            glColor3ub(0, 255, 255); // cyan
             fill_rectangle(p1x - 3, p1y - 3, p1x + 3, p1y + 3);
-            glColor3ub(0, 255, 255);
+            glColor3ub(255, 255, 0); // yellow
             fill_rectangle(p2x - 3, p2y - 3, p2x + 3, p2y + 3);
             
-            printf("%d,%d,%d,%d,%d,%d\n", x, y, p1x, p1y, p2x, p2y);
+            // printf("%d,%d,%d,%d,%d,%d\n", x, y, p1x, p1y, p2x, p2y);
         }
-        
-        glColor4ub(255, 0, 0, 60);
+        if(dir == 1) {
+            glColor4ub(255, 0, 0, 100);
+        } else {
+            glColor4ub(0, 0, 255, 100);
+        }
         fill_triangle(x, y, p1x, p1y, p2x, p2y);
     }
-    //printf("iterations: %d\n", iter);
+    printf("iterations: %d\n", iter);
 }
