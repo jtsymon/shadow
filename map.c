@@ -562,6 +562,21 @@ void map_shadow(int x, int y) {
         
         p2x = tile.pX;
         p2y = tile.pY;
+        
+        switch(side) {
+            case map_tile_left: // go up
+                p2y -= game_data.tile_size / 8;
+                break;
+            case map_tile_right:  // go down
+                p2y += game_data.tile_size / 8;
+                break;
+            case map_tile_bottom: // go left
+                p2x -= game_data.tile_size / 8;
+                break;
+            case map_tile_top:    // go right
+                p2x += game_data.tile_size / 8;
+                break;
+        }
 
         if(!changed_angle) min_angle += d;
         
