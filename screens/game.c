@@ -45,6 +45,7 @@ void screen_game_hide() {
 
 }
 
+static bool update = true;
 void screen_game_render() {
 	while(SDL_PollEvent(&RENDER.e)) {
 		switch(RENDER.e.type) {
@@ -56,10 +57,17 @@ void screen_game_render() {
 					case SDL_SCANCODE_ESCAPE:
 						set_screen(GLOBALS.screen_menu);
 						break;
+                    case SDL_SCANCODE_P:
+                        update = !update;
+                        break;
 				}
 				break;
 		}
 	}
+    if(!update) {
+        SDL_Delay(16);
+        return;
+    }
 	keymod = SDL_GetModState();
     int dX = 0, dY = 0;
     if(keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_A]) {
