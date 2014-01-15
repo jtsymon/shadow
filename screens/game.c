@@ -1,7 +1,7 @@
 #include "game.h"
 
 int player_speed = 2;
-int sleep_time;
+int render_time;
 char* string_buffer = NULL;
 
 void screen_game_create() {
@@ -47,6 +47,9 @@ void screen_game_hide() {
 
 static bool update = true;
 void screen_game_render() {
+    
+    render_time = SDL_GetTicks();
+    
 	while(SDL_PollEvent(&RENDER.e)) {
 		switch(RENDER.e.type) {
 			case SDL_QUIT:
@@ -122,16 +125,14 @@ void screen_game_render() {
     glColor3ub(128, 128, 128);
     fill_rectangle(game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5);
     
-    // draw fps
-    sprintf(string_buffer, "Render time: %dms", (SDL_GetTicks() - GLOBALS.last_tick));
-    GLOBALS.last_tick = SDL_GetTicks();
     glColor3ub(0, 255, 0);
-    draw_text(10, 10, string_buffer);
-    
     sprintf(string_buffer, "Player: %d,%d (%-1.2f,%-1.2f)", game_data.player.x, game_data.player.y,
             (float) game_data.player.x / game_data.tile_size, (float) game_data.player.y / game_data.tile_size);
     draw_text(350, 10, string_buffer);
     
+    // draw fps
+    sprintf(string_buffer, "Render time: %dms", (SDL_GetTicks() - render_time));
+    draw_text(10, 10, string_buffer);
 
     SDL_GL_SwapWindow(RENDER.window);
 }
