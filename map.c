@@ -386,14 +386,12 @@ static double d = 0.001;
  * @param y centre y
  */
 void map_shadow(int x, int y) {
-    
-    // create an alpha mask pixmap
-    // Pixmap data = new Pixmap(BERGS.width, BERGS.height, Pixmap.Format.Alpha);
-    // byte[] pixels = new byte[BERGS.width * BERGS.height];
-    // Arrays.fill(pixels, (byte) 255);
-    
     double sx = (double) x / game_data.tile_size;
     double sy = (double) y / game_data.tile_size;
+    // hackish fix for bug at round y values
+    // TODO: fix this properly
+    if(sy == (int)sy) sy += d;
+    
     double min_angle = 0, tmp_angle = 0;
     map_tile_collision tile = map_raycast(min_angle, sx, sy);
     double fx = game_to_gl_x(tile.pX), fy = game_to_gl_y(tile.pY);
@@ -463,7 +461,7 @@ void map_shadow(int x, int y) {
         for(;;) {
             iy += dY;
             ix += dX;
-            // printf("%d,%d\n", ix, iy);
+            printf("%d,%d\n", ix, iy);
             
             // check if the wall ends or we reach a corner
             if (!game_data.map->data[ix + game_data.map->width * iy] ||
@@ -498,14 +496,14 @@ void map_shadow(int x, int y) {
                 if(avoid_tile) {
                     tile = tmp_tile;
                 }
-                // printf("end of wall\n");
+                printf("end of wall\n");
                 break;
             }
             tmp_angle = vector_to_angle(ix - (d * dX) - sx, iy - (d * dY) - sy);
             tile = map_raycast(tmp_angle, sx, sy);
             if(tile.side != side || (!dX && tile.x != ix) || (!dY && tile.y != iy)) {
-                // printf("angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
-                // printf("failed raycast\n");
+                printf("angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
+                printf("failed raycast\n");
                 break;
             }
         }
@@ -517,7 +515,7 @@ void map_shadow(int x, int y) {
             while((!dX && tile.x != ix) || (!dY && tile.y != iy) || tile.side != side) {
                 tile_index = tile.x + game_data.map->width * tile.y;
                 if(c++ > 5) {
-                    // printf("failed to avoid tile\n");
+                    printf("failed to avoid tile\n");
                     break;
                 }
                 switch(tile.side) {
@@ -561,6 +559,7 @@ void map_shadow(int x, int y) {
         }
         
         if (min_angle == tmp_angle) {
+            // printf("No change to angle: %f\n", min_angle);
             min_angle += d;
         } else {
             min_angle = tmp_angle;
