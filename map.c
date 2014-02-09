@@ -377,7 +377,7 @@ map_tile_collision map_raycast(double angle, double x, double y) {
     return map_raycast_ignore(angle, x, y, -1);
 }
 
-bool debug_shadow = true;
+static bool debug_shadow = true;
 static double d = 0.001;
 
 /**
@@ -457,15 +457,17 @@ void map_shadow(int x, int y) {
         }
         
         bool avoid_tile = true;
+        bool wall_end = false;
         
         for(;;) {
             iy += dY;
             ix += dX;
             printf("%d,%d\n", ix, iy);
+            wall_end = !game_data.map->data[ix + game_data.map->width * iy] ||
+                    game_data.map->data[ix + dX2 + game_data.map->width * (iy + dY2)];
             
             // check if the wall ends or we reach a corner
-            if (!game_data.map->data[ix + game_data.map->width * iy] ||
-                    game_data.map->data[ix + dX2 + game_data.map->width * (iy + dY2)]) {
+            if (wall_end) {
                 iy -= dY;
                 ix -= dX;
                 switch(side) {
@@ -559,8 +561,8 @@ void map_shadow(int x, int y) {
         }
         
         if (min_angle == tmp_angle) {
-            // printf("No change to angle: %f\n", min_angle);
-            min_angle += d;
+            //printf("No change to angle: %f\n", min_angle);
+            min_angle += d * 10;
         } else {
             min_angle = tmp_angle;
         }
