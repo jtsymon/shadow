@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/map/map.o \
+	${OBJECTDIR}/map/visibility.o \
 	${OBJECTDIR}/misc.o \
 	${OBJECTDIR}/screen.o \
 	${OBJECTDIR}/screens/game.o \
@@ -112,6 +113,11 @@ ${OBJECTDIR}/map/map.o: map/map.c
 	${MKDIR} -p ${OBJECTDIR}/map
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map/map.o map/map.c
+
+${OBJECTDIR}/map/visibility.o: map/visibility.c 
+	${MKDIR} -p ${OBJECTDIR}/map
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map/visibility.o map/visibility.c
 
 ${OBJECTDIR}/misc.o: misc.c 
 	${MKDIR} -p ${OBJECTDIR}

@@ -13,7 +13,9 @@
       <logicalFolder name="map" displayName="map" projectFiles="true">
         <itemPath>map/map.c</itemPath>
         <itemPath>map/map.h</itemPath>
-        <itemPath>map/visibility_polygon.h</itemPath>
+        <itemPath>map/map_structures.h</itemPath>
+        <itemPath>map/visibility.c</itemPath>
+        <itemPath>map/visibility.h</itemPath>
       </logicalFolder>
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>screens/game.c</itemPath>
@@ -47,8 +49,24 @@
       <itemPath>Makefile</itemPath>
       <itemPath>TODO</itemPath>
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>TODO</itemPath>
+    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>game</Elem>
+    <Elem>screens</Elem>
+    <Elem>graphics</Elem>
+    <Elem>map</Elem>
     <Elem>game</Elem>
     <Elem>screens</Elem>
     <Elem>graphics</Elem>
@@ -105,7 +123,11 @@
       </item>
       <item path="map/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map/visibility_polygon.h" ex="false" tool="3" flavor2="0">
+      <item path="map/map_structures.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="map/visibility.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="map/visibility.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="misc.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -178,8 +200,6 @@
       <item path="map/map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="map/map.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="map/visibility_polygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="misc.c" ex="false" tool="0" flavor2="0">
       </item>

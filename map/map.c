@@ -13,6 +13,7 @@ map_t* map_init(int width, int height, unsigned char *data) {
     for (int i = 0; i < map_size; i++) {
         map->data[i] = data[i];
     }
+    map->segments = list_init();
     map_line_segments(map);
     return map;
 }

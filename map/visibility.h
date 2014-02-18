@@ -8,7 +8,10 @@
 #ifndef VISIBILITY_H
 #define	VISIBILITY_H
 
+#include "map.h"
+#include "../list.h"
 
+extern void map_line_segments(map_t* map);
 
 #endif	/* VISIBILITY_H */
 

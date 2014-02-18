@@ -14,6 +14,10 @@
                 <sourceRootElem>screens</sourceRootElem>
                 <sourceRootElem>graphics</sourceRootElem>
                 <sourceRootElem>map</sourceRootElem>
+                <sourceRootElem>game</sourceRootElem>
+                <sourceRootElem>screens</sourceRootElem>
+                <sourceRootElem>graphics</sourceRootElem>
+                <sourceRootElem>map</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

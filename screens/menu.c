@@ -44,7 +44,7 @@ void screen_menu_render() {
             case SDL_MOUSEBUTTONUP:
                 mouse.buttons[RENDER.e.button.button] = false;
                 if (RENDER.e.button.button == SDL_BUTTON_LEFT) {
-                    list_item* button = list_get_first_item(menu_data.buttons);
+                    list_item_t* button = list_get_first_item(menu_data.buttons);
                     while (button != NULL) {
                         button_click((button_t*) (button->data));
                         button = button->next;
@@ -92,7 +92,7 @@ void screen_menu_render() {
     // fill_triangle(0, 0, 640, 0, 640, 640);
     
     // draw buttons
-    list_item* button = list_get_first_item(menu_data.buttons);
+    list_item_t* button = list_get_first_item(menu_data.buttons);
     while (button != NULL) {
         button_draw(button->data);
         button = button->next;

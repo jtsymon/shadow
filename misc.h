@@ -65,6 +65,10 @@
 #define bool int
 // typedef enum { false, true } bool;
 
+typedef struct {
+    double x, y;
+} DPoint;
+
 extern double vector_to_angle(double w, double h);
 
 extern int max(int a, int b);
