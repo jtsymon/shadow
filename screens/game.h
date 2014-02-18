@@ -13,7 +13,7 @@
 
 #include "../misc.h"
 #include "../screen.h"
-#include "../map.h"
+#include "../map/map.h"
 #include "../main.h"
 
 extern screen_t* screen_game();

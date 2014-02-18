@@ -10,6 +10,11 @@
         <itemPath>graphics/text.c</itemPath>
         <itemPath>graphics/text.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="map" displayName="map" projectFiles="true">
+        <itemPath>map/map.c</itemPath>
+        <itemPath>map/map.h</itemPath>
+        <itemPath>map/visibility_polygon.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>screens/game.c</itemPath>
         <itemPath>screens/game.h</itemPath>
@@ -25,8 +30,6 @@
       <itemPath>list.h</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>main.h</itemPath>
-      <itemPath>map.c</itemPath>
-      <itemPath>map.h</itemPath>
       <itemPath>misc.c</itemPath>
       <itemPath>misc.h</itemPath>
       <itemPath>screen.c</itemPath>
@@ -49,6 +52,7 @@
     <Elem>game</Elem>
     <Elem>screens</Elem>
     <Elem>graphics</Elem>
+    <Elem>map</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -97,9 +101,11 @@
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map.c" ex="false" tool="0" flavor2="0">
+      <item path="map/map.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="map.h" ex="false" tool="3" flavor2="0">
+      <item path="map/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="map/visibility_polygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="misc.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -169,9 +175,11 @@
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map.c" ex="false" tool="0" flavor2="0">
+      <item path="map/map.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="map.h" ex="false" tool="3" flavor2="0">
+      <item path="map/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="map/visibility_polygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="misc.c" ex="false" tool="0" flavor2="0">
       </item>

@@ -42,7 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/hsv.o \
 	${OBJECTDIR}/list.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/map.o \
+	${OBJECTDIR}/map/map.o \
 	${OBJECTDIR}/misc.o \
 	${OBJECTDIR}/screen.o \
 	${OBJECTDIR}/screens/game.o \
@@ -108,10 +108,10 @@ ${OBJECTDIR}/main.o: main.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
-${OBJECTDIR}/map.o: map.c 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/map/map.o: map/map.c 
+	${MKDIR} -p ${OBJECTDIR}/map
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map.o map.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/map/map.o map/map.c
 
 ${OBJECTDIR}/misc.o: misc.c 
 	${MKDIR} -p ${OBJECTDIR}
