@@ -15,7 +15,7 @@ list_item* new_list_item(void* data) {
     return ret;
 }
 
-///add a new list_item containing data to the start of the list
+/// add a new list_item containing data to the start of the list
 void list_add(list *this, void* data) {
     if(this == NULL) {
         return;
@@ -31,7 +31,7 @@ void list_add(list *this, void* data) {
     this->head = new;
 }
 
-///add a new list_item containing data to the end of the list
+/// add a new list_item containing data to the end of the list
 void list_add_end(list *this, void* data) {
     if(this == NULL) {
         return;
@@ -47,7 +47,7 @@ void list_add_end(list *this, void* data) {
     this->tail = new;
 }
 
-///prepend a list_item to the front of the list
+/// prepend a list_item to the front of the list
 void list_prepend(list* this, list_item* n) {
     if(this == NULL) {
         return;
@@ -64,7 +64,7 @@ void list_prepend(list* this, list_item* n) {
     tmp->next = oldhead;
 }
 
-///append a list_item to the end of the list
+/// append a list_item to the end of the list
 void list_append(list* this, list_item* n) {
     if(this == NULL) {
         return;
@@ -80,7 +80,7 @@ void list_append(list* this, list_item* n) {
     this->tail = tmp;
 }
 
-///removes a list_item from the front of the list, but DON'T free() it, and return a pointer to that item
+/// removes a list_item from the front of the list, but DON'T free() it, and return a pointer to that item
 list_item* list_unlink(list* this) {
     if (this == NULL || this->head == NULL) {
         return NULL;
@@ -96,7 +96,7 @@ list_item* list_unlink(list* this) {
     return ret;
 }
 
-///remove a list_item from the end of the list, but DON'T free() it, and return a pointer to that item
+/// remove a list_item from the end of the list, but DON'T free() it, and return a pointer to that item
 list_item* list_unlink_end(list* this) {
     if (this == NULL || this->head == NULL) {
         return NULL;
@@ -114,7 +114,7 @@ list_item* list_unlink_end(list* this) {
     return ret;
 }
 
-///remove a list_item from the front of the list, return that item's data
+/// remove a list_item from the front of the list, return that item's data
 void* list_remove(list* this) {
     if (this == NULL || this->head == NULL) {
         return NULL;
@@ -130,7 +130,7 @@ void* list_remove(list* this) {
     return ret;
 }
 
-///remove a list_item from the end of the list, return that item's data
+/// remove a list_item from the end of the list, return that item's data
 void* list_remove_end(list* this) {
     if (this == NULL || this->head == NULL) {
         return NULL;
@@ -153,7 +153,7 @@ list_item* list_get_first_item(list* this) {
     return this->head;
 }
 
-///returns the data of the first item in the list
+/// returns the data of the first item in the list
 void* list_get_first(list* this) {
     if(this == NULL) {
         return NULL;
@@ -168,7 +168,7 @@ list_item* list_get_last_item(list* this) {
     return this->tail;
 }
 
-///returns the data of the last item in the list
+/// returns the data of the last item in the list
 void* list_get_last(list* this) {
     if(this == NULL) {
         return NULL;
@@ -203,7 +203,7 @@ list_item* list_get_item(list* this, int index) {
     return NULL;
 }
 
-///returns the data at index in list
+/// returns the data at index in list
 void* list_get(list* this, int index) {
     list_item* tmp = list_get_item(this, index);
     if(tmp == NULL) {
@@ -212,7 +212,8 @@ void* list_get(list* this, int index) {
     return tmp->data;
 }
 
-///sorts the list into ascending order of data
+/// sorts the list into ascending order of data
+/// TODO: add version which takes a sort() function
 int list_quicksort(list* this) {
     if(this == NULL) {
         return -1;
@@ -248,7 +249,18 @@ int list_quicksort(list* this) {
     return datacomparisons;
 }
 
-///free all memory related to the list, but leave data intact
+void list_foreach(list* this, void (*function)()) {
+    if(this == NULL) {
+        return;
+    }
+    list_item* tmp = this->head;
+    while(tmp != NULL) {
+        function(tmp->data);
+        tmp = tmp->next;
+    }
+}
+
+/// free all memory related to the list, but leave data intact
 void list_free(list* this) {
     if(this == NULL) {
         return;
@@ -261,7 +273,7 @@ void list_free(list* this) {
     free(this);
 }
 
-///free all memory related to the list, including data
+/// free all memory related to the list, including data
 void list_free_all(list* this) {//(be careful - it'll segfault if you free() a string constant or a non-pointer)
     if(this == NULL) {
         return;
@@ -275,7 +287,7 @@ void list_free_all(list* this) {//(be careful - it'll segfault if you free() a s
     free(this);
 }
 
-///print the data values (either pointers to data, or ints) of all nodes in the list, from head to tail
+/// print the data values (either pointers to data, or ints) of all nodes in the list, from head to tail
 void printlist(list *this) {
     if(this == NULL) {
         return;
