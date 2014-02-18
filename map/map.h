@@ -8,11 +8,12 @@
 #ifndef MAP_H
 #define	MAP_H
 
-#include "misc.h"
+#include "../misc.h"
+#include "visibility_polygon.h"
 
 typedef struct {
     int width, height;
-    
+    line_segment_t* segments;
     unsigned char* data;
 
 } map_t;

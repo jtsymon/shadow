@@ -2,18 +2,18 @@
 #include <sys/stat.h>
 
 #include "map.h"
-#include "screens/game.h"
+#include "../screens/game.h"
 
-map_t* map_init(int width, int height, unsigned char data[]) {
+map_t* map_init(int width, int height, unsigned char *data) {
     map_t* map = malloc(sizeof (map_t));
     map->width = width;
     map->height = height;
-    map->data = malloc(width * height);
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            map->data[x + width * y] = data[x + width * y];
-        }
+    int map_size = width * height;
+    map->data = malloc(map_size);
+    for (int i = 0; i < map_size; i++) {
+        map->data[i] = data[i];
     }
+    map_line_segments(map);
     return map;
 }
 
@@ -27,14 +27,8 @@ map_t* map_open(char* filename) {
     int width = data[p++] << 8 | data[p++];
     int height = data[p++] << 8 | data[p++];
 
-    map_t* map = malloc(sizeof (map_t));
-    map->width = width;
-    map->height = height;
-    int map_size = width * height;
-    map->data = malloc(map_size);
-    for (int i = 0; i < map_size; i++) {
-        map->data[i] = data[p++];
-    }
+    map_t* map = map_init(width, height, data + p);
+    
     free(data);
     printf("loaded %s\n", filename);
     return map;
