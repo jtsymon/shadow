@@ -9,7 +9,7 @@ list_t* list_init() {
     return ret;
 }
 
-list_item_t* new_list_item(void* data) {
+list_item_t* new_list_item(list_data_t data) {
     list_item_t* ret = malloc(sizeof(list_item_t)); //allocate space for next pointer and data pointer
     ret->next = NULL;
     ret->prev = NULL;
@@ -20,7 +20,7 @@ list_item_t* new_list_item(void* data) {
 /*
  *  add a new list_item containing data to the start of the list
  */
-void list_add(list_t *this, void* data) {
+void list_add(list_t *this, list_data_t data) {
     if(this == NULL) {
         return;
     }
@@ -38,7 +38,7 @@ void list_add(list_t *this, void* data) {
 /*
  *  add a new list_item containing data to the end of the list
  */
-void list_add_end(list_t *this, void* data) {
+void list_add_end(list_t *this, list_data_t data) {
     if(this == NULL) {
         return;
     }
@@ -131,16 +131,16 @@ list_item_t* list_unlink_end(list_t* this) {
 /*
  *  remove a list_item from the front of the list, return that item's data
  */
-void* list_remove(list_t* this) {
+list_data_t list_remove(list_t* this) {
     if (this == NULL || this->head == NULL) {
-        return NULL;
+        return (list_data_t)NULL;
     }
     this->size--;
     if (this->size == 0) {
         this->tail = NULL;
     }
     list_item_t* tmp = this->head;
-    void* ret = tmp->data;
+    list_data_t ret = tmp->data;
     this->head = this->head->next;
     free(tmp);
     return ret;
@@ -149,9 +149,9 @@ void* list_remove(list_t* this) {
 /*
  *  remove a list_item from the end of the list, return that item's data
  */
-void* list_remove_end(list_t* this) {
+list_data_t list_remove_end(list_t* this) {
     if (this == NULL || this->head == NULL) {
-        return NULL;
+        return (list_data_t)NULL;
     }
     this->size--;
     if (this->size == 0) {
@@ -159,7 +159,7 @@ void* list_remove_end(list_t* this) {
     }
     list_item_t* tmp = this->tail;
     this->tail = this->tail->prev;
-    void* ret = tmp->data;
+    list_data_t ret = tmp->data;
     free(tmp);
     return ret;
 }
@@ -174,11 +174,11 @@ list_item_t* list_get_first_item(list_t* this) {
 /*
  *  returns the data of the first item in the list
  */
-void* list_get_first(list_t* this) {
+list_data_t list_get_first(list_t* this) {
     if(this == NULL) {
-        return NULL;
+        return (list_data_t)NULL;
     }
-    return this->head == NULL ? NULL : this->head->data;
+    return this->head == NULL ? (list_data_t)NULL : this->head->data;
 }
 
 list_item_t* list_get_last_item(list_t* this) {
@@ -191,11 +191,11 @@ list_item_t* list_get_last_item(list_t* this) {
 /*
  *  returns the data of the last item in the list
  */
-void* list_get_last(list_t* this) {
+list_data_t list_get_last(list_t* this) {
     if(this == NULL) {
-        return NULL;
+        return (list_data_t)NULL;
     }
-    return this->tail == NULL ? NULL : this->tail->data;
+    return this->tail == NULL ? (list_data_t)NULL : this->tail->data;
 }
 
 list_item_t* list_get_item(list_t* this, int index) {
@@ -228,10 +228,10 @@ list_item_t* list_get_item(list_t* this, int index) {
 /*
  *  returns the data at index in list
  */
-void* list_get(list_t* this, int index) {
+list_data_t list_get(list_t* this, int index) {
     list_item_t* tmp = list_get_item(this, index);
     if(tmp == NULL) {
-        return NULL;
+        return (list_data_t)NULL;
     }
     return tmp->data;
 }
@@ -239,18 +239,18 @@ void* list_get(list_t* this, int index) {
 /**
  *  sorts the list into ascending order of data
  */
-int list_quicksort(list_t* this) {
+void list_quicksort(list_t* this) {
     if(this == NULL) {
-        return -1;
+        return;// -1;
     }
-    int datacomparisons = 0;
+    //int datacomparisons = 0;
     list_item_t* pivot = list_unlink(this); //pivot=head of the list, and remove the pivot from the list
     list_t* smaller = list_init();
     list_t* bigger = list_init();
     while (this->head != NULL) {
         list_item_t* tmp = list_unlink(this); //node to sort=head of the list, and remove the node to sort from our list
-        datacomparisons++;
-        if (tmp->data >= pivot->data) {
+        //datacomparisons++;
+        if (tmp->data.value >= pivot->data.value) {
             list_append(bigger, tmp);
         } else {
             list_append(smaller, tmp);
@@ -258,11 +258,11 @@ int list_quicksort(list_t* this) {
     }
     if (smaller->size > 1) {
         //if there's more than 1 node in smaller, sort it
-        datacomparisons += list_quicksort(smaller);
+        /*datacomparisons += */list_quicksort(smaller);
     }
     if (bigger->size > 1) {
         //if there's more than 1 node in bigger, sort it
-        datacomparisons += list_quicksort(bigger);
+        /*datacomparisons += */list_quicksort(bigger);
     }
 
     //order like so: [smaller][pivot][bigger]
@@ -271,16 +271,16 @@ int list_quicksort(list_t* this) {
     list_append(this, smaller->head);
     free(bigger); //only want to delete the list, not it's items
     free(smaller); //only want to delete the list, not it's items
-    return datacomparisons;
+    //return datacomparisons;
 }
 
 /*
  * sorts the list into ascending order of data,
  * based on a function which determines which item is larger
  */
-int list_quicksort_f(list_t* this, int(*sort)()) {
+void list_quicksort_f(list_t* this, int(*sort)()) {
     if(this == NULL) {
-        return -1;
+        return;// -1;
     }
     int datacomparisons = 0;
     list_item_t* pivot = list_unlink(this); //pivot=head of the list, and remove the pivot from the list
@@ -288,7 +288,7 @@ int list_quicksort_f(list_t* this, int(*sort)()) {
     list_t* bigger = list_init();
     while (this->head != NULL) {
         list_item_t* tmp = list_unlink(this); //node to sort=head of the list, and remove the node to sort from our list
-        datacomparisons++;
+        //datacomparisons++;
         if (sort(tmp->data, pivot->data) >= 0) {
             list_append(bigger, tmp);
         } else {
@@ -297,11 +297,11 @@ int list_quicksort_f(list_t* this, int(*sort)()) {
     }
     if (smaller->size > 1) {
         //if there's more than 1 node in smaller, sort it
-        datacomparisons += list_quicksort(smaller);
+        /*datacomparisons += */list_quicksort_f(smaller, sort);
     }
     if (bigger->size > 1) {
         //if there's more than 1 node in bigger, sort it
-        datacomparisons += list_quicksort(bigger);
+        /*datacomparisons += */list_quicksort_f(bigger, sort);
     }
 
     //order like so: [smaller][pivot][bigger]
@@ -310,7 +310,7 @@ int list_quicksort_f(list_t* this, int(*sort)()) {
     list_append(this, smaller->head);
     free(bigger); //only want to delete the list, not it's items
     free(smaller); //only want to delete the list, not it's items
-    return datacomparisons;
+    //return datacomparisons;
 }
 
 /*
@@ -352,7 +352,7 @@ void list_free_all(list_t* this) {//(be careful - it'll segfault if you free() a
     while (this->head != NULL) {
         list_item_t* tmp = this->head;
         this->head = this->head->next;
-        free(tmp->data);
+        free(tmp->data.data);
         free(tmp);
     }
     free(this);
