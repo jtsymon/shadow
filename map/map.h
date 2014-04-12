@@ -13,11 +13,29 @@
 #include "map_structures.h"
 #include "visibility.h"
 
-extern map_t* map_init(int width, int height, unsigned char data[]);
+/*
+ * Map Format:
+ * 
+ * List of points:
+ * x,y
+ * x,y
+ * x,y
+ * 
+ * List of line formed from points:
+ * pointid:pointid
+ * pointid:pointid
+ * pointid:pointid
+ * 
+ * List of polygons:
+ * segmentid,segmentid,segmentid:texture
+ * segmentid,segmentid,segmentid,segmentid:texture
+ */
+
 extern map_t* map_open(char* filename);
 
-extern map_tile_collision map_raycast(double angle, double x, double y);
-extern void map_shadow(int x, int y);
+//extern map_tile_collision map_raycast(double angle, double x, double y);
+extern ray_collision_t map_raycast_a(double x, double y, double angle, map_t *map);
+extern void map_shadow(double x, double y);
 
 #endif	/* MAP_H */
 

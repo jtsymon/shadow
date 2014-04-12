@@ -1,599 +1,389 @@
 
+#define _GNU_SOURCE
 #include <sys/stat.h>
+#include <stdio.h>
+#include <GLES3/gl3.h>
 
 #include "map.h"
 #include "../screens/game.h"
 
-map_t* map_init(int width, int height, unsigned char *data) {
-    map_t* map = malloc(sizeof (map_t));
-    map->width = width;
-    map->height = height;
-    int map_size = width * height;
-    map->data = malloc(map_size);
-    for (int i = 0; i < map_size; i++) {
-        map->data[i] = data[i];
+point_t *point_read(char *buf) {
+    if(*buf > '9' || *buf < '0') return NULL;
+    char *x = buf;
+    // advance to next number
+    while(*buf <= '9' && *buf >= '0') ++buf;
+    *buf++ = '\0';
+    if(*buf > '9' || *buf < '0') return NULL;
+    char *y = buf;
+    // advance to next number
+    while(*buf <= '9' && *buf >= '0') ++buf;
+    *buf++ = '\0';
+    if(*buf != '\n' && *buf != '\0') return NULL;
+    
+    point_t *point = malloc(sizeof(point_t));
+    point->x = atoi(x);
+    point->y = atoi(y);
+    
+    printf("Point: %d,%d\n", point->x, point->y);
+    
+    return point;
+}
+
+line_segment_t *segment_read(char *buf, map_t *map) {
+    if(*buf > '9' || *buf < '0') return NULL;
+    char *a = buf;
+    // advance to next number
+    while(*buf <= '9' && *buf >= '0') ++buf;
+    *buf++ = '\0';
+    if(*buf > '9' || *buf < '0') return NULL;
+    char *b = buf;
+    // advance to next number
+    while(*buf <= '9' && *buf >= '0') ++buf;
+    *buf++ = '\0';
+    if(*buf != '\n' && *buf != '\0') return NULL;
+    
+    line_segment_t *segment = malloc(sizeof(line_segment_t));
+    segment->a = atoi(a);
+    segment->b = atoi(b);
+    
+    printf("Line Segment: %d (%d, %d), %d (%d, %d)\n", segment->a, map->points[segment->a].x, map->points[segment->a].y, segment->b, map->points[segment->b].x, map->points[segment->b].y);
+    
+    return segment;
+}
+
+polygon_t *polygon_read(char* buf) {
+    list_t *segments = list_init();
+    char *id;
+    for(;;) {
+        if(*buf == '\0' || *buf == '\n') break;
+        if(*buf > '9' || *buf < '0') {
+            list_free(segments);
+            return NULL;
+        }
+        id = buf;
+        while(*buf <= '9' && *buf >= '0') ++buf;
+        if(*buf != '\0') *buf++ = '\0';
+        list_add(segments, (list_data_t)(void*)id);
     }
-    map->segments = list_init();
-    map_line_segments(map);
-    return map;
+    polygon_t *polygon = malloc(sizeof(polygon_t));
+    polygon->n_segments = segments->size;
+    polygon->segment_ids = malloc(polygon->n_segments * sizeof(int));
+    int i = 0;
+    while(id = list_remove(segments).data) {
+        polygon->segment_ids[i++] = atoi(id);
+    }
+    list_free(segments);
+    
+    printf("Polygon with %d line segments\n", polygon->n_segments);
+    
+    return polygon;
 }
 
 map_t* map_open(char* filename) {
-    char* data = read_file(filename);
-    if(!data) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        fputs("Failed to read map\n", stderr);
         return NULL;
     }
-
-    int p = 0;
-    int width = data[p++] << 8 | data[p++];
-    int height = data[p++] << 8 | data[p++];
-
-    map_t* map = map_init(width, height, data + p);
     
-    free(data);
+    char* buf = NULL;
+    size_t n = 0;
+    __ssize_t len;
+    
+    map_t *map = malloc(sizeof(map_t));
+    
+    // read points
+    {
+        list_t *points = list_init();
+        while ((len = getline(&buf, &n, file)) != -1) {
+            if(*buf == '\0' || *buf == '\n') break;
+            point_t *point = point_read(buf);
+            if(point) {
+                list_add_end(points, (list_data_t)(void*)point);
+            } else {
+                fprintf(stderr, "Invalid point encountered: '%s'\n", buf);
+            }
+        }
+        map->n_points = points->size;
+        map->points = malloc(map->n_points * sizeof(point_t));
+        printf("%d points\n", map->n_points);
+        point_t *point = NULL;
+        int i = 0;
+        while(point = list_remove(points).data) map->points[i++] = *point;
+        list_free_all(points);
+    }
+    
+    // read line segments
+    {
+        list_t *line_segments = list_init();
+        while ((len = getline(&buf, &n, file)) != -1) {
+            if(*buf == '\0' || *buf == '\n') break;
+            line_segment_t *segment = segment_read(buf, map);
+            if(segment) {
+                list_add_end(line_segments, (list_data_t)(void*)segment);
+            } else {
+                fprintf(stderr, "Invalid line segment encountered: '%s'\n", buf);
+            }
+        }
+        map->n_segments = line_segments->size;
+        map->segments = malloc(map->n_segments * sizeof(line_segment_t));
+        printf("%d lines\n", map->n_segments);
+        line_segment_t *segment = NULL;
+        int i = 0;
+        while(segment = list_remove(line_segments).data) map->segments[i++] = *segment;
+        list_free_all(line_segments);
+    }
+    
+    // read polygons
+    {
+        map->polygons = list_init();
+        while ((len = getline(&buf, &n, file)) != -1) {
+            if(*buf == '\0' || *buf == '\n') break;
+            polygon_t *polygon = polygon_read(buf);
+            if(polygon) {
+                list_add(map->polygons, (list_data_t)(void*)polygon);
+            } else {
+                fprintf(stderr, "Invalid polygon encountered: '%s'\n", buf);
+            }
+        }
+    }
+    
+    free(buf);
+    fclose(file);
+    
     printf("loaded %s\n", filename);
     return map;
 }
 
-/**
- * Cast a ray from ($x, $y) on the map, in direction $angle
- * @param angle
- * @param x
- * @param y
- * @return details about the collision
- */
-map_tile_collision map_raycast_ignore(double angle, double x, double y, int ignore_index) {
+#define no_collision return (ray_collision_t) { 0, 0, INFINITY };
 
-    int ix = (int) x, iy = (int) y;
-    double dx = cos(angle);
-    double dy = sin(angle);
-    double middle = 0;
-    int index;
-
-    // printf("%f - %f,%f (%d,%d)\n", angle, x, y, ix, iy);
-
-    // Work out which direction to go
-    if (dx >= 0 && dy >= 0) {
-        // Top right quadrant
-        // printf("TopRight\n");
-
-        while (ix < game_data.map->width && iy >= 0 && (game_data.map->data[index = ix + game_data.map->width * iy] == 0 ||
-                index == ignore_index)) {
-
-            middle = vector_to_angle((double) ix + 1 - x, (double) iy - y);
-
-            // printf("%f (%f) - %f,%f (%d,%d)\n", middle, angle, x, y, ix, iy);
-
-            if (angle < middle || angle == middle && angle == 0) {
-                // exiting through right of tile
-                ix++;
-            } else {
-                // exiting through top of tile
-                iy--;
+ray_collision_t ray_intersection(double x, double y, double m, double c, double cosa, double sina, double x1, double y1, double x2, double y2) {
+    // vertical line segment case
+    if(x2 == x1) {
+        if(x < x1 && cosa < 0 || x > x1 && cosa > 0) no_collision;
+        double ey = c + x1 * m;
+        if(ey >= min(y1, y2) && ey <= max(y1, y2)) {
+            double dy = ey - y;
+            double dx = x1 - x;
+            double dist = sqrt(dy * dy + dx * dx);
+            return (ray_collision_t) { x1, ey, dist };
+        }
+        no_collision;
+    }
+    // calculate the gradient now that we know it's non-zero
+    double sm = (y2 - y1) / (x2 - x1);
+    double sc = y1 - sm * x1;
+    // parallel lines case
+    if(equald(m, sm)) {
+        // check if they're from the same line
+        if(!equald(c, sc)) no_collision;
+        double min_x = min(x1, x2);
+        double max_x = max(x1, x2);
+        double min_y = min(y1, y2);
+        double max_y = max(y1, y2);
+        if(x >= min_x && x <= max_x) {
+            if(y >= min_y && y <= max_y) return (ray_collision_t) { x, y, 0 };
+            if(y <= min_y && sina < 0) return (ray_collision_t) { x, min_y, min_y - y };
+            if(y >= max_y && sina > 0) return (ray_collision_t) { x, max_y, y - max_y };
+        }
+        if(x <= min_x && cosa > 0) {
+            if(y >= min_y && y <= max_y) return (ray_collision_t) { min_x, y, min_x - x };
+            if(y <= min_y && sina < 0) {
+                double dx = min_x - x;
+                double dy = min_y - y;
+                double dist = sqrt(dy * dy + dx * dx);
+                return (ray_collision_t) { min_x, min_y, dist };
+            }
+            if(y >= max_y && sina > 0) {
+                double dx = min_x - x;
+                double dy = y - max_y;
+                double dist = sqrt(dy * dy + dx * dx);
+                return (ray_collision_t) { min_x, max_y, dist };
             }
         }
-
-        // We hit square ix, iy, we can use last calculated middle to work out
-        // which side was hit.
-        if (angle < middle || angle == 0) {
-            // Hit left side
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_left,
-                        ix * game_data.tile_size,
-                        (y - dy * (ix - x) / dx) * game_data.tile_size
-            };
-        } else if (angle == middle) {
-            // Hit the corner of a tile,
-            // so we check the angle to that tile to figure out what side we hit
-            middle = vector_to_angle((double) ix + 1 - x, (double) iy - y);
-            if (angle <= middle) {
-                if (angle == middle) {
-                    // this shouldn't happen
-                    printf("Error calculating angle: %f - %d,%d\n", angle, ix, iy);
-                }
-                // Hit bottom
-                //iy++;
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_bottom,
-                            ix * game_data.tile_size,
-                            (iy + 1) * game_data.tile_size
-                };
-            } else {
-                // Hit left side
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_left,
-                            ix * game_data.tile_size,
-                            iy * game_data.tile_size
-                };
+        if(x >= max_x && cosa < 0) {
+            if(y >= min_y && y <= max_y) return (ray_collision_t) { max_x, y, x - max_x };
+            if(y <= min_y && sina < 0) {
+                double dx = x - max_x;
+                double dy = min_y - y;
+                double dist = sqrt(dy * dy + dx * dx);
+                return (ray_collision_t) { max_x, min_y, dist };
             }
-        } else {
-            // Hit bottom
-            //iy++;
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_bottom,
-                        (x - dx * (iy + 1 - y) / dy) * game_data.tile_size,
-                        (iy + 1) * game_data.tile_size
-            };
-        }
-
-    } else if (dx < 0 && dy >= 0) {
-        // Top left quadrant
-        // printf("TopLeft\n");
-
-        if (ix == x) {
-            ix--;
-        }
-
-        while (ix >= 0 && iy >= 0 && (game_data.map->data[index = ix + game_data.map->width * iy] == 0 ||
-                index == ignore_index)) {
-
-            middle = vector_to_angle((double) ix - x, (double) iy - y);
-
-            // printf("%f (%f) - %f,%f (%d,%d)\n", middle, angle, x, y, ix, iy);
-
-            if (angle < middle || angle == middle && angle == M_PI) {
-                // exiting through top of tile
-                iy--;
-            } else {
-                // exiting through left of tile
-                ix--;
+            if(y >= max_y && sina > 0) {
+                double dx = x - max_x;
+                double dy = y - max_y;
+                double dist = sqrt(dy * dy + dx * dx);
+                return (ray_collision_t) { max_x, max_y, dist };
             }
         }
-
-        // We hit square ix, iy, we can use last calculated middle to work out
-        // which side was hit.
-        if (angle == middle) {
-            // Hit the corner of a tile,
-            // so we check the angle to that tile to figure out what side we hit
-            middle = vector_to_angle((double) ix - x, (double) iy - y);
-            if (angle >= middle) {
-                if (angle == middle) {
-                    // this shouldn't happen
-                    printf("Error calculating angle: %f - %d,%d\n", angle, ix, iy);
-                }
-                // Hit bottom side
-                //iy++;
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_bottom,
-                            ix * game_data.tile_size,
-                            (iy + 1) * game_data.tile_size
-                };
-            } else {
-                // Hit right side
-                //ix++;
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_right,
-                            (ix + 1) * game_data.tile_size,
-                            iy * game_data.tile_size
-                };
-            }
-        } else if (angle > middle) {
-            // Hit right side
-            //ix++;
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_right,
-                        (ix + 1) * game_data.tile_size,
-                        (y - dy * (ix + 1 - x) / dx) * game_data.tile_size
-            };
-        } else {
-            // Hit bottom
-            //iy++;
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_bottom,
-                        (x - dx * (iy + 1 - y) / dy) * game_data.tile_size,
-                        (iy + 1) * game_data.tile_size
-            };
-        }
-
-    } else if (dx < 0 && dy < 0) {
-        // Bottom left quadrant
-        // printf("BottomLeft\n");
-
-        if (ix == x) {
-            ix--;
-        }
-
-        while (ix >= 0 && iy < game_data.map->height && (game_data.map->data[index = ix + game_data.map->width * iy] == 0 ||
-                index == ignore_index)) {
-
-            middle = vector_to_angle((double) ix - x, (double) iy + 1 - y);
-
-            // printf("%f (%f) - %f,%f (%d,%d)\n", middle, angle, x, y, ix, iy);
-
-            if (angle < middle || angle == middle && angle == M_PI_2 * 3) {
-                // exiting through left of tile
-                ix--;
-            } else {
-                // exiting through bottom of tile
-                iy++;
-            }
-        }
-
-        // We hit square ix, iy, we can use last calculated middle to work out
-        // which side was hit.
-        if (angle == middle) {
-            // Hit the corner of a tile,
-            // so we check the angle to that tile to figure out what side we hit
-            middle = vector_to_angle((double) ix - x, (double) iy + 1 - y);
-            if (angle >= middle) {
-                if (angle == middle) {
-                    // this shouldn't happen
-                    printf("Error calculating angle: %f - %d,%d\n", angle, ix, iy);
-                }
-                // Hit right side
-                //ix++;
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_right,
-                            (ix + 1) * game_data.tile_size,
-                            iy * game_data.tile_size
-                };
-            } else {
-                // Hit top side
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_top,
-                            ix * game_data.tile_size,
-                            iy * game_data.tile_size
-                };
-            }
-        } else if (angle > middle) {
-            // Hit top
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_top,
-                        (x - dx * (iy - y) / dy) * game_data.tile_size,
-                        iy * game_data.tile_size
-            };
-        } else {
-            // Hit right side
-            //ix++;
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_right,
-                        (ix + 1) * game_data.tile_size,
-                        (y - dy * (ix + 1 - x) / dx) * game_data.tile_size
-            };
-        }
-
-    } else if (dx >= 0 && dy < 0) {
-        // Bottom right quadrant
-        // printf("BottomRight\n");
-
-        while (ix < game_data.map->width && iy < game_data.map->height && (game_data.map->data[index = ix + game_data.map->width * iy] == 0 ||
-                index == ignore_index)) {
-
-            middle = vector_to_angle((double) ix + 1 - x, (double) iy + 1 - y);
-
-            // printf("%f (%f) - %f,%f (%d,%d)\n", middle, angle, x, y, ix, iy);
-
-            if (angle < middle || angle == middle && angle == M_PI * 2) {
-                // exiting through bottom of tile
-                iy++;
-
-            } else {
-                // exiting through right of tile
-                ix++;
-            }
-        }
-
-        // We hit square ix, iy, we can use last calculated middle to work out
-        // which side was hit.
-        if (angle == middle) {
-            // Hit the corner of a tile,
-            // so we check the angle to that tile to figure out what side we hit
-            middle = vector_to_angle((double) ix - x, (double) iy + 1 - y);
-            if (angle >= middle) {
-                if (angle == middle) {
-                    // this shouldn't happen
-                    printf("Error calculating angle: %f - %d,%d\n", angle, ix, iy);
-                }
-                // Hit top side
-                // printf("top\n");
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_top,
-                            ix * game_data.tile_size,
-                            iy * game_data.tile_size
-                };
-            } else {
-                // Hit left side
-
-                return (map_tile_collision) {
-                    ix, iy,
-                            game_data.map->data[ix + game_data.map->width * iy],
-                            map_tile_left,
-                            ix * game_data.tile_size,
-                            iy * game_data.tile_size
-                };
-            }
-        } else if (angle > middle) {
-            // Hit left side
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_left,
-                        ix * game_data.tile_size,
-                        (y - dy * (ix - x) / dx) * game_data.tile_size
-            };
-        } else {
-            // Hit top side
-            // ix++;
-
-            return (map_tile_collision) {
-                ix, iy,
-                        game_data.map->data[ix + game_data.map->width * iy],
-                        map_tile_top,
-                        (x - dx * (iy - y) / dy) * game_data.tile_size,
-                        iy * game_data.tile_size
-            };
-        }
-
-    } // End of finding square collision.
-
+        
+        no_collision;
+    }
+    // standard case
+    double ex = (sc - c) / (m - sm);
+    if(ex < min(x1, x2) - 0.001 || ex > max(x1, x2) + 0.001 ||
+            ex < x && cosa > 0 || ex > x && cosa < 0) {
+        no_collision;
+    }
+    double ey = c + ex * m;
+    if(ey < min(y1, y2) - 0.001 || ey > max(y1, y2) + 0.001 ||
+            ey < y && sina > 0 || ey > y && sina < 0) {
+        no_collision;
+    }
+    double dx = ex - x;
+    double dy = ey - y;
+    double dist = sqrt(dx * dx + dy * dy);
+    return (ray_collision_t) { ex, ey, dist };
 }
 
-map_tile_collision map_raycast(double angle, double x, double y) {
-    return map_raycast_ignore(angle, x, y, -1);
+ray_collision_t vertical_ray_intersection(double x, double y, double sina,
+        double x1, double y1, double x2, double y2) {
+    // parallel lines (vertical line segment) case
+    if(x2 == x1) {
+        if(x != x1) no_collision;
+        double min_y = min(y1, y2);
+        double max_y = max(y1, y2);
+        if(y >= min_y && y <= max_y) return (ray_collision_t) { x, y, 0 };
+        if(y <= min_y && sina > 0) return (ray_collision_t) { x, min_y, min_y - y };
+        if(y >= max_y && sina < 0) return (ray_collision_t) { x, max_y, y - max_y };
+        no_collision;
+    }
+    // calculate the gradient now that we know it's non-zero
+    double sm = (y2 - y1) / (x2 - x1);
+    double sc = y1 - sm * x1;
+    // standard case
+    if(x >= min(x1, x2) && x <= max(x1, x2)) {
+        double ey = sc + x * sm;
+        if(y >= ey && sina < 0 || y <= ey && sina > 0) {
+            return (ray_collision_t) { x, ey, abs(y - ey) };
+        }
+    }
+    no_collision;
 }
 
-static bool debug_shadow = true;
-static double d = 0.001;
+#undef no_collision
 
-/**
- * Figure out which areas of the map are visible to the player
- * @param x centre x
- * @param y centre y
- */
-void map_shadow(int x, int y) {
-    double sx = (double) x / game_data.tile_size;
-    double sy = (double) y / game_data.tile_size;
-    // hackish fix for bug at round y values
-    // TODO: fix this properly
-    if(sy == (int)sy) sy += d;
+ray_collision_t map_raycast_a(double x, double y, double angle, map_t *map) {
     
-    double min_angle = 0, tmp_angle = 0;
-    map_tile_collision tile = map_raycast(min_angle, sx, sy);
-    double fx = game_to_gl_x(tile.pX), fy = game_to_gl_y(tile.pY);
-    bool halfway = false;
-    int iter = 0;
+    int i;
+    ray_collision_t closest_collision = (ray_collision_t) { 0, 0, INFINITY };
+    ray_collision_t new_collision;
+    double cosa = cos(angle);
+    double sina = -sin(angle);
     
-    glColor4ub(255, 0, 0, 100);
-    glBegin(GL_POLYGON);
-    
-    glVertex2d(game_to_gl_x(x), game_to_gl_y(y));
-    glVertex2d(fx, fy);
-
-    // unmask the regions that should be visible
-    for (;;) {
-        if(halfway) {
-            if(min_angle < M_PI) break;
-        } else if(min_angle > M_PI) {
-            halfway = true;
+    // printf("angle=%f, cos(angle)=%f, sin(angle)=%f\n", angle, cosa, sina);
+    if(absd(cosa) > delta) {
+        double m = sina / cosa;
+        double c = y - m * x;
+        // check edges of the map
+        // top
+        new_collision = ray_intersection(x, y, m, c, cosa, sina, 0, 0, RENDER.width, 0);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
         }
-        if(iter > 1000) break;
-        iter++;
-        // printf("%d\n", min_angle);
-
-        tile = map_raycast(min_angle, sx, sy);
-        // get the whole wall efficiently
-        
-        // printf("%d:%d %d:%d", tile.x, ix, tile.y, iy);
-        
-        // direction to move in
-        int dX = 0, dY = 0;
-        // direction to check in
-        int dX2 = 0, dY2 = 0;
-        
-        switch (tile.side) {
-            case map_tile_left:
-                dY = -1;
-                dX2 = -1;
-                break;
-            case map_tile_right:
-                dY = 1;
-                dX2 = 1;
-                break;
-            case map_tile_top:
-                dX = 1;
-                dY2 = -1;
-                break;
-            case map_tile_bottom:
-                dX = -1;
-                dY2 = 1;
-                break;
+        // right
+        new_collision = ray_intersection(x, y, m, c, cosa, sina, RENDER.width, 0, RENDER.width, RENDER.height);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
         }
-        
-        // printf("dX:%d,dY:%d,dX2:%d,dY2:%d\n", dX, dY, dX2, dY2);
-        
-        glVertex2d(game_to_gl_x(tile.pX), game_to_gl_y(tile.pY));
-        
-        // printf("start side:%d, x:%d, y:%d\n", tile.side, tile.x, tile.y);
-        
-        int ix = tile.x, iy = tile.y, side = tile.side;
-        if(side == map_tile_left) {
-            ix -= dX;
-            iy -= dY;
+        // bottom
+        new_collision = ray_intersection(x, y, m, c, cosa, sina, RENDER.width, RENDER.height, 0, RENDER.height);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
         }
-        
-        bool avoid_tile = true;
-        bool wall_end = false;
-        
-        for(;;) {
-            iy += dY;
-            ix += dX;
-            printf("%d,%d\n", ix, iy);
-            wall_end = !game_data.map->data[ix + game_data.map->width * iy] ||
-                    game_data.map->data[ix + dX2 + game_data.map->width * (iy + dY2)];
-            
-            // check if the wall ends or we reach a corner
-            if (wall_end) {
-                iy -= dY;
-                ix -= dX;
-                switch(side) {
-                    case map_tile_left: // go up
-                        tile.pX = ix * game_data.tile_size;
-                        tile.pY = iy * game_data.tile_size;
-                        tmp_angle = vector_to_angle(ix - (d * dX) - sx, iy - (d * dY) - sy);
-                        break;
-                    case map_tile_right: // go down
-                        tile.pX = (ix + 1) * game_data.tile_size;
-                        tile.pY = (iy + 1) * game_data.tile_size;
-                        tmp_angle = vector_to_angle(ix + 1 - (d * dX) - sx, iy + 1 - (d * dY) - sy);
-                        break;
-                    case map_tile_bottom: // go left
-                        tile.pX = ix * game_data.tile_size;
-                        tile.pY = (iy + 1) * game_data.tile_size;
-                        tmp_angle = vector_to_angle(ix - (d * dX) - sx, iy + 1 - (d * dY) - sy);
-                        break;
-                    case map_tile_top: // go right
-                        tile.pX = (ix + 1) * game_data.tile_size;
-                        tile.pY = iy * game_data.tile_size;
-                        tmp_angle = vector_to_angle(ix + 1 - (d * dX) - sx, iy - (d * dY) - sy);
-                        break;
-                }
-                // skip the loop to fix position if we already fixed it
-                map_tile_collision tmp_tile = map_raycast(tmp_angle, sx, sy);
-                avoid_tile = (tmp_tile.side != side || (!dX && tmp_tile.x != ix) || (!dY && tmp_tile.y != iy));
-                if(avoid_tile) {
-                    tile = tmp_tile;
-                }
-                printf("end of wall\n");
-                break;
-            }
-            tmp_angle = vector_to_angle(ix - (d * dX) - sx, iy - (d * dY) - sy);
-            tile = map_raycast(tmp_angle, sx, sy);
-            if(tile.side != side || (!dX && tile.x != ix) || (!dY && tile.y != iy)) {
-                printf("angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
-                printf("failed raycast\n");
-                break;
+        // left
+        new_collision = ray_intersection(x, y, m, c, cosa, sina, 0, RENDER.height, 0, 0);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
+        }
+        // check the line segments
+        for(i = 0; i < map->n_segments; i++) {
+            new_collision = ray_intersection(x, y, m, c, cosa, sina,
+                    map->points[map->segments[i].a].x, map->points[map->segments[i].a].y,
+                    map->points[map->segments[i].b].x, map->points[map->segments[i].b].y);
+//            if(new_collision.dist != INFINITY) {
+//                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
+//            }
+            if(new_collision.dist < closest_collision.dist) {
+                closest_collision = new_collision;
             }
         }
-        if(avoid_tile) {
-            double aw, ah, arw, arh;
-            int tile_index = tile.x + game_data.map->width * tile.y;
-            int c = 0;
-            // printf("tile side: %d, pos(%d,%d), correct side:%d, pos(%d,%d)\n", tile.side, tile.x, tile.y, side, ix, iy);
-            while((!dX && tile.x != ix) || (!dY && tile.y != iy) || tile.side != side) {
-                tile_index = tile.x + game_data.map->width * tile.y;
-                if(c++ > 5) {
-                    printf("failed to avoid tile\n");
-                    break;
-                }
-                switch(tile.side) {
-                    case map_tile_left: // go down
-                        arw = tile.x - sx;
-                        arh = tile.y + 1 - sy;
-                        aw = arw;
-                        ah = arh + d;
-                        break;
-                    case map_tile_right:  // go up
-                        arw = tile.x + 1 - sx;
-                        arh = tile.y - sy;
-                        aw = arw;
-                        ah = arh - d;
-                        break;
-                    case map_tile_bottom: // go right
-                        arw = tile.x + 1 - sx;
-                        arh = tile.y + 1 - sy;
-                        aw = arw + d;
-                        ah = arh;
-                        break;
-                    case map_tile_top:    // go left
-                        arw = tile.x - sx;
-                        arh = tile.y - sy;
-                        aw = arw - d;
-                        ah = arh;
-                        break;
-                }
-                tmp_angle = vector_to_angle(aw, ah);
-                tile = map_raycast(tmp_angle, sx, sy);
-                // printf("angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
+    } else {
+        // check edges of the map
+        // top
+        new_collision = vertical_ray_intersection(x, y, sina, 0, 0, RENDER.width, 0);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
+        }
+        // right
+        new_collision = vertical_ray_intersection(x, y, sina, RENDER.width, 0, RENDER.width, RENDER.height);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
+        }
+        // bottom
+        new_collision = vertical_ray_intersection(x, y, sina, RENDER.width, RENDER.height, 0, RENDER.height);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
+        }
+        // left
+        new_collision = vertical_ray_intersection(x, y, sina, 0, RENDER.height, 0, 0);
+        if(new_collision.dist < closest_collision.dist) {
+            closest_collision = new_collision;
+        }
+        // check the line segments
+        for(i = 0; i < map->n_segments; i++) {
+            new_collision = vertical_ray_intersection(x, y, sina,
+                    map->points[map->segments[i].a].x, map->points[map->segments[i].a].y,
+                    map->points[map->segments[i].b].x, map->points[map->segments[i].b].y);
+//            if(new_collision.dist != INFINITY) {
+//                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
+//            }
+            if(new_collision.dist < closest_collision.dist) {
+                closest_collision = new_collision;
             }
-            double tmp_tmp_angle = tmp_angle;
-            tmp_angle = vector_to_angle(arw, arh);
-            tile = map_raycast_ignore(tmp_angle, sx, sy, tile_index);
-            // printf("FINAL angle:%d, side:%d, x:%d, y:%d\n", (int)(tmp_angle * 180 * M_1_PI), tile.side, tile.x, tile.y);
-            tmp_angle = tmp_tmp_angle;
         }
-        if(!halfway || tmp_angle > M_PI) {
-            glVertex2d(game_to_gl_x(tile.pX), game_to_gl_y(tile.pY));
-        }
-        
-        if (min_angle == tmp_angle) {
-            //printf("No change to angle: %f\n", min_angle);
-            min_angle += d * 10;
-        } else {
-            min_angle = tmp_angle;
-        }
-//        switch(side) {
-//            case map_tile_left: // go up
-//                p2y -= game_data.tile_size / 8;
-//                break;
-//            case map_tile_right:  // go down
-//                p2y += game_data.tile_size / 8;
-//                break;
-//            case map_tile_bottom: // go left
-//                p2x -= game_data.tile_size / 8;
-//                break;
-//            case map_tile_top:    // go right
-//                p2x += game_data.tile_size / 8;
-//                break;
-//        }
-        
-//        if (debug_shadow) {
-//            glColor3ub(0, 255, 255); // cyan
-//            fill_rectangle(p1x - 3, p1y - 3, p1x + 3, p1y + 3);
-//            glColor3ub(255, 255, 0); // yellow
-//            fill_rectangle(p2x - 3, p2y - 3, p2x + 3, p2y + 3);
-//            
-//            // printf("%d,%d,%d,%d,%d,%d\n", x, y, p1x, p1y, p2x, p2y);
-//        }
-//        if(dir == 1) {
-//            glColor4ub(255, 0, 0, 100);
-//        } else {
-//            glColor4ub(0, 0, 255, 100);
-//        }
     }
     
-    glVertex2d(fx, fy);
+    // printf("%f, %f, %f\n", closest_collision.x, closest_collision.y, closest_collision.dist);
+    return closest_collision;
+}
+
+int sorter(list_data_t data1, list_data_t data2) {
+    return data1.dvalue >= data2.dvalue ? 1 : -1;
+}
+
+void map_shadow(double x, double y) {
     
-    printf("iterations: %d\n", iter);
-    
+    int i;
+    list_t *angles = list_init();
+    for(i = 0; i < game_data.map->n_points; i++) {
+        double angle = atan2(y - game_data.map->points[i].y,
+                game_data.map->points[i].x - x);
+        list_add(angles, (list_data_t)angle_sanify(angle - delta * 1000));
+        list_add(angles, (list_data_t)angle_sanify(angle));
+        list_add(angles, (list_data_t)angle_sanify(angle + delta * 1000));
+    }
+    // check edges of the screen
+    list_add(angles, (list_data_t)angle_sanify(atan2(y, -x)));
+    list_add(angles, (list_data_t)angle_sanify(atan2(y, RENDER.width - x)));
+    list_add(angles, (list_data_t)angle_sanify(atan2(y - RENDER.height, RENDER.width - x)));
+    list_add(angles, (list_data_t)angle_sanify(atan2(y - RENDER.height, -x)));
+    list_quicksort_f(angles, sorter);
+    glColor4ub(0, 255, 255, 100);
+    glBegin(GL_POLYGON);
+    glVertex2d(game_to_gl_x(game_data.player.x), game_to_gl_y(game_data.player.y));
+    double angle = list_remove(angles).dvalue;
+    ray_collision_t first = map_raycast_a(x, y, angle, game_data.map);
+    glVertex2d(game_to_gl_x(first.x), game_to_gl_y(first.y));
+    while(angles->size > 0) {
+        double angle = list_remove(angles).dvalue;
+        // printf("%f\n", angle);
+        ray_collision_t collision = map_raycast_a(x, y, angle, game_data.map);
+        glVertex2d(game_to_gl_x(collision.x), game_to_gl_y(collision.y));
+    }
+    list_free(angles);
+    glVertex2d(game_to_gl_x(first.x), game_to_gl_y(first.y));
+    glVertex2d(game_to_gl_x(game_data.player.x), game_to_gl_y(game_data.player.y));
     glEnd();
+    // printf("\n\n\n\n\n");
 }

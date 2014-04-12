@@ -1,5 +1,5 @@
 - Set up separate thread for execution (input handling and entity control), running at a fixed framerate
-- Fix shadow calculation
+- Set up shadow generation so it renders to a texture and then blends that on top of the frame
 - Write code to support rendering to a texture and then blitting the texture to the screen
 - Write code to support sprite sheets
 - Write map editor

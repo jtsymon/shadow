@@ -8,8 +8,8 @@ void play_game() {
 
 void screen_menu_create() {
     menu_data.buttons = list_init();
-    list_add(menu_data.buttons, button_create("Play", 100, 100, play_game));
-    list_add(menu_data.buttons, button_create_font("Create map", 100, 160, NULL, font_bold_oblique));
+    list_add(menu_data.buttons, (list_data_t)(void*)button_create("Play", 100, 100, play_game));
+    list_add(menu_data.buttons, (list_data_t)(void*)button_create_font("Create map", 100, 160, NULL, font_bold_oblique));
     background_color = (HsvColor) { 0, 100, 100 };
     printf("created menu\n");
 }
@@ -46,7 +46,7 @@ void screen_menu_render() {
                 if (RENDER.e.button.button == SDL_BUTTON_LEFT) {
                     list_item_t* button = list_get_first_item(menu_data.buttons);
                     while (button != NULL) {
-                        button_click((button_t*) (button->data));
+                        button_click((button_t*) (button->data.data));
                         button = button->next;
                     }
                 }
@@ -94,7 +94,7 @@ void screen_menu_render() {
     // draw buttons
     list_item_t* button = list_get_first_item(menu_data.buttons);
     while (button != NULL) {
-        button_draw(button->data);
+        button_draw(button->data.data);
         button = button->next;
     }
     

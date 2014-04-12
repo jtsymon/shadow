@@ -1,3 +1,5 @@
+#include <GL/glew.h>
+
 #include "game.h"
 
 int player_speed = 2;
@@ -93,33 +95,63 @@ void screen_game_render() {
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    
     // draw the map
-    for(int y = 0; y < game_data.map->height; y++) {
-        for(int x = 0; x < game_data.map->width; x++) {
-            glColor3ub(255 - game_data.map->data[x + game_data.map->width * y],
-                    255 - game_data.map->data[x + game_data.map->width * y],
-                    255 - game_data.map->data[x + game_data.map->width * y]);
-            fill_rectangle(x * game_data.tile_size,
-                    y * game_data.tile_size,
-                    x * game_data.tile_size + game_data.tile_size,
-                    y * game_data.tile_size + game_data.tile_size);
-        }
+    int i;
+    for(i = 0; i < game_data.map->n_segments; i++) {
+        glColor3ub(255, 0, 0);
+        glBegin(GL_LINES);
+        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].a].x),
+                game_to_gl_y(game_data.map->points[game_data.map->segments[i].a].y));
+        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].b].x),
+                game_to_gl_y(game_data.map->points[game_data.map->segments[i].b].y));
+        glEnd();
     }
+    
+//    double a;
+//    for(a = 0; a < M_PI; a += M_PI_4) {
+//
+//        ray_collision_t collision = map_raycast_a(game_data.player.x, game_data.player.y, a, game_data.map);
+//
+//        if(collision.dist == INFINITY) {
+//            // printf("no collision\n");
+//        } else {
+//            glColor3ub(0, 255, 0);
+//            glBegin(GL_LINES);
+//            glVertex2d(game_to_gl_x(game_data.player.x), game_to_gl_y(game_data.player.y));
+//            glVertex2d(game_to_gl_x(collision.x), game_to_gl_y(collision.y));
+//            glEnd();
+//        }
+//    }
+    
+    map_shadow(game_data.player.x, game_data.player.y);
+    
+//    for(int y = 0; y < game_data.map->height; y++) {
+//        for(int x = 0; x < game_data.map->width; x++) {
+//            glColor3ub(255 - game_data.map->data[x + game_data.map->width * y],
+//                    255 - game_data.map->data[x + game_data.map->width * y],
+//                    255 - game_data.map->data[x + game_data.map->width * y]);
+//            fill_rectangle(x * game_data.tile_size,
+//                    y * game_data.tile_size,
+//                    x * game_data.tile_size + game_data.tile_size,
+//                    y * game_data.tile_size + game_data.tile_size);
+//        }
+//    }
     
     // printf("%d, %d\n", game_data.player.x, game_data.player.y);
     
-    for(double a = 0; a < M_PI * 2; a+=0.0002) {
-        map_tile_collision hit = map_raycast(a, (double) game_data.player.x / game_data.tile_size, (double) game_data.player.y / game_data.tile_size);
-        glColor3ub(0, 255, 0);
-        fill_rectangle(hit.pX - 1, hit.pY - 1, hit.pX + 1, hit.pY + 1);
-        glColor3ub(255, 0, 255);
-        fill_rectangle((hit.x + 0.5) * game_data.tile_size - 5, (hit.y + 0.5) * game_data.tile_size - 5,
-                                (hit.x + 0.5) * game_data.tile_size + 5, (hit.y + 0.5) * game_data.tile_size + 5);
-        // pixelRGBA(RENDER.renderer, hit.pX, hit.pY, 0, 255, 0, 255);
-    }
-    
-    // shadow
-    map_shadow(game_data.player.x, game_data.player.y);
+//    for(double a = 0; a < M_PI * 2; a+=0.0002) {
+//        map_tile_collision hit = map_raycast(a, (double) game_data.player.x / game_data.tile_size, (double) game_data.player.y / game_data.tile_size);
+//        glColor3ub(0, 255, 0);
+//        fill_rectangle(hit.pX - 1, hit.pY - 1, hit.pX + 1, hit.pY + 1);
+//        glColor3ub(255, 0, 255);
+//        fill_rectangle((hit.x + 0.5) * game_data.tile_size - 5, (hit.y + 0.5) * game_data.tile_size - 5,
+//                                (hit.x + 0.5) * game_data.tile_size + 5, (hit.y + 0.5) * game_data.tile_size + 5);
+//        // pixelRGBA(RENDER.renderer, hit.pX, hit.pY, 0, 255, 0, 255);
+//    }
+//    
+//    // shadow
+//    map_shadow(game_data.player.x, game_data.player.y);
     
     // draw player
     glColor3ub(128, 128, 128);

@@ -71,8 +71,13 @@ typedef struct {
 
 extern double vector_to_angle(double w, double h);
 
+#define delta 0.00001
+
 extern int max(int a, int b);
 extern int min(int a, int b);
+extern double absd(double d);
+extern int equald(double a, double b);
+extern double angle_sanify(double a);
 
 extern char* read_file(char* filename);
 

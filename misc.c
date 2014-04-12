@@ -33,6 +33,19 @@ int min(int a, int b) {
     return a < b ? a : b;
 }
 
+double absd(double d) {
+    return d >= 0 ? d : -d;
+}
+
+int equald(double a, double b) {
+    return absd(a - b) < delta;
+}
+
+double angle_sanify(double a) {
+    if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
+    return a;
+}
+
 /**
  * Reads a file and returns the data from the file
  * The receiver is responsible for free()ing the returned char* array

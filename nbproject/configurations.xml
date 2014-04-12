@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="90">
+<configurationDescriptor version="94">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f1" displayName="src" projectFiles="true">
       <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
@@ -60,6 +60,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
       <itemPath>TODO</itemPath>
+      <itemPath>data/test.map</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

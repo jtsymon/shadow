@@ -9,10 +9,28 @@
 #define	MAP_STRUCTURES_H
 
 typedef struct {
-    int width, height;
-    list_t* segments;
-    unsigned char* data;
+    int x, y;
+} point_t;
 
+typedef struct {
+    int a, b;
+} line_segment_t;
+
+typedef struct {
+    // texture_t *texture;
+    int n_segments;
+    int *segment_ids;
+} polygon_t;
+
+typedef struct {
+    // unique endpoints of line_segments
+    int             n_points;
+    point_t         *points;
+    // line segments made up from points
+    int             n_segments;
+    line_segment_t  *segments;
+    // combinations of line segments, used for drawing wall textures
+    list_t          *polygons;
 } map_t;
 
 
@@ -28,11 +46,9 @@ enum {
  * including the side of the tile that was hit, and the pixel position of the collision
  */
 typedef struct {
-    int x, y;   // position of the tile in the map
-    int id;     // id of the tile
-    int side;   // side of the tile that was hit
-    int pX, pY; // pixel position of the spot on the tile
-} map_tile_collision;
+    double x, y;
+    double dist;
+} ray_collision_t;
 
 #endif	/* MAP_STRUCTURES_H */
 
