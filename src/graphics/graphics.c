@@ -1,6 +1,4 @@
 
-#include <SDL2/SDL_rect.h>
-
 #include "graphics.h"
 
 void update_dimensions() {
@@ -58,39 +56,50 @@ void update_dimensions() {
     }
 } */
 
+int init_mask() {
+    // The framebuffer, which regroups 0 or more textures, and 0 or 1 depth buffer.
+    glGenFramebuffers(1, &RENDER.mask_framebuffer);
+    // The texture to render to
+    glGenTextures(1, &RENDER.mask_texture);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, RENDER.mask_framebuffer);
+
+    // "Bind" the newly created texture : all future texture functions will modify this texture
+    glBindTexture(GL_TEXTURE_2D, RENDER.mask_texture);
+
+    // Give an empty image to OpenGL ( the last "0" means "empty" )
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RENDER.width, RENDER.height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+    // Poor filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Set "renderedTexture" as our colour attachement #0
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, RENDER.mask_texture, 0);
+
+    //    // Set the list of draw buffers.
+    //    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+    //    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
+    // Always check that our framebuffer is ok
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        fputs("Failed to generate framebuffers", stderr);
+        return 2;
+    }
+    return 0;
+}
+
 /**
  *  General OpenGL initialization function
  */
 int initGL() {
-    
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    
-    // Create the window where we will draw.
-    if((RENDER.window = SDL_CreateWindow("shadow",
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            RENDER.width, RENDER.height,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)) == NULL) {
-        printf("%s\n", SDL_GetError());
-        return 2;
-    }
-    
-    if((RENDER.gl_context = SDL_GL_CreateContext(RENDER.window)) == NULL) {
-        printf("%s\n", SDL_GetError());
-        return 3;
-    }
-    
     if(!initFonts()) {
         printf("Failed to load font\n");
-        return 4;
+        return 1;
     }
-    
-    SDL_GL_MakeCurrent(RENDER.window, RENDER.gl_context); 
-    SDL_GL_SetSwapInterval(1);
     
     glViewport(0,0, RENDER.width, RENDER.height);
 
@@ -101,6 +110,11 @@ int initGL() {
     
     // Enable smooth shading
     glShadeModel( GL_SMOOTH );
+    
+//    glEnable( GL_LINE_SMOOTH );
+//    glEnable( GL_POLYGON_SMOOTH );
+//    glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+//    glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
 
     // 2d
     glDisable(GL_DEPTH_TEST);
@@ -111,6 +125,7 @@ int initGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     update_dimensions();
+    // return init_mask();
     return 0;
 }
 
@@ -147,10 +162,10 @@ void fill_rectangle(int x1, int y1, int x2, int y2) {
 
 void draw_texture(int x, int y, int w, int h) {
     
-    double xa = game_to_gl_x(x),     ya = game_to_gl_y(y),
-           xb = game_to_gl_x(x + w), yb = game_to_gl_y(y + h);
+    double xa = game_to_gl_x(x),     ya = game_to_gl_y(y + h),
+           xb = game_to_gl_x(x + w), yb = game_to_gl_y(y);
     
-    glBindTexture( GL_TEXTURE_2D, default_font->texture );
+    glBindTexture( GL_TEXTURE_2D, font_bold_oblique->texture );
     
     glEnable(GL_TEXTURE_2D);
     
@@ -183,4 +198,8 @@ void draw_text_font(int x, int y, char* text, font_t* font) {
 void draw_text(int x, int y, char* text) {
     
     draw_text_font(x, y, text, default_font);
+}
+
+void draw_shadow_mask(int x, int y) {
+    
 }

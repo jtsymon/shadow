@@ -11,7 +11,7 @@
 #include "../misc.h"
 #include "../list.h"
 #include "map_structures.h"
-#include "visibility.h"
+#include "shadow.h"
 
 /*
  * Map Format:
@@ -33,9 +33,13 @@
 
 extern map_t* map_open(char* filename);
 
-//extern map_tile_collision map_raycast(double angle, double x, double y);
+extern ray_collision_t __ray_intersect(double x, double y, double m, double c, double cosa, double sina,
+        double x1, double y1, double x2, double y2);
+extern ray_collision_t __ray_intersect_v(double x, double y, double sina,
+        double x1, double y1, double x2, double y2);
+extern ray_collision_t __raycast(double x, double y, double m, double c, double cosa, double sina, map_t *map);
+extern ray_collision_t __raycast_v(double x, double y, double sina, map_t *map);
 extern ray_collision_t map_raycast_a(double x, double y, double angle, map_t *map);
-extern void map_shadow(double x, double y);
 
 #endif	/* MAP_H */
 

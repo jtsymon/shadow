@@ -17,10 +17,10 @@ typedef struct {
     int w, h;
     char* text;
     int text_x, text_y;
-    SDL_Color foreground_color;
-    SDL_Color background_color;
-    SDL_Color hover_background_color;
-    SDL_Color click_background_color;
+    RGBA foreground_color;
+    RGBA background_color;
+    RGBA hover_background_color;
+    RGBA click_background_color;
     font_t* font;
     void (*onclick)();
 } button_t;
@@ -35,12 +35,12 @@ extern button_t* button_create_font(char* text, int x, int y, void (*onclick)(),
 extern button_t* button_create_size(char* text, int x, int y, void (*onclick)(), int width, int height);
 extern button_t* button_create_size_font(char* text, int x, int y, void (*onclick)(), int width, int height, font_t* font);
 extern button_t* button_create_size_color(char* text, int x, int y, void (*onclick)(), int width, int height,
-        SDL_Color foreground_color, SDL_Color background_color, SDL_Color hover_background_color, SDL_Color click_background_color);
+        RGBA foreground_color, RGBA background_color, RGBA hover_background_color, RGBA click_background_color);
 extern button_t* button_create_size_color_font(char* text, int x, int y, void (*onclick)(), int width, int height,
-        SDL_Color foreground_color, SDL_Color background_color, SDL_Color hover_background_color, SDL_Color click_background_color,
+        RGBA foreground_color, RGBA background_color, RGBA hover_background_color, RGBA click_background_color,
         font_t* font);
 
-extern bool button_hover(button_t* this, int x, int y);
+extern int button_hover(button_t* this, int x, int y);
 extern void button_draw(button_t* this);
 extern void button_click(button_t* this);
 

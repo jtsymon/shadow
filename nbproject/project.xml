@@ -3,21 +3,17 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>sdl_game</name>
+            <name>shadow</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>game</sourceRootElem>
-                <sourceRootElem>screens</sourceRootElem>
-                <sourceRootElem>graphics</sourceRootElem>
-                <sourceRootElem>map</sourceRootElem>
-                <sourceRootElem>game</sourceRootElem>
-                <sourceRootElem>screens</sourceRootElem>
-                <sourceRootElem>graphics</sourceRootElem>
-                <sourceRootElem>map</sourceRootElem>
+                <sourceRootElem>src</sourceRootElem>
+                <sourceRootElem>src/screens</sourceRootElem>
+                <sourceRootElem>src/graphics</sourceRootElem>
+                <sourceRootElem>src/map</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

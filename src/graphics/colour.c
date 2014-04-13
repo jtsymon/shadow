@@ -1,9 +1,8 @@
-#include <SDL2/SDL.h>
 
-#include "hsv.h"
+#include "colour.h"
 
-SDL_Color HsvToRgb(HsvColor hsv) {
-    SDL_Color rgb;
+RGB HsvToRgb(HSV hsv) {
+    RGB rgb;
     unsigned char region, remainder, p, q, t;
 
     if (hsv.s == 0) {
@@ -44,8 +43,8 @@ SDL_Color HsvToRgb(HsvColor hsv) {
     return rgb;
 }
 
-HsvColor RgbToHsv(SDL_Color rgb) {
-    HsvColor hsv;
+HSV RgbToHsv(RGB rgb) {
+    HSV hsv;
     unsigned char rgbMin, rgbMax;
 
     rgbMin = rgb.r < rgb.g ? (rgb.r < rgb.b ? rgb.r : rgb.b) : (rgb.g < rgb.b ? rgb.g : rgb.b);

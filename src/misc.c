@@ -33,6 +33,14 @@ int min(int a, int b) {
     return a < b ? a : b;
 }
 
+double mind(double a, double b) {
+    return a < b ? a : b;
+}
+
+double maxd(double a, double b) {
+    return a > b ? a : b;
+}
+
 double absd(double d) {
     return d >= 0 ? d : -d;
 }

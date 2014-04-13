@@ -1,5 +1,6 @@
 
 #include "font.h"
+#include "image.h"
 
 bool font_load_fnt(font_t* font, char* filename, char* extension) {
     extension[0] = 'f';
@@ -31,15 +32,16 @@ bool font_load_fnt(font_t* font, char* filename, char* extension) {
     return true;
 }
 
-bool font_load_img(font_t* font, char* filename, char* extension) {
+int font_load_img(font_t* font, char* filename, char* extension) {
     extension[0] = 'p';
     extension[1] = 'n';
     extension[2] = 'g';
     
     // Load font bitmap
-    SDL_Surface *font_bitmap = IMG_Load(filename);
-    if(!font_bitmap) {
-        return false;
+    int width, height, bit_depth, colour_type;
+    GLubyte *image_data = load_png(filename, &width, &height, &bit_depth, &colour_type);
+    if(!image_data) {
+        return 0;
     }
     // Create The Texture
     glGenTextures(1, &(font->texture));
@@ -49,20 +51,20 @@ bool font_load_img(font_t* font, char* filename, char* extension) {
     glBindTexture(GL_TEXTURE_2D, font->texture);
 
     // Generate the texture
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, font_bitmap->w, font_bitmap->h,
-            0, GL_BGRA, GL_UNSIGNED_BYTE, font_bitmap->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height,
+            0, GL_BGRA, GL_UNSIGNED_BYTE, image_data);
 
     // Nearest filtering
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    SDL_FreeSurface(font_bitmap);
+    free(image_data);
     
     printf("loaded %s\n", filename);
-    return true;
+    return 1;
 }
 
-bool font_build(font_t* font) {
+int font_build(font_t* font) {
     float cx; // Holds x coord of current character
     float cy; // Holds y coord of current character
     float cw; // Holds width of current character
@@ -82,28 +84,28 @@ bool font_build(font_t* font) {
         cx = (float) (font->chars[i].x) / font->tex_size;
         cy = (float) (font->chars[i].y) / font->tex_size;
         cw = (float) (font->chars[i].w) / font->tex_size;
-
+        
         // Start Building A List
         glNewList(font->base + i, GL_COMPILE);
         // Use A Quad For Each Character
         glBegin(GL_QUADS);
         // Texture Coord (Bottom Left)
-        glTexCoord2f(cx, cy + ch);
+        glTexCoord2f(cx, 1 - cy - ch);
         // Vertex Coord (Bottom Left)
         glVertex2i(0, 0);
 
         // Texture Coord (Bottom Right)
-        glTexCoord2f(cx + cw, cy + ch);
+        glTexCoord2f(cx + cw, 1 - cy - ch);
         // Vertex Coord (Bottom Right)
         glVertex2i(font->chars[i].w, 0);
 
         // Texture Coord (Top Right)
-        glTexCoord2f(cx + cw, cy);
+        glTexCoord2f(cx + cw, 1 - cy);
         // Vertex Coord (Top Right)
         glVertex2i(font->chars[i].w, font->h);
 
         // Texture Coord (Top Left)
-        glTexCoord2f(cx, cy);
+        glTexCoord2f(cx, 1 - cy);
         // Vertex Coord (Top Left)
         glVertex2i(0, font->h);
         glEnd();
@@ -129,7 +131,7 @@ font_t* font_open(char* name) {
     font_t* font = malloc(sizeof(font_t));
     font->name = name;
     
-    bool succeeded = font_load_fnt(font, filename, extension) &&
+    int succeeded = font_load_fnt(font, filename, extension) &&
             font_load_img(font, filename, extension) &&
             font_build(font);
     

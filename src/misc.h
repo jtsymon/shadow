@@ -9,13 +9,14 @@
 #ifndef DEF_H
 #define	DEF_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_opengl.h>
 #include <math.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+
+#include <GL/glew.h>
+#include <GL/glxew.h>
+#include <GLFW/glfw3.h>
 
 #define MATH_CONSTANTS
 #ifdef MATH_CONSTANTS
@@ -60,11 +61,6 @@
 #endif
 #endif
 
-#define false 0
-#define true 1
-#define bool int
-// typedef enum { false, true } bool;
-
 typedef struct {
     double x, y;
 } DPoint;
@@ -73,8 +69,14 @@ extern double vector_to_angle(double w, double h);
 
 #define delta 0.00001
 
+typedef unsigned char bool;
+#define true    1
+#define false   0
+
 extern int max(int a, int b);
 extern int min(int a, int b);
+extern double maxd(double a, double b);
+extern double mind(double a, double b);
 extern double absd(double d);
 extern int equald(double a, double b);
 extern double angle_sanify(double a);

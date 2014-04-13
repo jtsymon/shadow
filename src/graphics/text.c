@@ -1,7 +1,7 @@
 
 #include "text.h"
 
-bool initFonts() {
+int initFonts() {
     default_font = font_open("data/default");
     font_bold_oblique = font_open("data/bold_oblique");
     return default_font && font_bold_oblique;

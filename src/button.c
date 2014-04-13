@@ -1,15 +1,13 @@
 
-#include <SDL2/SDL.h>
-
 #include "button.h"
 
 
 const int default_width = 150;
 const int default_height = 50;
-const SDL_Color default_foreground_color = { 255, 0, 0, 255 };
-const SDL_Color default_background_color = { 200, 200, 200, 255 };
-const SDL_Color default_hover_background_color = { 150, 150, 150, 255 };
-const SDL_Color default_click_background_color = { 100, 100, 100, 255 };
+const RGBA default_foreground_color = { 255, 0, 0, 255 };
+const RGBA default_background_color = { 200, 200, 200, 255 };
+const RGBA default_hover_background_color = { 150, 150, 150, 255 };
+const RGBA default_click_background_color = { 100, 100, 100, 255 };
 
 void button_update_text_position(button_t* this) {
     this->text_x = this->x + (this->w - text_width(this->text, this->font)) / 2;
@@ -39,7 +37,7 @@ void button_set_font(button_t* this, font_t* font) {
 }
 
 button_t* button_create_size_color_font(char* text, int x, int y, void (*onclick)(), int width, int height,
-        SDL_Color foreground_color, SDL_Color background_color, SDL_Color hover_background_color, SDL_Color click_background_color,
+        RGBA foreground_color, RGBA background_color, RGBA hover_background_color, RGBA click_background_color,
         font_t* font) {
     button_t* button = malloc(sizeof(button_t));
     button->x = x;
@@ -58,7 +56,7 @@ button_t* button_create_size_color_font(char* text, int x, int y, void (*onclick
 }
 
 button_t* button_create_size_color(char* text, int x, int y, void (*onclick)(), int width, int height,
-        SDL_Color foreground_color, SDL_Color background_color, SDL_Color hover_background_color, SDL_Color click_background_color) {
+        RGBA foreground_color, RGBA background_color, RGBA hover_background_color, RGBA click_background_color) {
     return button_create_size_color_font(text, x, y, onclick, width, height,
             foreground_color, background_color, hover_background_color, click_background_color,
             default_font);
@@ -88,13 +86,13 @@ button_t* button_create(char* text, int x, int y, void (*onclick)()) {
             default_font);
 }
 
-bool button_hover(button_t* this, int x, int y) {
+int button_hover(button_t* this, int x, int y) {
     return this->x < x && this->x + this->w > x && this->y < y && this->y + this->h > y;
 }
 
 void button_draw(button_t* this) {
     // draw background
-    if(mouse.buttons[SDL_BUTTON_LEFT] && button_hover(this, mouse.click_start.x, mouse.click_start.y)) {
+    if(mouse.buttons[GLFW_MOUSE_BUTTON_LEFT] && button_hover(this, mouse.sx, mouse.sy)) {
         glColor4ub(this->click_background_color.r, this->click_background_color.g, this->click_background_color.b, this->click_background_color.a);
     } else if(button_hover(this, mouse.x, mouse.y)) {
         glColor4ub(this->hover_background_color.r, this->hover_background_color.g, this->hover_background_color.b, this->hover_background_color.a);
@@ -109,7 +107,7 @@ void button_draw(button_t* this) {
 }
 
 void button_click(button_t* this) {
-    if(button_hover(this, mouse.click_start.x, mouse.click_start.y) && 
+    if(button_hover(this, mouse.sx, mouse.sy) && 
             button_hover(this, mouse.x, mouse.y) &&
             this->onclick != NULL) {
         this->onclick();

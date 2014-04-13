@@ -1,53 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="94">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f1" displayName="src" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="engine" projectFiles="true">
+        <itemPath>src/engine/timer.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
-        <itemPath>graphics/font.c</itemPath>
-        <itemPath>graphics/font.h</itemPath>
-        <itemPath>graphics/graphics.c</itemPath>
-        <itemPath>graphics/graphics.h</itemPath>
-        <itemPath>graphics/text.c</itemPath>
-        <itemPath>graphics/text.h</itemPath>
+        <itemPath>src/graphics/colour.h</itemPath>
+        <itemPath>src/graphics/font.h</itemPath>
+        <itemPath>src/graphics/graphics.h</itemPath>
+        <itemPath>src/graphics/image.h</itemPath>
+        <itemPath>src/graphics/text.h</itemPath>
       </logicalFolder>
       <logicalFolder name="map" displayName="map" projectFiles="true">
-        <itemPath>map/map.c</itemPath>
-        <itemPath>map/map.h</itemPath>
-        <itemPath>map/map_structures.h</itemPath>
-        <itemPath>map/visibility.c</itemPath>
-        <itemPath>map/visibility.h</itemPath>
+        <itemPath>src/map/map.h</itemPath>
+        <itemPath>src/map/map_structures.h</itemPath>
+        <itemPath>src/map/shadow.h</itemPath>
       </logicalFolder>
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
-        <itemPath>screens/game.c</itemPath>
-        <itemPath>screens/game.h</itemPath>
-        <itemPath>screens/menu.c</itemPath>
-        <itemPath>screens/menu.h</itemPath>
+        <itemPath>src/screens/game.h</itemPath>
+        <itemPath>src/screens/menu.h</itemPath>
       </logicalFolder>
-      <itemPath>button.c</itemPath>
-      <itemPath>button.h</itemPath>
-      <itemPath>global.h</itemPath>
-      <itemPath>hsv.c</itemPath>
-      <itemPath>hsv.h</itemPath>
-      <itemPath>list.c</itemPath>
-      <itemPath>list.h</itemPath>
-      <itemPath>main.c</itemPath>
-      <itemPath>main.h</itemPath>
-      <itemPath>misc.c</itemPath>
-      <itemPath>misc.h</itemPath>
-      <itemPath>screen.c</itemPath>
-      <itemPath>screen.h</itemPath>
+      <itemPath>src/button.h</itemPath>
+      <itemPath>src/global.h</itemPath>
+      <itemPath>src/list.h</itemPath>
+      <itemPath>src/main.h</itemPath>
+      <itemPath>src/misc.h</itemPath>
+      <itemPath>src/screen.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="TestFiles"
-                   displayName="Test Files"
-                   projectFiles="false"
-                   kind="TEST_LOGICAL_FOLDER">
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Important Files"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>Makefile</itemPath>
-      <itemPath>TODO</itemPath>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="engine" projectFiles="true">
+        <itemPath>src/engine/timer.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
+        <itemPath>src/graphics/font.c</itemPath>
+        <itemPath>src/graphics/graphics.c</itemPath>
+        <itemPath>src/graphics/image.c</itemPath>
+        <itemPath>src/graphics/text.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="map" displayName="map" projectFiles="true">
+        <itemPath>src/map/map.c</itemPath>
+        <itemPath>src/map/shadow.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="screens" displayName="screens" projectFiles="true">
+        <itemPath>src/screens/game.c</itemPath>
+        <itemPath>src/screens/menu.c</itemPath>
+      </logicalFolder>
+      <itemPath>src/button.c</itemPath>
+      <itemPath>src/graphics/colour.c</itemPath>
+      <itemPath>src/list.c</itemPath>
+      <itemPath>src/main.c</itemPath>
+      <itemPath>src/misc.c</itemPath>
+      <itemPath>src/screen.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -64,14 +72,10 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>game</Elem>
-    <Elem>screens</Elem>
-    <Elem>graphics</Elem>
-    <Elem>map</Elem>
-    <Elem>game</Elem>
-    <Elem>screens</Elem>
-    <Elem>graphics</Elem>
-    <Elem>map</Elem>
+    <Elem>src</Elem>
+    <Elem>src/screens</Elem>
+    <Elem>src/graphics</Elem>
+    <Elem>src/map</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -84,67 +88,75 @@
       <compileType>
         <cTool>
           <standard>10</standard>
-          <commandLine>-lpthread -lSDL2 -lSDL2_image -lm -lGL ${varCOMPILE}</commandLine>
+          <commandLine>${varCOMPILE}</commandLine>
         </cTool>
         <linkerTool>
-          <commandLine>${varLINK}</commandLine>
+          <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
         </linkerTool>
       </compileType>
-      <item path="button.c" ex="false" tool="0" flavor2="0">
+      <item path="src/button.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="button.h" ex="false" tool="3" flavor2="0">
+      <item path="src/button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="global.h" ex="false" tool="3" flavor2="0">
+      <item path="src/engine/timer.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/font.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/timer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/font.h" ex="false" tool="3" flavor2="0">
+      <item path="src/global.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/graphics.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/colour.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/graphics.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/colour.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/text.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/font.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/text.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/font.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="hsv.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/graphics.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="hsv.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/graphics.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="list.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/image.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="list.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/image.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/text.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="main.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/text.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map/map.c" ex="false" tool="0" flavor2="0">
+      <item path="src/list.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="map/map.h" ex="false" tool="3" flavor2="0">
+      <item path="src/list.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map/map_structures.h" ex="false" tool="3" flavor2="0">
+      <item path="src/main.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="map/visibility.c" ex="false" tool="0" flavor2="0">
+      <item path="src/main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map/visibility.h" ex="false" tool="3" flavor2="0">
+      <item path="src/map/map.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="misc.c" ex="false" tool="0" flavor2="0">
+      <item path="src/map/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="misc.h" ex="false" tool="3" flavor2="0">
+      <item path="src/map/map_structures.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="screen.c" ex="false" tool="0" flavor2="0">
+      <item path="src/map/shadow.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="screen.h" ex="false" tool="3" flavor2="0">
+      <item path="src/map/shadow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="screens/game.c" ex="false" tool="0" flavor2="0">
+      <item path="src/misc.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="screens/game.h" ex="false" tool="3" flavor2="0">
+      <item path="src/misc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="screens/menu.c" ex="false" tool="0" flavor2="0">
+      <item path="src/screen.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="screens/menu.h" ex="false" tool="3" flavor2="0">
+      <item path="src/screen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/screens/game.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/screens/game.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/screens/menu.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/screens/menu.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -168,55 +180,63 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="button.c" ex="false" tool="0" flavor2="0">
+      <item path="src/button.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="button.h" ex="false" tool="3" flavor2="0">
+      <item path="src/button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="global.h" ex="false" tool="3" flavor2="0">
+      <item path="src/engine/timer.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/font.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/timer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/font.h" ex="false" tool="3" flavor2="0">
+      <item path="src/global.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/graphics.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/colour.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/graphics.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/colour.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="graphics/text.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/font.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="graphics/text.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/font.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="hsv.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/graphics.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="hsv.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/graphics.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="list.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/image.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="list.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/image.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/text.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="main.h" ex="false" tool="3" flavor2="0">
+      <item path="src/graphics/text.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="map/map.c" ex="false" tool="0" flavor2="0">
+      <item path="src/list.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="map/map.h" ex="false" tool="3" flavor2="0">
+      <item path="src/list.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="misc.c" ex="false" tool="0" flavor2="0">
+      <item path="src/main.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="misc.h" ex="false" tool="3" flavor2="0">
+      <item path="src/main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="screen.c" ex="false" tool="0" flavor2="0">
+      <item path="src/map/map.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="screen.h" ex="false" tool="3" flavor2="0">
+      <item path="src/map/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="screens/game.c" ex="false" tool="0" flavor2="0">
+      <item path="src/misc.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="screens/game.h" ex="false" tool="3" flavor2="0">
+      <item path="src/misc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="screens/menu.c" ex="false" tool="0" flavor2="0">
+      <item path="src/screen.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="screens/menu.h" ex="false" tool="3" flavor2="0">
+      <item path="src/screen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/screens/game.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/screens/game.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/screens/menu.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/screens/menu.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

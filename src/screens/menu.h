@@ -13,7 +13,7 @@
 #include "../main.h"
 #include "../list.h"
 #include "../button.h"
-#include "../hsv.h"
+#include "../graphics/colour.h"
 
 extern screen_t* screen_menu();
 

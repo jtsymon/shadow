@@ -15,6 +15,7 @@
 #include "../screen.h"
 #include "../map/map.h"
 #include "../main.h"
+#include "../engine/timer.h"
 
 extern screen_t* screen_game();
 

@@ -13,13 +13,13 @@
 
 // commonly used variables
 // (used frequently enough to warrant keeping them outside of a struct)
-const Uint8* keys;
-SDL_Keymod keymod;
-SDL_bool running;
+uint8_t keys[GLFW_KEY_LAST + 1];
+int keymod;
+bool running;
 struct {
-    int x, y;
-    bool buttons[6];
-    SDL_Point click_start;
+    char buttons[GLFW_MOUSE_BUTTON_LAST + 1];
+    double x, y;
+    double sx, sy;
 } mouse;
 
 // contains general stuff that needs to be globally accessible
@@ -27,15 +27,16 @@ struct {
 	screen_t* screen_menu;
 	screen_t* screen_game;
 	int sleep_time;
-	Uint32 last_tick;
+	uint32_t last_tick;
 } GLOBALS;
 
 // contains stuff used by screens to render
 struct {
-    SDL_Window* window;
-    SDL_GLContext gl_context;
-	SDL_Event e;
+    GLFWwindow* window;
     int width, height;
+    GLuint mask_texture;
+    GLuint mask_framebuffer;
+    GLuint mask_vertexbuffer;
 } RENDER;
 
 #endif	/* GLOBAL_H */

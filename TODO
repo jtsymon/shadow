@@ -1,5 +1,23 @@
-- Set up separate thread for execution (input handling and entity control), running at a fixed framerate
-- Set up shadow generation so it renders to a texture and then blends that on top of the frame
-- Write code to support rendering to a texture and then blitting the texture to the screen
-- Write code to support sprite sheets
-- Write map editor
+Engine:
+    Set up separate thread for execution (player and entity control), running at a fixed framerate
+
+Shadow:
+    Render shadow mask to a framebuffer
+    Blit the framebuffer over the map using a fragment shader
+    Possibly apply effects when blending the framebuffer (such as detecting the edge of a dark area and making it less dark)
+    In the fragment shader also apply a darkening effect depending on distance from player (so far away stuff is darker / harder to see)
+
+Map:
+    Write a map editor
+    Come up with a way to automatically generate maps
+        Kind of like dungeon generation in e.g. Minecraft
+        Define structures as a series of walls defined by lines defined by points - should be easy to rotate and scale them and change texture
+        Generate larger structures (rooms) by combining variations of smaller structures
+        
+    Implement textured map tiles (using the polygon idea - a polygon is a group of line-segments which will be filled in with a texture
+
+Entities:
+    Write an entity system
+    Only render if the player can see them
+    Possibly do shadows for entities (technically possible, idk how to draw them though)
+    Implement animated sprite sheets

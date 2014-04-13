@@ -8,7 +8,9 @@
 #ifndef FONT_H
 #define	FONT_H
 
+#include "../global.h"
 #include "../misc.h"
+#include <string.h>
 
 typedef struct {
     int x, y, w;

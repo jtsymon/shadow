@@ -20,7 +20,7 @@ typedef struct {
     font_t* font;
 } text_t;
 
-extern bool initFonts();
+extern int initFonts();
 extern void glPrint(int x, int y, char *string, font_t* font);
 extern int text_width(char* text, font_t* font);
 
