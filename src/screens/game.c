@@ -85,16 +85,16 @@ static void render() {
     
     
     // draw the map
-    int i;
-    for(i = 0; i < game_data.map->n_segments; i++) {
-        glColor3ub(255, 0, 0);
-        glBegin(GL_LINES);
-        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].a].x),
-                game_to_gl_y(game_data.map->points[game_data.map->segments[i].a].y));
-        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].b].x),
-                game_to_gl_y(game_data.map->points[game_data.map->segments[i].b].y));
-        glEnd();
-    }
+//    int i;
+//    for(i = 0; i < game_data.map->n_segments; i++) {
+//        glColor3ub(255, 0, 0);
+//        glBegin(GL_LINES);
+//        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].a].x),
+//                game_to_gl_y(game_data.map->points[game_data.map->segments[i].a].y));
+//        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].b].x),
+//                game_to_gl_y(game_data.map->points[game_data.map->segments[i].b].y));
+//        glEnd();
+//    }
     
 //    double a;
 //    for(a = 0; a < M_PI; a += M_PI_4) {
@@ -111,7 +111,7 @@ static void render() {
 //            glEnd();
 //        }
 //    }
-    
+    // for(i = 0; i < 40; i++)
     map_shadow(game_data.player.x, game_data.player.y);
     
     // draw player

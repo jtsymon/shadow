@@ -58,7 +58,7 @@ double angle_sanify(double a) {
  * Reads a file and returns the data from the file
  * The receiver is responsible for free()ing the returned char* array
  */
-char* read_file(char* filename) {
+char* read_file(const char* filename) {
     struct stat st;
     if (stat(filename, &st) != 0) {
         fprintf(stderr, "Cannot determine size of %s: %s\n", filename, strerror(errno));

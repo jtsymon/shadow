@@ -1,5 +1,6 @@
 
 #include "graphics.h"
+#include "shaders.h"
 
 void update_dimensions() {
     two_over_width  = 2.0 / RENDER.width;
@@ -58,14 +59,14 @@ void update_dimensions() {
 
 int init_mask() {
     // The framebuffer, which regroups 0 or more textures, and 0 or 1 depth buffer.
-    glGenFramebuffers(1, &RENDER.mask_framebuffer);
+    glGenFramebuffers(1, &RENDER.mask.framebuffer);
     // The texture to render to
-    glGenTextures(1, &RENDER.mask_texture);
+    glGenTextures(1, &RENDER.mask.texture);
     
-    glBindFramebuffer(GL_FRAMEBUFFER, RENDER.mask_framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, RENDER.mask.framebuffer);
 
     // "Bind" the newly created texture : all future texture functions will modify this texture
-    glBindTexture(GL_TEXTURE_2D, RENDER.mask_texture);
+    glBindTexture(GL_TEXTURE_2D, RENDER.mask.texture);
 
     // Give an empty image to OpenGL ( the last "0" means "empty" )
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RENDER.width, RENDER.height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
@@ -77,7 +78,7 @@ int init_mask() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     // Set "renderedTexture" as our colour attachement #0
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, RENDER.mask_texture, 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, RENDER.mask.texture, 0);
 
     //    // Set the list of draw buffers.
     //    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
@@ -88,8 +89,29 @@ int init_mask() {
         fputs("Failed to generate framebuffers", stderr);
         return 2;
     }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    static const GLfloat fullscreen_quad[] = {
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+    };
+
+    glGenBuffers(1, &RENDER.mask.vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof (fullscreen_quad), fullscreen_quad, GL_STATIC_DRAW);
+    
+    RENDER.mask.vertex_shader = create_shader("shaders/pass_through.vert", GL_VERTEX_SHADER);
+    RENDER.mask.fragment_shader = create_shader("shaders/shadow_mask.frag", GL_FRAGMENT_SHADER);
+    RENDER.mask.program = create_program(RENDER.mask.vertex_shader, RENDER.mask.fragment_shader);
+    
     return 0;
 }
+
+GLuint program;
 
 /**
  *  General OpenGL initialization function
@@ -125,8 +147,10 @@ int initGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     update_dimensions();
-    // return init_mask();
-    return 0;
+    
+    program = create_program_src("shaders/pass_through.vert", "shaders/shadow_mask.frag");
+    
+    return init_mask();
 }
 
 double game_to_gl_x(int x) {

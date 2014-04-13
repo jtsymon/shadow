@@ -81,7 +81,7 @@ extern double absd(double d);
 extern int equald(double a, double b);
 extern double angle_sanify(double a);
 
-extern char* read_file(char* filename);
+extern char* read_file(const char* filename);
 
 #endif	/* DEF_H */
 

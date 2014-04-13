@@ -71,6 +71,9 @@ int sorter(list_data_t data1, list_data_t data2) {
 }
 
 void map_shadow(double x, double y) {
+    // draw to the framebuffer
+    // glBindFramebuffer(GL_FRAMEBUFFER, RENDER.mask.framebuffer);
+    // glClearColor(255, 0, 0, 255);
     
     int i;
     list_t *angles = list_init();
@@ -111,5 +114,34 @@ void map_shadow(double x, double y) {
     glVertex2d(game_to_gl_x(game_data.player.x), game_to_gl_y(game_data.player.y));
     glEnd();
     glEnable(GL_BLEND);
-    // printf("\n\n\n\n\n");
+    
+    /*
+    glColor3ub(0,255,0);
+    glViewport(0, 0, RENDER.width, RENDER.height);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    // draw to the screen
+    GLuint texID = glGetUniformLocation(RENDER.mask.program, "renderedTexture");
+    glUseProgram(RENDER.mask.program);
+    // Bind our texture in Texture Unit
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, RENDER.mask.texture);
+    // Set our "renderedTexture" sampler to user Texture Unit 0
+    glUniform1i(texID, 0);
+    
+    // 1rst attribute buffer : vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
+    glVertexAttribPointer(
+                    0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                    3, // size
+                    GL_FLOAT, // type
+                    GL_FALSE, // normalized?
+                    0, // stride
+                    (void*) 0 // array buffer offset
+                    );
+    glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
+    glDisableVertexAttribArray(0);
+    glUseProgram(0);
+     */
 }

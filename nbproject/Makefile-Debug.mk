@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/graphics/font.o \
 	${OBJECTDIR}/src/graphics/graphics.o \
 	${OBJECTDIR}/src/graphics/image.o \
+	${OBJECTDIR}/src/graphics/shaders.o \
 	${OBJECTDIR}/src/graphics/text.o \
 	${OBJECTDIR}/src/list.o \
 	${OBJECTDIR}/src/main.o \
@@ -105,6 +106,11 @@ ${OBJECTDIR}/src/graphics/image.o: src/graphics/image.c
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/image.o src/graphics/image.c
+
+${OBJECTDIR}/src/graphics/shaders.o: src/graphics/shaders.c 
+	${MKDIR} -p ${OBJECTDIR}/src/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/shaders.o src/graphics/shaders.c
 
 ${OBJECTDIR}/src/graphics/text.o: src/graphics/text.c 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics

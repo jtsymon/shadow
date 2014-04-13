@@ -34,9 +34,14 @@ struct {
 struct {
     GLFWwindow* window;
     int width, height;
-    GLuint mask_texture;
-    GLuint mask_framebuffer;
-    GLuint mask_vertexbuffer;
+    struct {
+        GLuint texture;
+        GLuint framebuffer;
+        GLuint vertex_buffer;
+        GLuint vertex_shader;
+        GLuint fragment_shader;
+        GLuint program;
+    } mask;
 } RENDER;
 
 #endif	/* GLOBAL_H */
