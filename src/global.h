@@ -30,6 +30,8 @@ struct {
 	uint32_t last_tick;
 } GLOBALS;
 
+GLuint program;
+
 // contains stuff used by screens to render
 struct {
     GLFWwindow* window;
@@ -38,6 +40,7 @@ struct {
         GLuint texture;
         GLuint framebuffer;
         GLuint vertex_buffer;
+        GLuint vertex_array;
         GLuint vertex_shader;
         GLuint fragment_shader;
         GLuint program;

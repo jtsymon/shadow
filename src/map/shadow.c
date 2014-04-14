@@ -90,30 +90,64 @@ void map_shadow(double x, double y) {
     list_add(angles, (list_data_t)angle_sanify(atan2(y - RENDER.height, RENDER.width - x)));
     list_add(angles, (list_data_t)angle_sanify(atan2(y - RENDER.height, -x)));
     list_quicksort_f(angles, sorter);
-    glDisable(GL_BLEND);
-    glColor4ub(100, 100, 100, 255);
-    glBegin(GL_POLYGON);
-    glVertex2d(game_to_gl_x(game_data.player.x), game_to_gl_y(game_data.player.y));
+    
+    int size = angles->size + 3;
+    GLfloat data[size * 2];
+    i = 0;
+    
+    data[i++] = game_to_gl_x(game_data.player.x); data[i++] = game_to_gl_y(game_data.player.y);
+    
     double angle = list_remove(angles).dvalue;
     ray_collision_t first = shadow_raycast(x, y, angle);
-    glVertex2d(game_to_gl_x(first.x), game_to_gl_y(first.y));
+    
+    data[i++] = game_to_gl_x(first.x); data[i++] = game_to_gl_y(first.y);
+    
     while(angles->size > 0) {
         double angle = list_remove(angles).dvalue;
         // printf("%f\n", angle);
         ray_collision_t collision = shadow_raycast(x, y, angle);
-        double px = collision.x;
-        double py = collision.y;
+        // double px = collision.x;
+        // double py = collision.y;
 //        if(angle > M_PI_2 && angle < M_PI_2 * 3) px += 2;
 //        else px -= 2;
 //        if(angle > M_PI) py -= 2;
 //        else py += 2;
-        glVertex2d(game_to_gl_x(px), game_to_gl_y(py));
+        
+        data[i++] = game_to_gl_x(collision.x); data[i++] = game_to_gl_y(collision.y);
     }
     list_free(angles);
-    glVertex2d(game_to_gl_x(first.x), game_to_gl_y(first.y));
-    glVertex2d(game_to_gl_x(game_data.player.x), game_to_gl_y(game_data.player.y));
-    glEnd();
-    glEnable(GL_BLEND);
+    
+    data[i++] = game_to_gl_x(first.x); data[i++] = game_to_gl_y(first.y);
+    data[i++] = game_to_gl_x(game_data.player.x); data[i++] = game_to_gl_y(game_data.player.y);
+    
+    //glDisable(GL_BLEND);
+    
+    glUseProgram(RENDER.mask.program);
+    
+    glBindVertexArray(RENDER.mask.vertex_array);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof (data), data, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
+    glVertexAttribPointer(
+                    0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                    2, // size
+                    GL_FLOAT, // type
+                    GL_FALSE, // normalized?
+                    0, // stride
+                    (void*) 0 // array buffer offset
+                    );
+    glDrawArrays(GL_TRIANGLE_FAN, 0, size);
+    glDisableVertexAttribArray(0);
+    
+//    glEnableClientState(GL_VERTEX_ARRAY);
+//    glVertexPointer(2, GL_FLOAT, 0, data);
+//    glDrawArrays(GL_POLYGON, 0, size);
+//    glDisableClientState(GL_VERTEX_ARRAY);
+    
+    //glEnable(GL_BLEND);
     
     /*
     glColor3ub(0,255,0);

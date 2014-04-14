@@ -8,7 +8,6 @@
 #ifndef TEXT_H
 #define	TEXT_H
 
-#include "../main.h"
 #include "font.h"
 
 font_t* default_font;

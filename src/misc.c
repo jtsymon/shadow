@@ -72,9 +72,10 @@ char* read_file(const char* filename) {
         return NULL;
     }
 
-    char* data = malloc(file_size);
+    char* data = malloc(file_size + 1);
     fread(data, 1, file_size, file);
     fclose(file);
+    data[file_size] = '\0';
     
     return data;
 }

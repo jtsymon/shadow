@@ -36,10 +36,12 @@ int setup() {
     // Initialize the library
     if (!glfwInit())
         return -1;
-
+    
     glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
 
     // Create a windowed mode window and its OpenGL context
@@ -56,7 +58,7 @@ int setup() {
     glfwSetMouseButtonCallback(RENDER.window, mouse_callback);
 
     // Init GLEW
-    glewExperimental = 1;
+    glewExperimental = true;
     GLenum err = glewInit();
     if (GLEW_OK != err) {
         fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
@@ -90,17 +92,23 @@ int main(int argc, char* argv[]) {
         while(running) {
             glfwGetCursorPos(RENDER.window, &mouse.x, &mouse.y);
             screen->f[screen_RENDER]();
+
+            // make sure to render buffered data
+            buffer_end();
             glfwSwapBuffers(RENDER.window);
             glfwPollEvents();
         }
+        
+        printf("Cleaning up...\n");
+        GLOBALS.screen_menu->f[screen_DESTROY]();
+        GLOBALS.screen_game->f[screen_DESTROY]();
+        // Close OpenGL window and terminate GLFW
+        glfwDestroyWindow(RENDER.window);
+    } else {
+        fputs("Failed to set up a window\n", stderr);
     }
     
     // clean up
-	printf("Exiting...\n");
-    GLOBALS.screen_menu->f[screen_DESTROY]();
-    GLOBALS.screen_game->f[screen_DESTROY]();
-    // Close OpenGL window and terminate GLFW
-    glfwDestroyWindow(RENDER.window);
     glfwTerminate();
     printf("Bye\n");
     return err;

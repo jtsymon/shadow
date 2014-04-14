@@ -93,11 +93,11 @@ int button_hover(button_t* this, int x, int y) {
 void button_draw(button_t* this) {
     // draw background
     if(mouse.buttons[GLFW_MOUSE_BUTTON_LEFT] && button_hover(this, mouse.sx, mouse.sy)) {
-        glColor4ub(this->click_background_color.r, this->click_background_color.g, this->click_background_color.b, this->click_background_color.a);
+        buffer_set_colour(this->click_background_color);
     } else if(button_hover(this, mouse.x, mouse.y)) {
-        glColor4ub(this->hover_background_color.r, this->hover_background_color.g, this->hover_background_color.b, this->hover_background_color.a);
+        buffer_set_colour(this->hover_background_color);
     } else {
-        glColor4ub(this->background_color.r, this->background_color.g, this->background_color.b, this->background_color.a);
+        buffer_set_colour(this->background_color);
     }
     fill_rectangle(this->x, this->y, this->x + this->w, this->y + this->h);
     

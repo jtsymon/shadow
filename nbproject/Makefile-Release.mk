@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/src/button.o \
 	${OBJECTDIR}/src/engine/timer.o \
+	${OBJECTDIR}/src/graphics/buffered.o \
 	${OBJECTDIR}/src/graphics/colour.o \
 	${OBJECTDIR}/src/graphics/font.o \
 	${OBJECTDIR}/src/graphics/graphics.o \
@@ -46,6 +47,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/list.o \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/map/map.o \
+	${OBJECTDIR}/src/map/shadow.o \
 	${OBJECTDIR}/src/misc.o \
 	${OBJECTDIR}/src/screen.o \
 	${OBJECTDIR}/src/screens/game.o \
@@ -85,6 +87,11 @@ ${OBJECTDIR}/src/engine/timer.o: src/engine/timer.c
 	${MKDIR} -p ${OBJECTDIR}/src/engine
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/timer.o src/engine/timer.c
+
+${OBJECTDIR}/src/graphics/buffered.o: src/graphics/buffered.c 
+	${MKDIR} -p ${OBJECTDIR}/src/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/buffered.o src/graphics/buffered.c
 
 ${OBJECTDIR}/src/graphics/colour.o: src/graphics/colour.c 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
@@ -130,6 +137,11 @@ ${OBJECTDIR}/src/map/map.o: src/map/map.c
 	${MKDIR} -p ${OBJECTDIR}/src/map
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/map.o src/map/map.c
+
+${OBJECTDIR}/src/map/shadow.o: src/map/shadow.c 
+	${MKDIR} -p ${OBJECTDIR}/src/map
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/shadow.o src/map/shadow.c
 
 ${OBJECTDIR}/src/misc.o: src/misc.c 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/src/button.o \
 	${OBJECTDIR}/src/engine/timer.o \
+	${OBJECTDIR}/src/graphics/buffered.o \
 	${OBJECTDIR}/src/graphics/colour.o \
 	${OBJECTDIR}/src/graphics/font.o \
 	${OBJECTDIR}/src/graphics/graphics.o \
@@ -86,6 +87,11 @@ ${OBJECTDIR}/src/engine/timer.o: src/engine/timer.c
 	${MKDIR} -p ${OBJECTDIR}/src/engine
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/timer.o src/engine/timer.c
+
+${OBJECTDIR}/src/graphics/buffered.o: src/graphics/buffered.c 
+	${MKDIR} -p ${OBJECTDIR}/src/graphics
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/buffered.o src/graphics/buffered.c
 
 ${OBJECTDIR}/src/graphics/colour.o: src/graphics/colour.c 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics

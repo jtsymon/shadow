@@ -1,6 +1,5 @@
 
 #include "graphics.h"
-#include "shaders.h"
 
 void update_dimensions() {
     two_over_width  = 2.0 / RENDER.width;
@@ -91,18 +90,21 @@ int init_mask() {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
-    static const GLfloat fullscreen_quad[] = {
-        -1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-    };
+//    static const GLfloat fullscreen_quad[] = {
+//        -1.0f, -1.0f, 0.0f,
+//        1.0f, -1.0f, 0.0f,
+//        -1.0f, 1.0f, 0.0f,
+//        -1.0f, 1.0f, 0.0f,
+//        1.0f, -1.0f, 0.0f,
+//        1.0f, 1.0f, 0.0f,
+//    };
 
+    glGenVertexArrays(1, &RENDER.mask.vertex_array);
+	glBindVertexArray(RENDER.mask.vertex_array);
+    
     glGenBuffers(1, &RENDER.mask.vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof (fullscreen_quad), fullscreen_quad, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof (fullscreen_quad), fullscreen_quad, GL_STATIC_DRAW);
     
     RENDER.mask.vertex_shader = create_shader("shaders/pass_through.vert", GL_VERTEX_SHADER);
     RENDER.mask.fragment_shader = create_shader("shaders/shadow_mask.frag", GL_FRAGMENT_SHADER);
@@ -110,8 +112,6 @@ int init_mask() {
     
     return 0;
 }
-
-GLuint program;
 
 /**
  *  General OpenGL initialization function
@@ -144,13 +144,11 @@ int initGL() {
     
     // Enable blending
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     update_dimensions();
     
-    program = create_program_src("shaders/pass_through.vert", "shaders/shadow_mask.frag");
-    
-    return init_mask();
+    return init_mask() + init_buffer();
 }
 
 double game_to_gl_x(int x) {
@@ -162,26 +160,27 @@ double game_to_gl_y(int y) {
 }
 
 void fill_triangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-    glBegin(GL_TRIANGLES);
-
-    glVertex2d(game_to_gl_x(x1), game_to_gl_y(y1));
-    glVertex2d(game_to_gl_x(x2), game_to_gl_y(y2));
-    glVertex2d(game_to_gl_x(x3), game_to_gl_y(y3));
-
-    glEnd();
+    buffer_set_mode(GL_TRIANGLES);
+    buffer_add_n(3, (GLfloat[]) {
+        game_to_gl_x(x1), game_to_gl_y(y1),
+        game_to_gl_x(x2), game_to_gl_y(y2),
+        game_to_gl_x(x3), game_to_gl_y(y3)
+    });
 }
 
 void fill_rectangle(int x1, int y1, int x2, int y2) {
-    // glRectd(game_to_gl_x(x1), game_to_gl_y(y1), game_to_gl_x(x2), game_to_gl_y(y2));
     double xa = game_to_gl_x(x1), ya = game_to_gl_y(y1),
            xb = game_to_gl_x(x2), yb = game_to_gl_y(y2);
-
-    glBegin(GL_POLYGON);
-    glVertex2d(xa, ya);
-    glVertex2d(xb, ya);
-    glVertex2d(xb, yb);
-    glVertex2d(xa, yb);
-    glEnd();
+    
+    buffer_set_mode(GL_TRIANGLES);
+    buffer_add_n(6, (GLfloat[]) {
+        xa, ya,
+        xb, ya,
+        xb, yb,
+        xa, ya,
+        xa, yb,
+        xb, yb
+    });
 }
 
 void draw_texture(int x, int y, int w, int h) {
@@ -222,8 +221,4 @@ void draw_text_font(int x, int y, char* text, font_t* font) {
 void draw_text(int x, int y, char* text) {
     
     draw_text_font(x, y, text, default_font);
-}
-
-void draw_shadow_mask(int x, int y) {
-    
 }

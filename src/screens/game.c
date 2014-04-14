@@ -85,16 +85,17 @@ static void render() {
     
     
     // draw the map
-//    int i;
-//    for(i = 0; i < game_data.map->n_segments; i++) {
-//        glColor3ub(255, 0, 0);
-//        glBegin(GL_LINES);
-//        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].a].x),
-//                game_to_gl_y(game_data.map->points[game_data.map->segments[i].a].y));
-//        glVertex2d(game_to_gl_x(game_data.map->points[game_data.map->segments[i].b].x),
-//                game_to_gl_y(game_data.map->points[game_data.map->segments[i].b].y));
-//        glEnd();
-//    }
+    int i;
+    buffer_set_colour((RGBA) { 255, 0, 0, 255 });
+    buffer_set_mode(GL_LINES);
+    for(i = 0; i < game_data.map->n_segments; i++) {
+        buffer_add_n(2, (GLfloat[]) {
+            game_to_gl_x(game_data.map->points[game_data.map->segments[i].a].x),
+                    game_to_gl_y(game_data.map->points[game_data.map->segments[i].a].y),
+            game_to_gl_x(game_data.map->points[game_data.map->segments[i].b].x),
+                    game_to_gl_y(game_data.map->points[game_data.map->segments[i].b].y)
+        });
+    }
     
 //    double a;
 //    for(a = 0; a < M_PI; a += M_PI_4) {

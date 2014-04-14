@@ -11,6 +11,7 @@
 #include "misc.h"
 #include "screens/menu.h"
 #include "screens/game.h"
+#include "graphics/shaders.h"
 
 extern void set_screen(screen_t* newScreen);
 

@@ -1,5 +1,5 @@
 /* 
- * File:   opengl.h
+ * File:   graphics.h
  * Author: jts
  *
  * Created on 12 January 2014, 8:06 PM
@@ -12,6 +12,8 @@
 #include "colour.h"
 #include "text.h"
 #include "font.h"
+#include "shaders.h"
+#include "buffered.h"
 
 double two_over_width, two_over_height;
 
