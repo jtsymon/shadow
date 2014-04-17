@@ -41,11 +41,13 @@ static void render() {
         button_draw(button->data.data);
         button = button->next;
     }
+    buffer_end();
     
-    glColor3ub(0, 255, 0);
-//    draw_text(100, 300, "Testing Text _ <- underscore");
+    draw_text(100, 300, "Testing Text _ <- underscore", (RGBA) {0, 255, 0, 255});
     
-    draw_texture(100, 400, 256, 256);
+    draw_texture(font_bold_oblique->texture, (RGBA) {0, 0, 255, 255}, 100, 400, 256, 256);
+    
+    draw_texture_region(font_bold_oblique->texture, (RGBA) {255, 0, 255, 255}, 400, 250, 100, 100, 0, 0, 100, 100);
 }
 
 static void key_callback(int key, int scancode, int action, int mods) {

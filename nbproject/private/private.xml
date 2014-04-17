@@ -7,15 +7,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jts/git/shadow/src/graphics/buffered.h</file>
+            <file>file:/home/jts/git/shadow/src/screens/menu.c</file>
+            <file>file:/home/jts/git/shadow/src/graphics/font.c</file>
+            <file>file:/home/jts/git/shadow/src/screens/game.c</file>
+            <file>file:/home/jts/git/shadow/include/graphics/text.h</file>
+            <file>file:/home/jts/git/shadow/src/button.h</file>
+            <file>file:/home/jts/git/shadow/src/graphics/texture.c</file>
             <file>file:/home/jts/git/shadow/src/main.c</file>
             <file>file:/home/jts/git/shadow/src/graphics/graphics.c</file>
-            <file>file:/home/jts/git/shadow/src/screens/menu.c</file>
             <file>file:/home/jts/git/shadow/src/button.c</file>
-            <file>file:/home/jts/git/shadow/src/graphics/buffered.c</file>
-            <file>file:/home/jts/git/shadow/src/screens/game.c</file>
-            <file>file:/home/jts/git/shadow/src/map/shadow.c</file>
-            <file>file:/home/jts/git/shadow/src/graphics/graphics.h</file>
+            <file>file:/home/jts/git/shadow/shaders/texture.frag</file>
+            <file>file:/home/jts/git/shadow/src/misc.h</file>
+            <file>file:/home/jts/git/shadow/src/global.h</file>
+            <file>file:/home/jts/git/shadow/src/graphics/texture.h</file>
+            <file>file:/home/jts/git/shadow/src/graphics/text.c</file>
         </group>
     </open-files>
 </project-private>

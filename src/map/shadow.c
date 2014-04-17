@@ -122,7 +122,7 @@ void map_shadow(double x, double y) {
     
     //glDisable(GL_BLEND);
     
-    glUseProgram(RENDER.mask.program);
+    glUseProgram(RENDER.shaders.shadow);
     
     glBindVertexArray(RENDER.mask.vertex_array);
     

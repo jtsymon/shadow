@@ -1,4 +1,4 @@
-#include "image.h"
+#include "texture.h"
 
 GLubyte *load_png(char *name, int *width, int *height, int *bit_depth, int *colour_type) {
     png_structp png_ptr;
@@ -110,4 +110,84 @@ GLubyte *load_png(char *name, int *width, int *height, int *bit_depth, int *colo
  
     /* That's it */
     return outData;
+}
+
+texture_t texture_png(char *filename) {
+    int width, height, bit_depth, colour_type;
+    GLubyte *image_data = load_png(filename, &width, &height, &bit_depth, &colour_type);
+    if(!image_data) {
+        return (texture_t) { 0, 0, 0, 0, 0 };
+    }
+    GLuint texture;
+    // Create The Texture
+    glGenTextures(1, &texture);
+
+    // Load in font
+    // Typical texture generation using data from the bitmap
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Generate the texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+            0, GL_BGRA, GL_UNSIGNED_BYTE, image_data);
+
+    // Nearest filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    
+    free(image_data);
+    
+    return (texture_t) { texture, width, height, bit_depth, colour_type };
+}
+
+static void _draw_texture(GLuint texture, RGBA colour, GLfloat data[]) {
+    
+    GLuint texID = glGetUniformLocation(RENDER.shaders.texture, "texture");
+    glUseProgram(RENDER.shaders.texture);
+    // Bind our texture in Texture Unit
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // Set our "renderedTexture" sampler to user Texture Unit 0
+    glUniform1i(texID, 0);
+    
+    glUniform4f(glGetUniformLocation(RENDER.shaders.texture, "colour_in"),
+            (float)colour.r / 255, (float)colour.g / 255,
+            (float)colour.b / 255, (float)colour.a / 255);
+    
+    glBindVertexArray(RENDER.vertex_array);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), data, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer);
+    glVertexAttribPointer(
+                    0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                    4, // size
+                    GL_FLOAT, // type
+                    GL_FALSE, // normalized?
+                    0, // stride
+                    (void*) 0 // array buffer offset
+                    );
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glDisableVertexAttribArray(0);
+}
+
+void draw_texture(texture_t texture, RGBA colour, int x, int y, int w, int h) {
+    
+    _draw_texture(texture.texture, colour, (GLfloat[]) {
+        game_to_gl_x(x),     game_to_gl_y(y),     0, 0,
+        game_to_gl_x(x + w), game_to_gl_y(y),     1, 0,
+        game_to_gl_x(x + w), game_to_gl_y(y + h), 1, 1,
+        game_to_gl_x(x),     game_to_gl_y(y + h), 0, 1
+    });
+}
+
+void draw_texture_region(texture_t texture, RGBA colour, int x, int y, int w, int h, int tx, int ty, int tw, int th) {
+    
+    _draw_texture(texture.texture, colour, (GLfloat[]) {
+        game_to_gl_x(x),     game_to_gl_y(y),     (float)(tx) / texture.width,      (float)(ty) / texture.height,
+        game_to_gl_x(x + w), game_to_gl_y(y),     (float)(tx + tw) / texture.width, (float)(ty) / texture.height,
+        game_to_gl_x(x + w), game_to_gl_y(y + h), (float)(tx + tw) / texture.width, (float)(ty + th) / texture.height,
+        game_to_gl_x(x),     game_to_gl_y(y + h), (float)(tx) / texture.width,      (float)(ty + th) / texture.height
+    });
 }

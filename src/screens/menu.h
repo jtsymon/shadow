@@ -14,6 +14,7 @@
 #include "../list.h"
 #include "../button.h"
 #include "../graphics/colour.h"
+#include "../graphics/texture.h"
 
 extern screen_t* screen_menu();
 

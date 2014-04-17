@@ -119,14 +119,13 @@ static void render() {
     glColor3ub(128, 128, 128);
     fill_rectangle(game_data.player.x - 5, game_data.player.y - 5, game_data.player.x + 5, game_data.player.y + 5);
     
-    glColor3ub(0, 255, 0);
     sprintf(string_buffer, "Player: %d,%d (%-1.2f,%-1.2f)", game_data.player.x, game_data.player.y,
             (float) game_data.player.x / game_data.tile_size, (float) game_data.player.y / game_data.tile_size);
-    draw_text(350, 10, string_buffer);
+    draw_text(350, 10, string_buffer, (RGBA) {0, 255, 0, 255});
     
     // draw fps
     sprintf(string_buffer, "Render time: %dms", (ticks_ms() - render_time));
-    draw_text(10, 10, string_buffer);
+    draw_text(10, 10, string_buffer, (RGBA) {0, 255, 0, 255});
 }
 
 static void key_callback(int key, int scancode, int action, int mods) {

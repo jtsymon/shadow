@@ -9,6 +9,7 @@
 #define	BUFFERED_H
 
 #include "../misc.h"
+#include "../global.h"
 #include "colour.h"
 
 extern int init_buffer();

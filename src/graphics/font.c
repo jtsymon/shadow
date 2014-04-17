@@ -1,6 +1,6 @@
 
 #include "font.h"
-#include "image.h"
+#include "texture.h"
 
 bool font_load_fnt(font_t* font, char* filename, char* extension) {
     extension[0] = 'f';
@@ -38,27 +38,8 @@ int font_load_img(font_t* font, char* filename, char* extension) {
     extension[2] = 'g';
     
     // Load font bitmap
-    int width, height, bit_depth, colour_type;
-    GLubyte *image_data = load_png(filename, &width, &height, &bit_depth, &colour_type);
-    if(!image_data) {
-        return 0;
-    }
-    // Create The Texture
-    glGenTextures(1, &(font->texture));
-
-    // Load in font
-    // Typical texture generation using data from the bitmap
-    glBindTexture(GL_TEXTURE_2D, font->texture);
-
-    // Generate the texture
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height,
-            0, GL_BGRA, GL_UNSIGNED_BYTE, image_data);
-
-    // Nearest filtering
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-    free(image_data);
+    font->texture = texture_png(filename);
+    if(!font->texture.texture) return 0;
     
     printf("loaded %s\n", filename);
     return 1;
@@ -77,7 +58,7 @@ int font_build(font_t* font) {
     // Creating Display List
     font->base = glGenLists(size);
     // Select Our Font Texture
-    glBindTexture(GL_TEXTURE_2D, font->texture);
+    glBindTexture(GL_TEXTURE_2D, font->texture.texture);
 
     // Loop Through All Lists
     for (int i = 0; i < size; i++) {

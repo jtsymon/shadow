@@ -101,9 +101,9 @@ void button_draw(button_t* this) {
     }
     fill_rectangle(this->x, this->y, this->x + this->w, this->y + this->h);
     
+    buffer_end();
     // draw text
-    glColor4ub(this->foreground_color.r, this->foreground_color.g, this->foreground_color.b, this->foreground_color.a);
-    draw_text_font(this->text_x, this->text_y, this->text, this->font);
+    draw_text_f(this->text_x, this->text_y, this->text, this->foreground_color, this->font);
 }
 
 void button_click(button_t* this) {

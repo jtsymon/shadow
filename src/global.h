@@ -41,10 +41,14 @@ struct {
         GLuint framebuffer;
         GLuint vertex_buffer;
         GLuint vertex_array;
-        GLuint vertex_shader;
-        GLuint fragment_shader;
-        GLuint program;
     } mask;
+    struct {
+        GLuint shadow;
+        GLuint texture;
+        GLuint colour;
+    } shaders;
+    GLuint vertex_buffer;
+    GLuint vertex_array;
 } RENDER;
 
 #endif	/* GLOBAL_H */

@@ -56,6 +56,23 @@ void update_dimensions() {
     }
 } */
 
+int init_vertex_buffers() {
+    glGenVertexArrays(1, &RENDER.vertex_array);
+	glBindVertexArray(RENDER.vertex_array);
+    
+    glGenBuffers(1, &RENDER.vertex_buffer);
+    
+    return 0;
+}
+
+int init_shaders() {
+    RENDER.shaders.shadow  = create_program_src("shaders/pass_through_texture.vert", "shaders/shadow_mask.frag");
+    RENDER.shaders.colour  = create_program_src("shaders/pass_through.vert", "shaders/colour.frag");
+    RENDER.shaders.texture = create_program_src("shaders/texture.vert", "shaders/texture.frag");
+    
+    return !(RENDER.shaders.shadow || RENDER.shaders.colour || RENDER.shaders.texture);
+}
+
 int init_mask() {
     // The framebuffer, which regroups 0 or more textures, and 0 or 1 depth buffer.
     glGenFramebuffers(1, &RENDER.mask.framebuffer);
@@ -106,10 +123,6 @@ int init_mask() {
     // glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
     // glBufferData(GL_ARRAY_BUFFER, sizeof (fullscreen_quad), fullscreen_quad, GL_STATIC_DRAW);
     
-    RENDER.mask.vertex_shader = create_shader("shaders/pass_through.vert", GL_VERTEX_SHADER);
-    RENDER.mask.fragment_shader = create_shader("shaders/shadow_mask.frag", GL_FRAGMENT_SHADER);
-    RENDER.mask.program = create_program(RENDER.mask.vertex_shader, RENDER.mask.fragment_shader);
-    
     return 0;
 }
 
@@ -118,7 +131,7 @@ int init_mask() {
  */
 int initGL() {
 
-    if(!initFonts()) {
+    if(!init_fonts()) {
         printf("Failed to load font\n");
         return 1;
     }
@@ -144,11 +157,11 @@ int initGL() {
     
     // Enable blending
     glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     update_dimensions();
     
-    return init_mask() + init_buffer();
+    return init_shaders() + init_mask() + init_vertex_buffers() + init_buffer();
 }
 
 double game_to_gl_x(int x) {
@@ -181,44 +194,4 @@ void fill_rectangle(int x1, int y1, int x2, int y2) {
         xa, yb,
         xb, yb
     });
-}
-
-void draw_texture(int x, int y, int w, int h) {
-    
-    double xa = game_to_gl_x(x),     ya = game_to_gl_y(y + h),
-           xb = game_to_gl_x(x + w), yb = game_to_gl_y(y);
-    
-    glBindTexture( GL_TEXTURE_2D, font_bold_oblique->texture );
-    
-    glEnable(GL_TEXTURE_2D);
-    
-    glBegin( GL_QUADS );
-        //Bottom-left vertex (corner)
-        glTexCoord2i(0, 0);
-        glVertex2f(xa, ya);
-
-        //Bottom-right vertex (corner)
-        glTexCoord2i(1, 0);
-        glVertex2f(xb, ya);
-
-        //Top-right vertex (corner)
-        glTexCoord2i(1, 1);
-        glVertex2f(xb, yb);
-
-        //Top-left vertex (corner)
-        glTexCoord2i(0, 1);
-        glVertex2f(xa, yb);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-}
-
-void draw_text_font(int x, int y, char* text, font_t* font) {
-    glEnable(GL_TEXTURE_2D);
-    glPrint(x, y, text, font);
-    glDisable(GL_TEXTURE_2D);
-}
-
-void draw_text(int x, int y, char* text) {
-    
-    draw_text_font(x, y, text, default_font);
 }

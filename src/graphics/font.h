@@ -8,23 +8,10 @@
 #ifndef FONT_H
 #define	FONT_H
 
+#include "types.h"
 #include "../global.h"
 #include "../misc.h"
 #include <string.h>
-
-typedef struct {
-    int x, y, w;
-} font_char;
-
-typedef struct {
-    char* name;
-    int min_char, max_char;
-    int tex_size;
-    int h;
-    font_char* chars;
-    GLuint base;        // Base Display List For The Font
-    GLuint texture;     // Storage For Our Font Texture
-} font_t;
 
 extern font_t* font_open(char* name);
 

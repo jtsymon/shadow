@@ -10,7 +10,7 @@
 
 #include "../misc.h"
 #include "../list.h"
-#include "map_structures.h"
+#include "types.h"
 #include "shadow.h"
 
 /*

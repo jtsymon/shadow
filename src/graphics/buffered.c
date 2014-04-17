@@ -11,7 +11,8 @@ static GLuint   buffer_shader;
 
 static GLuint   vertex_array;
 static GLuint   vertex_buffer;
-static GLuint   buffer_default_shader;
+
+#define buffer_default_shader RENDER.shaders.colour
 
 int init_buffer() {
     glGenVertexArrays(1, &vertex_array);
@@ -19,7 +20,6 @@ int init_buffer() {
     
     glGenBuffers(1, &vertex_buffer);
     
-    buffer_default_shader = create_program_src("shaders/pass_through.vert", "shaders/colour.frag");
     buffer_shader = buffer_default_shader;
     
     return 0;
