@@ -153,13 +153,13 @@ static void _draw_texture(GLuint texture, RGBA colour, GLfloat data[]) {
             (float)colour.r / 255, (float)colour.g / 255,
             (float)colour.b / 255, (float)colour.a / 255);
     
-    glBindVertexArray(RENDER.vertex_array);
+    glBindVertexArray(RENDER.vertex_array[0]);
     
-    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer[0]);
     glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), data, GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer[0]);
     glVertexAttribPointer(
                     0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
                     4, // size

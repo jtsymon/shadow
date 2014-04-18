@@ -20,7 +20,7 @@ void draw_text_f(int x, int y, char *text, RGBA colour, font_t* font) {
     double cy1 = game_to_gl_y(y);
     double cy2 = game_to_gl_y(y + font->h);
     
-    GLfloat data[len * 4 * 6];
+    GLfloat coords[len * 4 * 6];
     
     // Generate an array of coords to draw the font texture
     for(i = 0; i < len; i++) {
@@ -29,49 +29,48 @@ void draw_text_f(int x, int y, char *text, RGBA colour, font_t* font) {
             fprintf(stderr, "Cannot print character '%s'\n", text[i]);
         }
         
-        font_char ch = font->chars[c];
-        
         // right edge of character
-        x += ch.w;
+        x += font->w[c];
         double cx2 = game_to_gl_x(x);
         
-        double tx1 = (double)ch.x / font->tex_size;
-        double ty1 = (double)ch.y / font->tex_size;
-        double tx2 = (double)(ch.x + ch.w) / font->tex_size;
-        double ty2 = (double)(ch.y + font->h) / font->tex_size;
+        int tc = 4 * c;
+        GLfloat tx1 = font->chars[tc++];
+        GLfloat ty1 = font->chars[tc++];
+        GLfloat tx2 = font->chars[tc++];
+        GLfloat ty2 = font->chars[tc++];
         
         int d = i * 4 * 6;
         
         // top left
-        data[d++] = cx1;
-        data[d++] = cy1;
-        data[d++] = tx1;
-        data[d++] = ty1;
+        coords[d++] = cx1;
+        coords[d++] = cy1;
+        coords[d++] = tx1;
+        coords[d++] = ty1;
         // top right
-        data[d++] = cx2;
-        data[d++] = cy1;
-        data[d++] = tx2;
-        data[d++] = ty1;
+        coords[d++] = cx2;
+        coords[d++] = cy1;
+        coords[d++] = tx2;
+        coords[d++] = ty1;
         // bottom right
-        data[d++] = cx2;
-        data[d++] = cy2;
-        data[d++] = tx2;
-        data[d++] = ty2;
+        coords[d++] = cx2;
+        coords[d++] = cy2;
+        coords[d++] = tx2;
+        coords[d++] = ty2;
         // top left
-        data[d++] = cx1;
-        data[d++] = cy1;
-        data[d++] = tx1;
-        data[d++] = ty1;
+        coords[d++] = cx1;
+        coords[d++] = cy1;
+        coords[d++] = tx1;
+        coords[d++] = ty1;
         // bottom left
-        data[d++] = cx1;
-        data[d++] = cy2;
-        data[d++] = tx1;
-        data[d++] = ty2;
+        coords[d++] = cx1;
+        coords[d++] = cy2;
+        coords[d++] = tx1;
+        coords[d++] = ty2;
         // bottom right
-        data[d++] = cx2;
-        data[d++] = cy2;
-        data[d++] = tx2;
-        data[d++] = ty2;
+        coords[d++] = cx2;
+        coords[d++] = cy2;
+        coords[d++] = tx2;
+        coords[d++] = ty2;
         
         // shift across to the next character
         cx1 = cx2;
@@ -89,13 +88,10 @@ void draw_text_f(int x, int y, char *text, RGBA colour, font_t* font) {
             (float)colour.r / 255, (float)colour.g / 255,
             (float)colour.b / 255, (float)colour.a / 255);
     
-    glBindVertexArray(RENDER.vertex_array);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, len * 4 * 6 * sizeof(GLfloat), data, GL_STATIC_DRAW);
-    
+    glBindVertexArray(RENDER.vertex_array[0]);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, RENDER.vertex_buffer[0]);
+    glBufferData(GL_ARRAY_BUFFER, len * 4 * 6 * sizeof(GLfloat), coords, GL_STATIC_DRAW);
     glVertexAttribPointer(
                     0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
                     4, // size
@@ -104,28 +100,9 @@ void draw_text_f(int x, int y, char *text, RGBA colour, font_t* font) {
                     0, // stride
                     (void*) 0 // array buffer offset
                     );
-    glDrawArrays(GL_TRIANGLES, 0, len * 4 * 6);
+    
+    glDrawArrays(GL_TRIANGLES, 0, len * 6);
     glDisableVertexAttribArray(0);
-//    /* Select our texture */
-//    glBindTexture(GL_TEXTURE_2D, font->texture.texture);
-//    
-//    /* Store The Projection Matrix */
-//    glPushMatrix();
-//    /* Reset The Projection Matrix */
-//    glLoadIdentity();
-//    /* Set Up An Ortho Screen */
-//    glOrtho( 0, RENDER.width, 0, RENDER.height, -1, 1 );
-//
-//    glTranslated(x, RENDER.height - y - 16, 0);
-//
-//    /* Choose The Font Set (0 or 1) */
-//    glListBase(font->base - font->min_char);
-//    
-//    /* Write The Text To The Screen */
-//    glCallLists(strlen(string), GL_BYTE, string);
-//    
-//    /* Restore The Old Projection Matrix */
-//    glPopMatrix();
 }
 
 void draw_text(int x, int y, char* text, RGBA colour) {
@@ -135,7 +112,7 @@ void draw_text(int x, int y, char* text, RGBA colour) {
 int text_width(char* text, font_t* font) {
     int w = 0, p = 0;
     for(; text[p] != 0 ;) {
-        w += font->chars[text[p++] - font->min_char].w;
+        w += font->w[text[p++] - font->min_char];
     }
     return w;
 }

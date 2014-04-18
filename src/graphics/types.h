@@ -17,16 +17,12 @@ typedef struct {
 } texture_t;
 
 typedef struct {
-    int x, y, w;
-} font_char;
-
-typedef struct {
-    char* name;
+    char *name;
     int min_char, max_char;
     int tex_size;
     int h;
-    font_char* chars;
-    GLuint base;        // Base Display List For The Font
+    int *w;
+    GLfloat *chars;
     texture_t texture;  // Storage For Our Font Texture
 } font_t;
 

@@ -32,6 +32,8 @@ struct {
 
 GLuint program;
 
+#define n_buffers 2
+
 // contains stuff used by screens to render
 struct {
     GLFWwindow* window;
@@ -47,8 +49,8 @@ struct {
         GLuint texture;
         GLuint colour;
     } shaders;
-    GLuint vertex_buffer;
-    GLuint vertex_array;
+    GLuint vertex_buffer[n_buffers];
+    GLuint vertex_array[n_buffers];
 } RENDER;
 
 #endif	/* GLOBAL_H */

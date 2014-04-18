@@ -1,6 +1,20 @@
 
 #include "timer.h"
 
+uint64_t ticks_ns() {
+    struct timespec time;
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    // printf("%ld %ld", time.tv_sec, time.tv_nsec);
+    return time.tv_sec * 1000000000 + time.tv_nsec;
+}
+
+uint64_t ticks_us() {
+    struct timespec time;
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    // printf("%ld %ld", time.tv_sec, time.tv_nsec);
+    return time.tv_sec * 1000000 + time.tv_nsec / 1000;
+}
+
 uint64_t ticks_ms() {
     struct timespec time;
     clock_gettime(CLOCK_MONOTONIC, &time);

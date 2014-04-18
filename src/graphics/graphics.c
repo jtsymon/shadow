@@ -57,10 +57,13 @@ void update_dimensions() {
 } */
 
 int init_vertex_buffers() {
-    glGenVertexArrays(1, &RENDER.vertex_array);
-	glBindVertexArray(RENDER.vertex_array);
-    
-    glGenBuffers(1, &RENDER.vertex_buffer);
+    int i;
+    for(i = 0; i < n_buffers; i++) {
+        glGenVertexArrays(1, &RENDER.vertex_array[i]);
+        glBindVertexArray(RENDER.vertex_array[i]);
+
+        glGenBuffers(1, &RENDER.vertex_buffer[i]);
+    }
     
     return 0;
 }

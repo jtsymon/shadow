@@ -33,8 +33,6 @@
       <itemPath>shaders/pass_through.vert</itemPath>
       <itemPath>shaders/pass_through_texture.vert</itemPath>
       <itemPath>shaders/shadow_mask.frag</itemPath>
-      <itemPath>shaders/text.frag</itemPath>
-      <itemPath>shaders/text.vert</itemPath>
       <itemPath>shaders/texture.frag</itemPath>
       <itemPath>shaders/texture.vert</itemPath>
     </logicalFolder>
@@ -143,10 +141,6 @@
       </item>
       <item path="shaders/shadow_mask.frag" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="shaders/text.frag" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="shaders/text.vert" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="shaders/texture.frag" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/texture.vert" ex="false" tool="3" flavor2="0">
@@ -248,10 +242,6 @@
       <item path="shaders/pass_through_texture.vert" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/shadow_mask.frag" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="shaders/text.frag" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="shaders/text.vert" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/texture.frag" ex="false" tool="3" flavor2="0">
       </item>
