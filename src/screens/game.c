@@ -75,8 +75,30 @@ static void render() {
         printf("DEBUG ");
         delay_ms(5);
     }
-    game_data.player.x += dX;
-    game_data.player.y += dY;
+    int i;
+    {
+#define collide_dist 10
+        ivec2 pos = { game_data.player.x + dX, game_data.player.y + dY };
+        ivec2 posx = { game_data.player.x + dX, game_data.player.y };
+        ivec2 posy = { game_data.player.x, game_data.player.y + dY };
+        
+        int move = 0;
+
+        for(i = 0; i < game_data.map->n_segments; i++) {
+            ivec2 v = game_data.map->points[game_data.map->segments[i].a];
+            ivec2 w = game_data.map->points[game_data.map->segments[i].b];
+            if(idist_line_segment(v, w, pos) < collide_dist) {
+                if(idist_line_segment(v, w, posx) < collide_dist) move |= 1;
+                if(idist_line_segment(v, w, posy) < collide_dist) move |= 2;
+                if((move & 3) == 3) break;
+            }
+        }
+#undef collide_dist
+        
+        printf("%d %d %d\n", move, dX, dY);
+        if((move & 1) == 0) game_data.player.x += dX;
+        if((move & 2) == 0) game_data.player.y += dY;
+    }
     
 	// background color
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -85,7 +107,6 @@ static void render() {
     
     
     // draw the map
-    int i;
     buffer_set_colour((RGBA) { 255, 0, 0, 255 });
     buffer_set_mode(GL_LINES);
     for(i = 0; i < game_data.map->n_segments; i++) {

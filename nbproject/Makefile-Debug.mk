@@ -48,6 +48,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/map/map.o \
 	${OBJECTDIR}/src/map/shadow.o \
+	${OBJECTDIR}/src/math/vector.o \
 	${OBJECTDIR}/src/misc.o \
 	${OBJECTDIR}/src/screen.o \
 	${OBJECTDIR}/src/screens/game.o \
@@ -142,6 +143,11 @@ ${OBJECTDIR}/src/map/shadow.o: src/map/shadow.c
 	${MKDIR} -p ${OBJECTDIR}/src/map
 	${RM} "$@.d"
 	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/shadow.o src/map/shadow.c
+
+${OBJECTDIR}/src/math/vector.o: src/math/vector.c 
+	${MKDIR} -p ${OBJECTDIR}/src/math
+	${RM} "$@.d"
+	$(COMPILE.c) -g -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/vector.o src/math/vector.c
 
 ${OBJECTDIR}/src/misc.o: src/misc.c 
 	${MKDIR} -p ${OBJECTDIR}/src

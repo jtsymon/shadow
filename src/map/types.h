@@ -8,9 +8,9 @@
 #ifndef MAP_STRUCTURES_H
 #define	MAP_STRUCTURES_H
 
-typedef struct {
-    int x, y;
-} point_t;
+#include "../math/vector.h"
+
+typedef ivec2 point_t;
 
 typedef struct {
     int a, b;

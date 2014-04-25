@@ -19,6 +19,9 @@
         <itemPath>include/map/shadow.h</itemPath>
         <itemPath>include/map/types.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f1" displayName="math" projectFiles="true">
+        <itemPath>src/math/vector.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>include/screens/game.h</itemPath>
         <itemPath>include/screens/menu.h</itemPath>
@@ -52,6 +55,9 @@
       <logicalFolder name="map" displayName="map" projectFiles="true">
         <itemPath>src/map/map.c</itemPath>
         <itemPath>src/map/shadow.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="math" projectFiles="true">
+        <itemPath>src/math/vector.c</itemPath>
       </logicalFolder>
       <logicalFolder name="screens" displayName="screens" projectFiles="true">
         <itemPath>src/screens/game.c</itemPath>
@@ -173,6 +179,10 @@
       </item>
       <item path="src/map/shadow.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="src/math/vector.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/math/vector.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/misc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/screen.c" ex="false" tool="0" flavor2="0">
@@ -274,6 +284,10 @@
       <item path="src/map/map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/map/shadow.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/math/vector.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/math/vector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/misc.c" ex="false" tool="0" flavor2="0">
       </item>
