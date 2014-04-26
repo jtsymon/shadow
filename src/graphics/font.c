@@ -1,6 +1,5 @@
 
 #include "font.h"
-#include "texture.h"
 
 bool font_load_fnt(font_t* font, char* filename, char* extension) {
     extension[0] = 'f';

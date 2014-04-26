@@ -9,6 +9,7 @@
 #define	GLOBAL_H
 
 #include "misc.h"
+#include "math/math.h"
 #include "screen.h"
 
 // commonly used variables

@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/button.o \
+	${OBJECTDIR}/src/engine/entity.o \
 	${OBJECTDIR}/src/engine/timer.o \
 	${OBJECTDIR}/src/graphics/buffered.o \
 	${OBJECTDIR}/src/graphics/colour.o \
@@ -48,6 +49,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/map/map.o \
 	${OBJECTDIR}/src/map/shadow.o \
+	${OBJECTDIR}/src/math/math.o \
 	${OBJECTDIR}/src/math/vector.o \
 	${OBJECTDIR}/src/misc.o \
 	${OBJECTDIR}/src/screen.o \
@@ -83,6 +85,11 @@ ${OBJECTDIR}/src/button.o: src/button.c
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/button.o src/button.c
+
+${OBJECTDIR}/src/engine/entity.o: src/engine/entity.c 
+	${MKDIR} -p ${OBJECTDIR}/src/engine
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/entity.o src/engine/entity.c
 
 ${OBJECTDIR}/src/engine/timer.o: src/engine/timer.c 
 	${MKDIR} -p ${OBJECTDIR}/src/engine
@@ -143,6 +150,11 @@ ${OBJECTDIR}/src/map/shadow.o: src/map/shadow.c
 	${MKDIR} -p ${OBJECTDIR}/src/map
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/shadow.o src/map/shadow.c
+
+${OBJECTDIR}/src/math/math.o: src/math/math.c 
+	${MKDIR} -p ${OBJECTDIR}/src/math
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/math.o src/math/math.c
 
 ${OBJECTDIR}/src/math/vector.o: src/math/vector.c 
 	${MKDIR} -p ${OBJECTDIR}/src/math

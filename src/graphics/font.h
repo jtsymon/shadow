@@ -10,7 +10,8 @@
 
 #include "types.h"
 #include "../global.h"
-#include "../misc.h"
+#include "../math/math.h"
+#include "texture.h"
 #include <string.h>
 
 extern font_t* font_open(char* name);

@@ -8,7 +8,7 @@ ray_collision_t shadow_raycast(double x, double y, double angle) {
     ray_collision_t collision = (ray_collision_t) { 0, 0, INFINITY };
     ray_collision_t new_collision;
     
-    if(absd(cosa) > delta) {
+    if(absd(cosa) > M_DELTA) {
         double m = sina / cosa;
         double c = y - m * x;
         // check edges of the map
@@ -80,9 +80,9 @@ void map_shadow(double x, double y) {
     for(i = 0; i < game_data.map->n_points; i++) {
         double angle = atan2(y - game_data.map->points[i].y,
                 game_data.map->points[i].x - x);
-        list_add(angles, (list_data_t)angle_sanify(angle - delta * 1000));
+        list_add(angles, (list_data_t)angle_sanify(angle - M_DELTA * 1000));
         list_add(angles, (list_data_t)angle_sanify(angle));
-        list_add(angles, (list_data_t)angle_sanify(angle + delta * 1000));
+        list_add(angles, (list_data_t)angle_sanify(angle + M_DELTA * 1000));
     }
     // check edges of the screen
     list_add(angles, (list_data_t)angle_sanify(atan2(y, -x)));
@@ -95,7 +95,7 @@ void map_shadow(double x, double y) {
     GLfloat data[size * 2];
     i = 0;
     
-    data[i++] = game_to_gl_x(game_data.player.x); data[i++] = game_to_gl_y(game_data.player.y);
+    data[i++] = game_to_gl_x(game_data.player.pos.x); data[i++] = game_to_gl_y(game_data.player.pos.y);
     
     double angle = list_remove(angles).dvalue;
     ray_collision_t first = shadow_raycast(x, y, angle);
@@ -118,7 +118,7 @@ void map_shadow(double x, double y) {
     list_free(angles);
     
     data[i++] = game_to_gl_x(first.x); data[i++] = game_to_gl_y(first.y);
-    data[i++] = game_to_gl_x(game_data.player.x); data[i++] = game_to_gl_y(game_data.player.y);
+    data[i++] = game_to_gl_x(game_data.player.pos.x); data[i++] = game_to_gl_y(game_data.player.pos.y);
     
     //glDisable(GL_BLEND);
     

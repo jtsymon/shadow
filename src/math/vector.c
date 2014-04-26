@@ -1,7 +1,16 @@
 
 #include "vector.h"
 
+inline vec2 ivec_to_vec(ivec2 v) {
+    return (vec2) { v.x, v.y };
+}
+
 double vec_dist(vec2 v, vec2 w) {
+    double dx = w.x - v.x;
+    double dy = w.y - v.y;
+    return sqrt(dx * dx + dy * dy);
+}
+double ivec_dist(ivec2 v, ivec2 w) {
     double dx = w.x - v.x;
     double dy = w.y - v.y;
     return sqrt(dx * dx + dy * dy);
@@ -12,21 +21,55 @@ double vec_dist_sq(vec2 v, vec2 w) {
     double dy = w.y - v.y;
     return dx * dx + dy * dy;
 }
+double ivec_dist_sq(ivec2 v, ivec2 w) {
+    double dx = w.x - v.x;
+    double dy = w.y - v.y;
+    return dx * dx + dy * dy;
+}
+
+double vec_mag(vec2 v) {
+    return sqrt(v.x * v.x + v.y * v.y);
+}
+double ivec_mag(ivec2 v) {
+    return sqrt(v.x * v.x + v.y * v.y);
+}
 
 double vec_dot(vec2 v, vec2 w) {
+    return v.x * w.x + v.y * w.y;
+}
+double ivec_dot(ivec2 v, ivec2 w) {
     return v.x * w.x + v.y * w.y;
 }
 
 vec2 vec_scale(double s, vec2 v) {
     return (vec2) { v.x * s, v.y * s };
 }
+vec2 ivec_scale(double s, ivec2 v) {
+    return (vec2) { v.x * s, v.y * s };
+}
 
 vec2 vec_add(vec2 v, vec2 w) {
     return (vec2) { v.x + w.x, v.y + w.y };
 }
+ivec2 ivec_add(ivec2 v, ivec2 w) {
+    return (ivec2) { v.x + w.x, v.y + w.y };
+}
 
 vec2 vec_sub(vec2 v, vec2 w) {
     return (vec2) { v.x - w.x, v.y - w.y };
+}
+ivec2 ivec_sub(ivec2 v, ivec2 w) {
+    return (ivec2) { v.x - w.x, v.y - w.y };
+}
+
+/**
+ * True if the point is to the left of the vector
+ */
+int vec_side(vec2 v, vec2 w, vec2 p) {
+    return sign((w.x - v.x) * (p.y - v.y) - (w.y - v.y) * (p.x - v.x));
+}
+int ivec_side(ivec2 v, ivec2 w, ivec2 p) {
+     return sign((w.x - v.x) * (p.y - v.y) - (w.y - v.y) * (p.x - v.x));
 }
 
 /**
@@ -58,32 +101,4 @@ double idist_line_segment(ivec2 v, ivec2 w, ivec2 p) {
     return __dist_line_segment((vec2) { (double) v.x, (double) v.y },
             (vec2) { (double) w.x, (double) w.y },
             (vec2) { (double) p.x, (double) p.y });
-}
-
-double ivec_dist(ivec2 v, ivec2 w) {
-    double dx = w.x - v.x;
-    double dy = w.y - v.y;
-    return sqrt(dx * dx + dy * dy);
-}
-
-double ivec_dist_sq(ivec2 v, ivec2 w) {
-    double dx = w.x - v.x;
-    double dy = w.y - v.y;
-    return dx * dx + dy * dy;
-}
-
-double ivec_dot(ivec2 v, ivec2 w) {
-    return v.x * w.x + v.y * w.y;
-}
-
-vec2 ivec_scale(double s, ivec2 v) {
-    return (vec2) { v.x * s, v.y * s };
-}
-
-ivec2 ivec_add(ivec2 v, ivec2 w) {
-    return (ivec2) { v.x + w.x, v.y + w.y };
-}
-
-ivec2 ivec_sub(ivec2 v, ivec2 w) {
-    return (ivec2) { v.x - w.x, v.y - w.y };
 }

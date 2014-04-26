@@ -315,7 +315,7 @@ ray_collision_t map_raycast_a(double x, double y, double angle, map_t *map) {
     double cosa = cos(angle);
     double sina = -sin(angle);
     
-    if(absd(cosa) > delta) {
+    if(absd(cosa) > M_DELTA) {
         double m = sina / cosa;
         double c = y - m * x;
         return __raycast(x, y, m, c, cosa, sina, map);

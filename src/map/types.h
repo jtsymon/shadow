@@ -8,6 +8,7 @@
 #ifndef MAP_STRUCTURES_H
 #define	MAP_STRUCTURES_H
 
+#include "../list.h"
 #include "../math/vector.h"
 
 typedef ivec2 point_t;

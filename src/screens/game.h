@@ -16,6 +16,7 @@
 #include "../map/map.h"
 #include "../main.h"
 #include "../engine/timer.h"
+#include "../engine/entity.h"
 #include "../math/vector.h"
 
 extern screen_t* screen_game();
@@ -24,8 +25,7 @@ struct {
     pthread_t* execution;
 	pthread_t* shading;
     map_t *map;
-    int tile_size;
-    ivec2 player;
+    entity_t player;
 } game_data;
 
 #endif /* SCREEN_GAME_H */
