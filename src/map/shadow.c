@@ -80,9 +80,9 @@ void map_shadow(double x, double y) {
     for(i = 0; i < game_data.map->n_points; i++) {
         double angle = atan2(y - game_data.map->points[i].y,
                 game_data.map->points[i].x - x);
-        list_add(angles, (list_data_t)angle_sanify(angle - M_DELTA * 1000));
+        list_add(angles, (list_data_t)angle_sanify(angle - SHADOW_DELTA));
         list_add(angles, (list_data_t)angle_sanify(angle));
-        list_add(angles, (list_data_t)angle_sanify(angle + M_DELTA * 1000));
+        list_add(angles, (list_data_t)angle_sanify(angle + SHADOW_DELTA));
     }
     // check edges of the screen
     list_add(angles, (list_data_t)angle_sanify(atan2(y, -x)));

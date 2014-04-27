@@ -10,7 +10,8 @@
 
 #include <math.h>
 
-#define M_DELTA 0.00001
+#define M_DELTA         0.00001
+#define SHADOW_DELTA    0.0005
 
 typedef unsigned char bool;
 #define true    1
