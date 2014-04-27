@@ -1,3 +1,8 @@
+Position values:
+    Switch back to using ints, but on a standardised scale (e.g. make the player 64*64 units, and the screen 1000*1000 units, and then just scale it to the size of the window)
+    Use doubles for raycasting (angle based) calculations, but always convert back to whole units at the end
+    Possibly need sub-unit values for entities that can move (either that or use ridiculously accurate positioning), because when scaling up for a large screen movement still needs to be smooth.
+
 Engine:
     Set up separate thread for execution (player and entity control), running at a fixed framerate
 

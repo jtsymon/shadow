@@ -50,7 +50,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/map/map.o \
 	${OBJECTDIR}/src/map/shadow.o \
 	${OBJECTDIR}/src/math/math.o \
-	${OBJECTDIR}/src/math/vector.o \
+	${OBJECTDIR}/src/math/v2d.o \
+	${OBJECTDIR}/src/math/v2i.o \
 	${OBJECTDIR}/src/misc.o \
 	${OBJECTDIR}/src/screen.o \
 	${OBJECTDIR}/src/screens/game.o \
@@ -156,10 +157,15 @@ ${OBJECTDIR}/src/math/math.o: src/math/math.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/math.o src/math/math.c
 
-${OBJECTDIR}/src/math/vector.o: src/math/vector.c 
+${OBJECTDIR}/src/math/v2d.o: src/math/v2d.c 
 	${MKDIR} -p ${OBJECTDIR}/src/math
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/vector.o src/math/vector.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/v2d.o src/math/v2d.c
+
+${OBJECTDIR}/src/math/v2i.o: src/math/v2i.c 
+	${MKDIR} -p ${OBJECTDIR}/src/math
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/v2i.o src/math/v2i.c
 
 ${OBJECTDIR}/src/misc.o: src/misc.c 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -24,7 +24,7 @@ typedef struct {
 typedef struct {
     // unique endpoints of line_segments
     int             n_points;
-    vec2             *points;
+    v2i             *points;
     // line segments made up from points
     int             n_segments;
     line_segment_t  *segments;
@@ -45,7 +45,7 @@ enum {
  * including the side of the tile that was hit, and the pixel position of the collision
  */
 typedef struct {
-    double x, y;
+    int x, y;
     double dist;
 } ray_collision_t;
 

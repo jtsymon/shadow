@@ -8,20 +8,37 @@
 #ifndef VECTOR_H
 #define	VECTOR_H
 
+#include <stdint.h>
 #include "math.h"
 
 typedef struct {
-    double x, y;
-} vec2;
+    int x, y;
+} v2i;
 
-extern double vec_dist(vec2 v, vec2 w);
-extern double vec_dist_sq(vec2 v, vec2 w);
-extern double vec_mag(vec2 v);
-extern double vec_dot(vec2 v, vec2 w);
-extern vec2 vec_scale(double s, vec2 v);
-extern vec2 vec_add(vec2 v, vec2 w);
-extern vec2 vec_sub(vec2 v, vec2 w);
-extern int vec_side(vec2 a, vec2 b, vec2 c);
-extern double dist_line_segment(vec2 v, vec2 w, vec2 p);
+typedef struct {
+    double x, y;
+} v2d;
+
+extern v2d v2i_to_v2d(v2i v);
+extern double v2i_dist(v2i v, v2i w);
+extern int64_t v2i_dist_sq(v2i v, v2i w);
+extern double v2i_mag(v2i v);
+extern int64_t v2i_dot(v2i v, v2i w);
+extern v2i v2i_scale(double s, v2i v);
+extern v2i v2i_add(v2i v, v2i w);
+extern v2i v2i_sub(v2i v, v2i w);
+extern int v2i_side(v2i a, v2i b, v2i c);
+extern double v2i_dist_line_segment(v2i v, v2i w, v2i p);
+
+extern v2i v2d_to_v2i(v2d v);
+extern double v2d_dist(v2d v, v2d w);
+extern double v2d_dist_sq(v2d v, v2d w);
+extern double v2d_mag(v2d v);
+extern double v2d_dot(v2d v, v2d w);
+extern v2d v2d_scale(double s, v2d v);
+extern v2d v2d_add(v2d v, v2d w);
+extern v2d v2d_sub(v2d v, v2d w);
+extern int v2d_side(v2d a, v2d b, v2d c);
+extern double v2d_dist_line_segment(v2d v, v2d w, v2d p);
 
 #endif	/* VECTOR_H */

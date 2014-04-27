@@ -7,7 +7,7 @@
 #include "map.h"
 #include "../screens/game.h"
 
-vec2 *point_read(char *buf) {
+v2i *point_read(char *buf) {
     if(*buf > '9' || *buf < '0') return NULL;
     char *x = buf;
     // advance to next number
@@ -20,11 +20,11 @@ vec2 *point_read(char *buf) {
     *buf++ = '\0';
     if(*buf != '\n' && *buf != '\0') return NULL;
     
-    vec2 *point = malloc(sizeof(vec2));
-    point->x = (double)atoi(x);
-    point->y = (double)atoi(y);
+    v2i *point = malloc(sizeof(v2i));
+    point->x = atoi(x);
+    point->y = atoi(y);
     
-    printf("Point: %f,%f\n", point->x, point->y);
+    printf("Point: %d,%d\n", point->x, point->y);
     
     return point;
 }
@@ -97,7 +97,7 @@ map_t* map_open(char* filename) {
         list_t *points = list_init();
         while ((len = getline(&buf, &n, file)) != -1) {
             if(*buf == '\0' || *buf == '\n') break;
-            vec2 *point = point_read(buf);
+            v2i *point = point_read(buf);
             if(point) {
                 list_add_end(points, (list_data_t)(void*)point);
             } else {
@@ -105,9 +105,9 @@ map_t* map_open(char* filename) {
             }
         }
         map->n_points = points->size;
-        map->points = malloc(map->n_points * sizeof(vec2));
+        map->points = malloc(map->n_points * sizeof(v2i));
         printf("%d points\n", map->n_points);
-        vec2 *point = NULL;
+        v2i *point = NULL;
         int i = 0;
         while(point = list_remove(points).data) map->points[i++] = *point;
         list_free_all(points);
@@ -157,67 +157,66 @@ map_t* map_open(char* filename) {
 
 #define no_collision return (ray_collision_t) { 0, 0, INFINITY };
 
-ray_collision_t __ray_intersect(double x, double y, double m, double c, double cosa, double sina,
-        double x1, double y1, double x2, double y2) {
+ray_collision_t __ray_intersect(v2i p, double m, double c, double cosa, double sina, v2i s1, v2i s2) {
     // vertical line segment case
-    if(x2 == x1) {
-        if(x < x1 && cosa < 0 || x > x1 && cosa > 0) no_collision;
-        double ey = c + x1 * m;
-        if(ey >= mind(y1, y2) && ey <= maxd(y1, y2)) {
-            double dy = ey - y;
-            double dx = x1 - x;
+    if(s1.x == s2.x) {
+        if(p.x <= s1.x && cosa <= 0 || p.x > s1.x && cosa > 0) no_collision;
+        double ey = c + s1.x * m;
+        if(ey >= mind(s1.y, s2.y) && ey <= maxd(s1.y, s2.y)) {
+            double dy = ey - p.y;
+            double dx = s1.x - p.x;
             double dist = sqrt(dy * dy + dx * dx);
-            return (ray_collision_t) { x1, ey, dist };
+            return (ray_collision_t) { s1.x, ey, dist };
         }
         no_collision;
     }
     // calculate the gradient now that we know it's non-zero
-    double sm = (y2 - y1) / (x2 - x1);
-    double sc = y1 - sm * x1;
+    double sm = (double)(s2.y - s1.y) / (s2.x - s1.x);
+    double sc = s1.y - sm * s1.x;
     // ray starts on the line case
-    if(equald(y, sm * x + sc) && equald(y, m * x + c) && x >= mind(x1, x2) && x <= maxd(x1, x2) && y >= mind(y1, y2) && y <= maxd(y1, y2)) {
-        // printf("y=%f=%f=%f, x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", y, sm * x + sc, m * x + c, x, mind(x1, x2), maxd(x1, x2), mind(y1, y2), maxd(y1, y2));
-        return (ray_collision_t) { x, y, 0 };
+    if(equald(p.y, sm * p.x + sc) && equald(p.y, m * p.x + c) && p.x >= mind(s1.x, s2.x) && p.x <= maxd(s1.x, s2.x) && p.y >= mind(s1.y, s2.y) && p.y <= maxd(s1.y, s2.y)) {
+        // printf("p.y=%f=%f=%f, p.x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", p.y, sm * p.x + sc, m * p.x + c, p.x, mind(s1.x, s2.x), maxd(s1.x, s2.x), mind(s1.y, s2.y), maxd(s1.y, s2.y));
+        return (ray_collision_t) { p.x, p.y, 0 };
     }
     // parallel lines case
     if(equald(m, sm)) {
         // check if they're from the same line
         if(!equald(c, sc)) no_collision;
-        double min_x = mind(x1, x2);
-        double max_x = maxd(x1, x2);
-        double min_y = mind(y1, y2);
-        double max_y = maxd(y1, y2);
-        if(x >= min_x && x <= max_x) {
-            if(y >= min_y && y <= max_y) return (ray_collision_t) { x, y, 0 };
-            if(y <= min_y && sina < 0) return (ray_collision_t) { x, min_y, min_y - y };
-            if(y >= max_y && sina > 0) return (ray_collision_t) { x, max_y, y - max_y };
+        double min_x = mind(s1.x, s2.x);
+        double max_x = maxd(s1.x, s2.x);
+        double min_y = mind(s1.y, s2.y);
+        double max_y = maxd(s1.y, s2.y);
+        if(p.x >= min_x && p.x <= max_x) {
+            if(p.y >= min_y && p.y <= max_y) return (ray_collision_t) { p.x, p.y, 0 };
+            if(p.y <= min_y && sina < 0) return (ray_collision_t) { p.x, min_y, min_y - p.y };
+            if(p.y >= max_y && sina > 0) return (ray_collision_t) { p.x, max_y, p.y - max_y };
         }
-        if(x <= min_x && cosa > 0) {
-            if(y >= min_y && y <= max_y) return (ray_collision_t) { min_x, y, min_x - x };
-            if(y <= min_y && sina < 0) {
-                double dx = min_x - x;
-                double dy = min_y - y;
+        if(p.x <= min_x && cosa > 0) {
+            if(p.y >= min_y && p.y <= max_y) return (ray_collision_t) { min_x, p.y, min_x - p.x };
+            if(p.y <= min_y && sina < 0) {
+                double dx = min_x - p.x;
+                double dy = min_y - p.y;
                 double dist = sqrt(dy * dy + dx * dx);
                 return (ray_collision_t) { min_x, min_y, dist };
             }
-            if(y >= max_y && sina > 0) {
-                double dx = min_x - x;
-                double dy = y - max_y;
+            if(p.y >= max_y && sina > 0) {
+                double dx = min_x - p.x;
+                double dy = p.y - max_y;
                 double dist = sqrt(dy * dy + dx * dx);
                 return (ray_collision_t) { min_x, max_y, dist };
             }
         }
-        if(x >= max_x && cosa < 0) {
-            if(y >= min_y && y <= max_y) return (ray_collision_t) { max_x, y, x - max_x };
-            if(y <= min_y && sina < 0) {
-                double dx = x - max_x;
-                double dy = min_y - y;
+        if(p.x >= max_x && cosa < 0) {
+            if(p.y >= min_y && p.y <= max_y) return (ray_collision_t) { max_x, p.y, p.x - max_x };
+            if(p.y <= min_y && sina < 0) {
+                double dx = p.x - max_x;
+                double dy = min_y - p.y;
                 double dist = sqrt(dy * dy + dx * dx);
                 return (ray_collision_t) { max_x, min_y, dist };
             }
-            if(y >= max_y && sina > 0) {
-                double dx = x - max_x;
-                double dy = y - max_y;
+            if(p.y >= max_y && sina > 0) {
+                double dx = p.x - max_x;
+                double dy = p.y - max_y;
                 double dist = sqrt(dy * dy + dx * dx);
                 return (ray_collision_t) { max_x, max_y, dist };
             }
@@ -227,46 +226,45 @@ ray_collision_t __ray_intersect(double x, double y, double m, double c, double c
     }
     // standard case
     double ex = (sc - c) / (m - sm);
-    if(ex < mind(x1, x2) - 0.001 || ex > maxd(x1, x2) + 0.001 ||
-            ex < x && cosa > 0 || ex > x && cosa < 0) {
+    if(ex < mind(s1.x, s2.x) - 0.001 || ex > maxd(s1.x, s2.x) + 0.001 ||
+            ex < p.x && cosa > 0 || ex > p.x && cosa < 0) {
         no_collision;
     }
     double ey = c + ex * m;
-    if(ey < mind(y1, y2) - 0.001 || ey > maxd(y1, y2) + 0.001 ||
-            ey < y && sina > 0 || ey > y && sina < 0) {
+    if(ey < mind(s1.y, s2.y) - 0.001 || ey > maxd(s1.y, s2.y) + 0.001 ||
+            ey < p.y && sina > 0 || ey > p.y && sina < 0) {
         no_collision;
     }
-    double dx = ex - x;
-    double dy = ey - y;
+    double dx = ex - p.x;
+    double dy = ey - p.y;
     double dist = sqrt(dx * dx + dy * dy);
     return (ray_collision_t) { ex, ey, dist };
 }
 
-ray_collision_t __ray_intersect_v(double x, double y, double sina,
-        double x1, double y1, double x2, double y2) {
+ray_collision_t __ray_intersect_v(v2i p, double sina, v2i s1, v2i s2) {
     // parallel lines (vertical line segment) case
-    if(x2 == x1) {
-        if(x != x1) no_collision;
-        double min_y = mind(y1, y2);
-        double max_y = maxd(y1, y2);
-        if(y >= min_y && y <= max_y) return (ray_collision_t) { x, y, 0 };
-        if(y <= min_y && sina > 0) return (ray_collision_t) { x, min_y, min_y - y };
-        if(y >= max_y && sina < 0) return (ray_collision_t) { x, max_y, y - max_y };
+    if(s2.x == s1.x) {
+        if(p.x != s1.x) no_collision;
+        double min_y = mind(s1.y, s2.y);
+        double max_y = maxd(s1.y, s2.y);
+        if(p.y >= min_y && p.y <= max_y) return (ray_collision_t) { p.x, p.y, 0 };
+        if(p.y <= min_y && sina > 0) return (ray_collision_t) { p.x, min_y, min_y - p.y };
+        if(p.y >= max_y && sina < 0) return (ray_collision_t) { p.x, max_y, p.y - max_y };
         no_collision;
     }
     // calculate the gradient now that we know it's non-zero
-    double sm = (y2 - y1) / (x2 - x1);
-    double sc = y1 - sm * x1;
+    double sm = (double)(s2.y - s1.y) / (s2.x - s1.x);
+    double sc = s1.y - sm * s1.x;
     // ray starts on the line case
-    if(equald(y, sm * x + sc) && x >= mind(x1, x2) && x <= maxd(x1, x2) && y >= mind(y1, y2) && y <= maxd(y1, y2)) {
-        // printf("y=%f=%f, x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", y, sm * x + sc, mind(x1, x2), maxd(x1, x2), mind(y1, y2), maxd(y1, y2));
-        return (ray_collision_t) { x, y, 0 };
+    if(equald(p.y, sm * p.x + sc) && p.x >= mind(s1.x, s2.x) && p.x <= maxd(s1.x, s2.x) && p.y >= mind(s1.y, s2.y) && p.y <= maxd(s1.y, s2.y)) {
+        // printf("p.y=%f=%f, p.x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", p.y, sm * p.x + sc, mind(s1.x, s2.x), maxd(s1.x, s2.x), mind(s1.y, s2.y), maxd(s1.y, s2.y));
+        return (ray_collision_t) { p.x, p.y, 0 };
     }
     // standard case
-    if(x >= mind(x1, x2) && x <= maxd(x1, x2)) {
-        double ey = sc + x * sm;
-        if(y >= ey && sina < 0 || y <= ey && sina > 0) {
-            return (ray_collision_t) { x, ey, abs(y - ey) };
+    if(p.x >= mind(s1.x, s2.x) && p.x <= maxd(s1.x, s2.x)) {
+        double ey = sc + p.x * sm;
+        if(p.y >= ey && sina < 0 || p.y <= ey && sina > 0) {
+            return (ray_collision_t) { p.x, ey, abs(p.y - ey) };
         }
     }
     no_collision;
@@ -274,14 +272,14 @@ ray_collision_t __ray_intersect_v(double x, double y, double sina,
 
 #undef no_collision
 
-ray_collision_t __raycast(double x, double y, double m, double c, double cosa, double sina, map_t *map) {
+ray_collision_t __raycast(v2i p, double m, double c, double cosa, double sina, map_t *map) {
     int i;
     ray_collision_t collision = (ray_collision_t) { 0, 0, INFINITY };
     ray_collision_t new_collision;
     for(i = 0; i < map->n_segments; i++) {
-        new_collision = __ray_intersect(x, y, m, c, cosa, sina,
-                map->points[map->segments[i].a].x, map->points[map->segments[i].a].y,
-                map->points[map->segments[i].b].x, map->points[map->segments[i].b].y);
+        new_collision = __ray_intersect(p, m, c, cosa, sina,
+                (v2i) { map->points[map->segments[i].a].x, map->points[map->segments[i].a].y },
+                (v2i) { map->points[map->segments[i].b].x, map->points[map->segments[i].b].y });
 //            if(new_collision.dist != INFINITY) {
 //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
 //            }
@@ -292,14 +290,14 @@ ray_collision_t __raycast(double x, double y, double m, double c, double cosa, d
     return collision;
 }
 
-ray_collision_t __raycast_v(double x, double y, double sina, map_t *map) {
+ray_collision_t __raycast_v(v2i p, double sina, map_t *map) {
     int i;
     ray_collision_t collision = (ray_collision_t) { 0, 0, INFINITY };
     ray_collision_t new_collision;
     for(i = 0; i < map->n_segments; i++) {
-        new_collision = __ray_intersect_v(x, y, sina,
-                map->points[map->segments[i].a].x, map->points[map->segments[i].a].y,
-                map->points[map->segments[i].b].x, map->points[map->segments[i].b].y);
+        new_collision = __ray_intersect_v(p, sina,
+                (v2i) { map->points[map->segments[i].a].x, map->points[map->segments[i].a].y },
+                (v2i) { map->points[map->segments[i].b].x, map->points[map->segments[i].b].y });
 //            if(new_collision.dist != INFINITY) {
 //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
 //            }
@@ -310,16 +308,16 @@ ray_collision_t __raycast_v(double x, double y, double sina, map_t *map) {
     return collision;
 }
 
-ray_collision_t map_raycast_a(double x, double y, double angle, map_t *map) {
+ray_collision_t map_raycast_a(v2i p, double angle, map_t *map) {
     
     double cosa = cos(angle);
     double sina = -sin(angle);
     
     if(absd(cosa) > M_DELTA) {
         double m = sina / cosa;
-        double c = y - m * x;
-        return __raycast(x, y, m, c, cosa, sina, map);
+        double c = p.y - m * p.x;
+        return __raycast(p, m, c, cosa, sina, map);
     } else {
-        return __raycast_v(x, y, sina, map);
+        return __raycast_v(p, sina, map);
     }
 }

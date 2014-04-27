@@ -12,7 +12,7 @@
 #include "../main.h"
 #include "../list.h"
 
-extern void map_shadow(double x, double y);
+extern void map_shadow(v2i p);
 
 #endif	/* SHADOW_H */
 

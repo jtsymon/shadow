@@ -9,46 +9,45 @@ entity_t entity_init(int x, int y) {
     return e;
 }
 
-void entity_move(entity_t *e, int dx, int dy, map_t *map) {
+void entity_move(entity_t *e, v2i input, map_t *map) {
     
-    if(dx == 0 && dy == 0) return;
+    if(input.x == 0 && input.y == 0) return;
     
-    vec2 input = { dx, dy };
-    vec2 pos = vec_sub(e->pos, input);
+    v2i pos = v2i_sub(e->pos, input);
     
-    printf("\ninput: %f, %f\n", input.x, input.y);
+    printf("\ninput: %d, %d\n", input.x, input.y);
     
     int i;
     int rad = e->radius ? e->radius : 1;
 
     for(i = 0; i < map->n_segments; i++) {
-        vec2 v = map->points[map->segments[i].a];
-        vec2 w = map->points[map->segments[i].b];
-        if(dist_line_segment(v, w, pos) < rad) {
-            vec2 normal;
-            int side = vec_side(v, w, pos);
+        v2i v = map->points[map->segments[i].a];
+        v2i w = map->points[map->segments[i].b];
+        if(v2i_dist_line_segment(v, w, pos) < rad) {
+            int side = v2i_side(v, w, pos);
             printf("side: %d\n", side);
+            v2d normal;
             if(side == 1) {
-                normal = (vec2) { -(w.y - v.y), -(w.x - v.x) };
+                normal = (v2d) { -(double)(w.y - v.y), -(double)(w.x - v.x) };
             } else {
-                normal = (vec2) { w.y - v.y, -(w.x - v.x) };
+                normal = (v2d) { (double)(w.y - v.y), -(double)(w.x - v.x) };
             }
-            normal = vec_scale(1.0 / absd(vec_mag(normal)), normal);
+            normal = v2d_scale(1.0 / absd(v2d_mag(normal)), normal);
             printf("normal: %f, %f\n", normal.x, normal.y);
             if(side == 1) {
                 normal.y *= -1;
                 printf("normal: %f, %f\n", normal.x, normal.y);
             }
-            vec2 undesired = vec_scale(vec_dot(input, normal), normal);
+            v2d undesired = v2d_scale(v2d_dot(v2i_to_v2d(input), normal), normal);
             printf("undesired: %f, %f\n", undesired.x, undesired.y);
-            if(input.y > M_DELTA && normal.y > M_DELTA || input.y < -M_DELTA && normal.y < -M_DELTA) undesired.y = 0;
-            if(input.x > M_DELTA && normal.x > M_DELTA || input.x < -M_DELTA && normal.x < -M_DELTA) undesired.x = 0;
+            if(input.y > 0 && normal.y > M_DELTA || input.y < 0 && normal.y < -M_DELTA) undesired.y = 0;
+            if(input.x > 0 && normal.x > M_DELTA || input.x < 0 && normal.x < -M_DELTA) undesired.x = 0;
             printf("undesired: %f, %f\n", undesired.x, undesired.y);
-            input = vec_sub(input, undesired);
-            printf("input: %f, %f\n", input.x, input.y);
-            pos = vec_sub(e->pos, input);
+            input = v2i_sub(input, v2d_to_v2i(undesired));
+            printf("input: %d, %d\n", input.x, input.y);
+            pos = v2i_sub(e->pos, input);
         }
     }
-    printf("final: %f, %f\n", input.x, input.y);
-    e->pos = vec_add(e->pos, input);
+    printf("final: %d, %d\n", input.x, input.y);
+    e->pos = v2i_add(e->pos, input);
 }

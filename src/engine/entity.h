@@ -14,12 +14,12 @@
 #include "../map/types.h"
 
 typedef struct {
-    vec2 pos;
+    v2i pos;
     int radius;
 } entity_t;
 
 extern entity_t entity_init(int x, int y);
-extern void entity_move(entity_t *e, int dx, int dy, map_t *map);
+extern void entity_move(entity_t *e, v2i input, map_t *map);
 
 #endif	/* ENTITY_H */
 

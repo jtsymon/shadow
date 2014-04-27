@@ -35,18 +35,18 @@ static void render() {
         delay_ms(16);
         return;
     }
-    int dx = 0, dy = 0;
+    v2i input = { 0, 0 };
     if(keys[GLFW_KEY_LEFT] || keys[GLFW_KEY_A]) {
-        dx -= player_speed;
+        input.x -= player_speed;
     }
     if(keys[GLFW_KEY_RIGHT] || keys[GLFW_KEY_D]) {
-        dx += player_speed;
+        input.x += player_speed;
     }
     if(keys[GLFW_KEY_UP] || keys[GLFW_KEY_W]) {
-        dy -= player_speed;
+        input.y -= player_speed;
     }
     if(keys[GLFW_KEY_DOWN] || keys[GLFW_KEY_S]) {
-        dy += player_speed;
+        input.y += player_speed;
     }
     if (keys[GLFW_KEY_1]) {
         printf("DEBUG ");
@@ -62,7 +62,7 @@ static void render() {
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    entity_move(&game_data.player, dx, dy, game_data.map);
+    entity_move(&game_data.player, input, game_data.map);
     
     // draw the map
     buffer_set_colour((RGBA) { 255, 0, 0, 255 });
@@ -93,13 +93,13 @@ static void render() {
 //        }
 //    }
     // for(i = 0; i < 40; i++)
-    map_shadow(game_data.player.pos.x, game_data.player.pos.y);
+    map_shadow(game_data.player.pos);
     
     // draw player
     glColor3ub(128, 128, 128);
     fill_rectangle(game_data.player.pos.x - 5, game_data.player.pos.y - 5, game_data.player.pos.x + 5, game_data.player.pos.y + 5);
     
-    sprintf(string_buffer, "Player: %2.1f,%2.1f", game_data.player.pos.x, game_data.player.pos.y);
+    sprintf(string_buffer, "Player: %d,%d", game_data.player.pos.x, game_data.player.pos.y);
     draw_text(350, 10, string_buffer, (RGBA) {0, 255, 0, 255});
     
     // draw fps

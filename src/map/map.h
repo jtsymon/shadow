@@ -33,13 +33,11 @@
 
 extern map_t* map_open(char* filename);
 
-extern ray_collision_t __ray_intersect(double x, double y, double m, double c, double cosa, double sina,
-        double x1, double y1, double x2, double y2);
-extern ray_collision_t __ray_intersect_v(double x, double y, double sina,
-        double x1, double y1, double x2, double y2);
-extern ray_collision_t __raycast(double x, double y, double m, double c, double cosa, double sina, map_t *map);
-extern ray_collision_t __raycast_v(double x, double y, double sina, map_t *map);
-extern ray_collision_t map_raycast_a(double x, double y, double angle, map_t *map);
+extern ray_collision_t __ray_intersect(v2i p, double m, double c, double cosa, double sina, v2i s1, v2i s2);
+extern ray_collision_t __ray_intersect_v(v2i p, double sina, v2i s1, v2i s2);
+extern ray_collision_t __raycast(v2i p, double m, double c, double cosa, double sina, map_t *map);
+extern ray_collision_t __raycast_v(v2i p, double sina, map_t *map);
+extern ray_collision_t map_raycast_a(v2i p, double angle, map_t *map);
 
 #endif	/* MAP_H */
 
