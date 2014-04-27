@@ -66,19 +66,15 @@ static void mouse_callback(int button, int action, int mods) {
     }
 }
 
-static void (*vtable[])() = {
-    &create,
-    &destroy,
-    &show,
-    &hide,
-    &render,
-    &key_callback,
-    &mouse_callback
-};
-
 screen_t* screen_menu() {
     screen_t* screen = malloc(sizeof (screen_t));
-    screen->f = vtable;
+    screen->create          = &create;
+    screen->destroy         = &destroy;
+    screen->show            = &show;
+    screen->hide            = &hide;
+    screen->render          = &render;
+    screen->key_callback    = &key_callback;
+    screen->mouse_callback  = &mouse_callback;
     create();
     return screen;
 }

@@ -9,7 +9,7 @@ static void error_callback(int error, const char* description) {
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     keymod = mods;
     keys[key] = action != GLFW_RELEASE;
-    screen->f[screen_KEY_CALLBACK](key, scancode, action, mods);
+    screen->key_callback(key, scancode, action, mods);
 }
 
 static void mouse_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -18,14 +18,14 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         glfwGetCursorPos(RENDER.window, &mouse.sx, &mouse.sy);
     }
-    screen->f[screen_MOUSE_CALLBACK](button, action, mods);
+    screen->mouse_callback(button, action, mods);
 }
 
 void set_screen(screen_t* newScreen) {
     if(screen != newScreen) {
-        screen->f[screen_HIDE]();
+        screen->hide();
         screen = newScreen;
-        screen->f[screen_SHOW]();
+        screen->show();
     }
 }
 
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
         
         while(running) {
             glfwGetCursorPos(RENDER.window, &mouse.x, &mouse.y);
-            screen->f[screen_RENDER]();
+            screen->render();
 
             // make sure to render buffered data
             buffer_end();
@@ -100,8 +100,8 @@ int main(int argc, char* argv[]) {
         }
         
         printf("Cleaning up...\n");
-        GLOBALS.screen_menu->f[screen_DESTROY]();
-        GLOBALS.screen_game->f[screen_DESTROY]();
+        GLOBALS.screen_menu->destroy();
+        GLOBALS.screen_game->destroy();
         // Close OpenGL window and terminate GLFW
         glfwDestroyWindow(RENDER.window);
     } else {

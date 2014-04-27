@@ -8,21 +8,14 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-/* Screen_Functions
- *	indexes into vtable of functions a screen has
- */
-enum {
-	screen_CREATE = 0,      // called when creating the screen
-	screen_DESTROY,         // called when destroying the screen
-	screen_SHOW,            // called when the screen will start displaying
-	screen_HIDE,            // called when the screen will be hidden (but not necessarily destroyed)
-	screen_RENDER,          // called when the screen should draw
-    screen_KEY_CALLBACK,    // called when a key event is received
-    screen_MOUSE_CALLBACK   // called when a mouse event is received
-};
-
 typedef struct {
-	void (**f)();
+	void (*create)(),               // called when creating the screen
+            (*destroy)(),           // called when destroying the screen
+            (*show)(),              // called when the screen will start displaying
+            (*hide)(),              // called when the screen will be hidden (but not necessarily destroyed)
+            (*render)(),            // called when the screen should draw
+            (*key_callback)(),      // called when a key event is received
+            (*mouse_callback)();    // called when a mouse event is received
 } screen_t;
 
 #endif /* SCREEN_H */
