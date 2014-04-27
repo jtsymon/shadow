@@ -158,11 +158,17 @@ map_t* map_open(char* filename) {
 #define no_collision return (ray_collision_t) { 0, 0, INFINITY };
 
 ray_collision_t __ray_intersect(v2i p, double m, double c, double cosa, double sina, v2i s1, v2i s2) {
+    
+    int min_x = min(s1.x, s2.x);
+    int max_x = max(s1.x, s2.x);
+    int min_y = min(s1.y, s2.y);
+    int max_y = max(s1.y, s2.y);
+    
     // vertical line segment case
     if(s1.x == s2.x) {
         if(p.x <= s1.x && cosa <= 0 || p.x > s1.x && cosa > 0) no_collision;
         double ey = c + s1.x * m;
-        if(ey >= mind(s1.y, s2.y) && ey <= maxd(s1.y, s2.y)) {
+        if(ey >= min_y && ey <= max_y) {
             double dy = ey - p.y;
             double dx = s1.x - p.x;
             double dist = sqrt(dy * dy + dx * dx);
@@ -173,19 +179,16 @@ ray_collision_t __ray_intersect(v2i p, double m, double c, double cosa, double s
     // calculate the gradient now that we know it's non-zero
     double sm = (double)(s2.y - s1.y) / (s2.x - s1.x);
     double sc = s1.y - sm * s1.x;
+    
     // ray starts on the line case
-    if(equald(p.y, sm * p.x + sc) && equald(p.y, m * p.x + c) && p.x >= mind(s1.x, s2.x) && p.x <= maxd(s1.x, s2.x) && p.y >= mind(s1.y, s2.y) && p.y <= maxd(s1.y, s2.y)) {
-        // printf("p.y=%f=%f=%f, p.x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", p.y, sm * p.x + sc, m * p.x + c, p.x, mind(s1.x, s2.x), maxd(s1.x, s2.x), mind(s1.y, s2.y), maxd(s1.y, s2.y));
+    if(equald(p.y, sm * p.x + sc) && equald(p.y, m * p.x + c) && p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y) {
+        // printf("p.y=%d=%d=%d, p.x=%d, min_x=%d, max_x=%d, min_y=%d, max_y=%d\n", p.y, sm * p.x + sc, m * p.x + c, p.x, min_x, max_x, min_y, max_y);
         return (ray_collision_t) { p.x, p.y, 0 };
     }
     // parallel lines case
     if(equald(m, sm)) {
         // check if they're from the same line
         if(!equald(c, sc)) no_collision;
-        double min_x = mind(s1.x, s2.x);
-        double max_x = maxd(s1.x, s2.x);
-        double min_y = mind(s1.y, s2.y);
-        double max_y = maxd(s1.y, s2.y);
         if(p.x >= min_x && p.x <= max_x) {
             if(p.y >= min_y && p.y <= max_y) return (ray_collision_t) { p.x, p.y, 0 };
             if(p.y <= min_y && sina < 0) return (ray_collision_t) { p.x, min_y, min_y - p.y };
@@ -226,12 +229,12 @@ ray_collision_t __ray_intersect(v2i p, double m, double c, double cosa, double s
     }
     // standard case
     double ex = (sc - c) / (m - sm);
-    if(ex < mind(s1.x, s2.x) - 0.001 || ex > maxd(s1.x, s2.x) + 0.001 ||
+    if(ex < min_x - M_DELTA|| ex > max_x + M_DELTA ||
             ex < p.x && cosa > 0 || ex > p.x && cosa < 0) {
         no_collision;
     }
     double ey = c + ex * m;
-    if(ey < mind(s1.y, s2.y) - 0.001 || ey > maxd(s1.y, s2.y) + 0.001 ||
+    if(ey < min_y - M_DELTA|| ey > max_y + M_DELTA ||
             ey < p.y && sina > 0 || ey > p.y && sina < 0) {
         no_collision;
     }
@@ -243,10 +246,14 @@ ray_collision_t __ray_intersect(v2i p, double m, double c, double cosa, double s
 
 ray_collision_t __ray_intersect_v(v2i p, double sina, v2i s1, v2i s2) {
     // parallel lines (vertical line segment) case
+    
+    int min_x = min(s1.x, s2.x);
+    int max_x = max(s1.x, s2.x);
+    int min_y = min(s1.y, s2.y);
+    int max_y = max(s1.y, s2.y);
+    
     if(s2.x == s1.x) {
         if(p.x != s1.x) no_collision;
-        double min_y = mind(s1.y, s2.y);
-        double max_y = maxd(s1.y, s2.y);
         if(p.y >= min_y && p.y <= max_y) return (ray_collision_t) { p.x, p.y, 0 };
         if(p.y <= min_y && sina > 0) return (ray_collision_t) { p.x, min_y, min_y - p.y };
         if(p.y >= max_y && sina < 0) return (ray_collision_t) { p.x, max_y, p.y - max_y };
@@ -256,12 +263,12 @@ ray_collision_t __ray_intersect_v(v2i p, double sina, v2i s1, v2i s2) {
     double sm = (double)(s2.y - s1.y) / (s2.x - s1.x);
     double sc = s1.y - sm * s1.x;
     // ray starts on the line case
-    if(equald(p.y, sm * p.x + sc) && p.x >= mind(s1.x, s2.x) && p.x <= maxd(s1.x, s2.x) && p.y >= mind(s1.y, s2.y) && p.y <= maxd(s1.y, s2.y)) {
-        // printf("p.y=%f=%f, p.x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", p.y, sm * p.x + sc, mind(s1.x, s2.x), maxd(s1.x, s2.x), mind(s1.y, s2.y), maxd(s1.y, s2.y));
+    if(equald(p.y, sm * p.x + sc) && p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y) {
+        // printf("p.y=%d=%d, p.x=%d, min_x=%d, max_x=%d, min_y=%d, max_y=%d\n", p.y, sm * p.x + sc, min_x, max_x, min_y, max_y);
         return (ray_collision_t) { p.x, p.y, 0 };
     }
     // standard case
-    if(p.x >= mind(s1.x, s2.x) && p.x <= maxd(s1.x, s2.x)) {
+    if(p.x >= min_x && p.x <= max_x) {
         double ey = sc + p.x * sm;
         if(p.y >= ey && sina < 0 || p.y <= ey && sina > 0) {
             return (ray_collision_t) { p.x, ey, abs(p.y - ey) };
