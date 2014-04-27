@@ -63,11 +63,16 @@ extern double vector_to_angle(double w, double h);
 extern int max(int a, int b);
 extern int min(int a, int b);
 extern double maxd(double a, double b);
+extern float maxf(float a, float b);
 extern double mind(double a, double b);
+extern float minf(float a, float b);
 extern double absd(double d);
-extern int equald(double a, double b);
+extern float absf(float f);
+extern bool equald(double a, double b);
+extern bool equalf(float a, float b);
 extern int sign(double a);
 extern double angle_sanify(double a);
+extern float angle_sanifyf(float a);
 
 #endif	/* MATH_H */
 

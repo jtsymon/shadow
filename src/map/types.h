@@ -11,8 +11,6 @@
 #include "../list.h"
 #include "../math/vector.h"
 
-typedef ivec2 point_t;
-
 typedef struct {
     int a, b;
 } line_segment_t;
@@ -26,7 +24,7 @@ typedef struct {
 typedef struct {
     // unique endpoints of line_segments
     int             n_points;
-    point_t         *points;
+    vec2             *points;
     // line segments made up from points
     int             n_segments;
     line_segment_t  *segments;

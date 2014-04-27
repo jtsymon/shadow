@@ -13,6 +13,7 @@
 
 typedef union {
     int     value;
+    float   fvalue;
     double  dvalue;
     void    *data;
 } list_data_t;

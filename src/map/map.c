@@ -7,7 +7,7 @@
 #include "map.h"
 #include "../screens/game.h"
 
-point_t *point_read(char *buf) {
+vec2 *point_read(char *buf) {
     if(*buf > '9' || *buf < '0') return NULL;
     char *x = buf;
     // advance to next number
@@ -20,11 +20,11 @@ point_t *point_read(char *buf) {
     *buf++ = '\0';
     if(*buf != '\n' && *buf != '\0') return NULL;
     
-    point_t *point = malloc(sizeof(point_t));
-    point->x = atoi(x);
-    point->y = atoi(y);
+    vec2 *point = malloc(sizeof(vec2));
+    point->x = (double)atoi(x);
+    point->y = (double)atoi(y);
     
-    printf("Point: %d,%d\n", point->x, point->y);
+    printf("Point: %f,%f\n", point->x, point->y);
     
     return point;
 }
@@ -97,7 +97,7 @@ map_t* map_open(char* filename) {
         list_t *points = list_init();
         while ((len = getline(&buf, &n, file)) != -1) {
             if(*buf == '\0' || *buf == '\n') break;
-            point_t *point = point_read(buf);
+            vec2 *point = point_read(buf);
             if(point) {
                 list_add_end(points, (list_data_t)(void*)point);
             } else {
@@ -105,9 +105,9 @@ map_t* map_open(char* filename) {
             }
         }
         map->n_points = points->size;
-        map->points = malloc(map->n_points * sizeof(point_t));
+        map->points = malloc(map->n_points * sizeof(vec2));
         printf("%d points\n", map->n_points);
-        point_t *point = NULL;
+        vec2 *point = NULL;
         int i = 0;
         while(point = list_remove(points).data) map->points[i++] = *point;
         list_free_all(points);
@@ -227,12 +227,12 @@ ray_collision_t __ray_intersect(double x, double y, double m, double c, double c
     }
     // standard case
     double ex = (sc - c) / (m - sm);
-    if(ex < mind(x1, x2) - 0.001 || ex > max(x1, x2) + 0.001 ||
+    if(ex < mind(x1, x2) - 0.001 || ex > maxd(x1, x2) + 0.001 ||
             ex < x && cosa > 0 || ex > x && cosa < 0) {
         no_collision;
     }
     double ey = c + ex * m;
-    if(ey < mind(y1, y2) - 0.001 || ey > max(y1, y2) + 0.001 ||
+    if(ey < mind(y1, y2) - 0.001 || ey > maxd(y1, y2) + 0.001 ||
             ey < y && sina > 0 || ey > y && sina < 0) {
         no_collision;
     }
@@ -259,7 +259,7 @@ ray_collision_t __ray_intersect_v(double x, double y, double sina,
     double sc = y1 - sm * x1;
     // ray starts on the line case
     if(equald(y, sm * x + sc) && x >= mind(x1, x2) && x <= maxd(x1, x2) && y >= mind(y1, y2) && y <= maxd(y1, y2)) {
-        printf("y=%f=%f, x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", y, sm * x + sc, mind(x1, x2), maxd(x1, x2), mind(y1, y2), maxd(y1, y2));
+        // printf("y=%f=%f, x=%f, minx=%f, maxx=%f, miny=%f, maxy=%f\n", y, sm * x + sc, mind(x1, x2), maxd(x1, x2), mind(y1, y2), maxd(y1, y2));
         return (ray_collision_t) { x, y, 0 };
     }
     // standard case

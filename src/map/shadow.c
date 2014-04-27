@@ -1,7 +1,7 @@
 
 #include "shadow.h"
 
-ray_collision_t shadow_raycast(double x, double y, double angle) {
+static ray_collision_t shadow_raycast(double x, double y, double angle) {
     
     double cosa = cos(angle);
     double sina = -sin(angle);
@@ -137,7 +137,7 @@ void map_shadow(double x, double y) {
                     GL_FLOAT, // type
                     GL_FALSE, // normalized?
                     0, // stride
-                    (void*) 0 // array buffer offset
+                    NULL // array buffer offset
                     );
     glDrawArrays(GL_TRIANGLE_FAN, 0, size);
     glDisableVertexAttribArray(0);

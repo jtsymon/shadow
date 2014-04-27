@@ -22,8 +22,8 @@ void entity_move(entity_t *e, int dx, int dy, map_t *map) {
     int rad = e->radius ? e->radius : 1;
 
     for(i = 0; i < map->n_segments; i++) {
-        vec2 v = ivec_to_vec(map->points[map->segments[i].a]);
-        vec2 w = ivec_to_vec(map->points[map->segments[i].b]);
+        vec2 v = map->points[map->segments[i].a];
+        vec2 w = map->points[map->segments[i].b];
         if(dist_line_segment(v, w, pos) < rad) {
             vec2 normal;
             int side = vec_side(v, w, pos);

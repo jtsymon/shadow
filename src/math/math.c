@@ -32,7 +32,15 @@ inline double mind(double a, double b) {
     return a < b ? a : b;
 }
 
+inline float minf(float a, float b) {
+    return a < b ? a : b;
+}
+
 inline double maxd(double a, double b) {
+    return a > b ? a : b;
+}
+
+inline float maxf(float a, float b) {
     return a > b ? a : b;
 }
 
@@ -40,8 +48,16 @@ inline double absd(double d) {
     return d >= 0 ? d : -d;
 }
 
-inline int equald(double a, double b) {
+inline float absf(float f) {
+    return f >= 0 ? f : -f;
+}
+
+inline bool equald(double a, double b) {
     return absd(a - b) < M_DELTA;
+}
+
+inline bool equalf(float a, float b) {
+    return absf(a - b) < M_DELTA;
 }
 
 inline int sign(double a) {
@@ -49,6 +65,11 @@ inline int sign(double a) {
 }
 
 inline double angle_sanify(double a) {
+    if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
+    return a;
+}
+
+inline float angle_sanifyf(float a) {
     if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
     return a;
 }
