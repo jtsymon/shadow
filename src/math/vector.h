@@ -28,7 +28,8 @@ extern v2i v2i_scale(double s, v2i v);
 extern v2i v2i_add(v2i v, v2i w);
 extern v2i v2i_sub(v2i v, v2i w);
 extern int v2i_side(v2i a, v2i b, v2i c);
-extern double v2i_dist_line_segment(v2i v, v2i w, v2i p);
+extern double v2i_dist_line_segment(v2i v, v2i w, v2i p, bool *endpoint);
+extern double v2i_angle(v2i v);
 
 extern v2i v2d_to_v2i(v2d v);
 extern double v2d_dist(v2d v, v2d w);

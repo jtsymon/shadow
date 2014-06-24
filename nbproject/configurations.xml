@@ -88,8 +88,26 @@
       <itemPath>TODO</itemPath>
       <itemPath>data/test.map</itemPath>
     </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>TODO</itemPath>
+      <itemPath>data/test.map</itemPath>
+    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>src</Elem>
+    <Elem>src/screens</Elem>
+    <Elem>src/graphics</Elem>
+    <Elem>src/map</Elem>
+    <Elem>shaders</Elem>
     <Elem>src</Elem>
     <Elem>src/screens</Elem>
     <Elem>src/graphics</Elem>
@@ -219,7 +237,8 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <commandLine>-lpthread -lSDL2 -lSDL2_ttf -lSDL2_gfx -lm -lGL</commandLine>
+          <standard>10</standard>
+          <commandLine>${varCOMPILE}</commandLine>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -230,6 +249,9 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
+        </linkerTool>
       </compileType>
       <item path="include/button.h" ex="false" tool="3" flavor2="0">
       </item>

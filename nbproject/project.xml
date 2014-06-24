@@ -15,6 +15,11 @@
                 <sourceRootElem>src/graphics</sourceRootElem>
                 <sourceRootElem>src/map</sourceRootElem>
                 <sourceRootElem>shaders</sourceRootElem>
+                <sourceRootElem>src</sourceRootElem>
+                <sourceRootElem>src/screens</sourceRootElem>
+                <sourceRootElem>src/graphics</sourceRootElem>
+                <sourceRootElem>src/map</sourceRootElem>
+                <sourceRootElem>shaders</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

@@ -53,16 +53,31 @@ int v2i_side(v2i v, v2i w, v2i p) {
  * @param p Point
  * @return The distance
  */
-double v2i_dist_line_segment(v2i v, v2i w, v2i p) {
+double v2i_dist_line_segment(v2i v, v2i w, v2i p, bool *endpoint) {
     // Return minimum distance between line segment vw and point p
-    double l2 = v2i_dist_sq(v, w);                          // i.e. |w-v|^2 -  avoid a sqrt
-    if (l2 == 0.0) return v2i_dist(p, v);                        // v == w case
+    *endpoint = true;
+    double l2 = v2i_dist_sq(v, w);                  // i.e. |w-v|^2 -  avoid a sqrt
+    if (l2 == 0.0) {
+        return v2i_dist(p, v);                      // v == w case
+    }
     // Consider the line extending the segment, parameterized as v + t (w - v).
     // We find projection of point p onto the line. 
     // It falls where t = [(p-v) . (w-v)] / |w-v|^2
     double t = v2i_dot(v2i_sub(p, v), v2i_sub(w, v)) / l2;
-    if (t < 0.0) return v2i_dist(p, v);                          // Beyond the 'v' end of the segment
-    else if (t > 1.0) return v2i_dist(p, w);                     // Beyond the 'w' end of the segment
-    v2i projection = v2i_add(v, v2i_scale(t, v2i_sub(w, v))); // Projection falls on the segment
+    if (t < 0.0) {
+        return v2i_dist(p, v);                      // Beyond the 'v' end of the segment
+    }
+    else if (t > 1.0) {
+        return v2i_dist(p, w);                      // Beyond the 'w' end of the segment
+    }
+    v2i projection = v2i_add(v, v2i_scale(t, v2i_sub(w, v)));   // Projection falls on the segment
+    *endpoint = false;
     return v2i_dist(p, projection);
+}
+
+/**
+ * Calculates the angle between two vectors
+ */
+double v2i_angle(v2i v) {
+    return atan((double)v.y / (double)v.x);
 }
