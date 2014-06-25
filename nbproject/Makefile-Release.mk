@@ -36,34 +36,26 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/button.o \
-	${OBJECTDIR}/src/engine/entity.o \
-	${OBJECTDIR}/src/engine/timer.o \
-	${OBJECTDIR}/src/graphics/buffered.o \
-	${OBJECTDIR}/src/graphics/colour.o \
-	${OBJECTDIR}/src/graphics/font.o \
-	${OBJECTDIR}/src/graphics/graphics.o \
-	${OBJECTDIR}/src/graphics/shaders.o \
-	${OBJECTDIR}/src/graphics/text.o \
-	${OBJECTDIR}/src/graphics/texture.o \
-	${OBJECTDIR}/src/list.o \
+	${OBJECTDIR}/src/engine/Entity.o \
+	${OBJECTDIR}/src/engine/Timing.o \
+	${OBJECTDIR}/src/graphics/BitmapFont.o \
+	${OBJECTDIR}/src/graphics/Colours.o \
+	${OBJECTDIR}/src/graphics/Graphics.o \
+	${OBJECTDIR}/src/graphics/Shaders.o \
+	${OBJECTDIR}/src/graphics/Texture.o \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/map/map.o \
-	${OBJECTDIR}/src/map/shadow.o \
-	${OBJECTDIR}/src/math/math.o \
-	${OBJECTDIR}/src/math/v2d.o \
-	${OBJECTDIR}/src/math/v2i.o \
 	${OBJECTDIR}/src/misc.o \
-	${OBJECTDIR}/src/screen.o \
-	${OBJECTDIR}/src/screens/game.o \
-	${OBJECTDIR}/src/screens/menu.o
+	${OBJECTDIR}/src/views/GameView.o \
+	${OBJECTDIR}/src/views/MenuView.o
 
 
 # C Compiler Flags
-CFLAGS=${varCOMPILE}
+CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=${varCOMPILE}
+CXXFLAGS=${varCOMPILE}
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -80,112 +72,72 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow ${OBJECTFILES} ${LDLIBSOPTIONS} -lGL -lglfw -lGLEW -lm -lpng -lpthread
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow ${OBJECTFILES} ${LDLIBSOPTIONS} -lGL -lglfw -lGLEW -lm -lpng -lpthread
 
-${OBJECTDIR}/src/button.o: src/button.c 
+${OBJECTDIR}/src/button.o: src/button.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/button.o src/button.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/button.o src/button.cc
 
-${OBJECTDIR}/src/engine/entity.o: src/engine/entity.c 
+${OBJECTDIR}/src/engine/Entity.o: src/engine/Entity.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/engine
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/entity.o src/engine/entity.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/Entity.o src/engine/Entity.cc
 
-${OBJECTDIR}/src/engine/timer.o: src/engine/timer.c 
+${OBJECTDIR}/src/engine/Timing.o: src/engine/Timing.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/engine
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/timer.o src/engine/timer.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/Timing.o src/engine/Timing.cc
 
-${OBJECTDIR}/src/graphics/buffered.o: src/graphics/buffered.c 
+${OBJECTDIR}/src/graphics/BitmapFont.o: src/graphics/BitmapFont.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/buffered.o src/graphics/buffered.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/BitmapFont.o src/graphics/BitmapFont.cc
 
-${OBJECTDIR}/src/graphics/colour.o: src/graphics/colour.c 
+${OBJECTDIR}/src/graphics/Colours.o: src/graphics/Colours.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/colour.o src/graphics/colour.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Colours.o src/graphics/Colours.cc
 
-${OBJECTDIR}/src/graphics/font.o: src/graphics/font.c 
+${OBJECTDIR}/src/graphics/Graphics.o: src/graphics/Graphics.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/font.o src/graphics/font.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Graphics.o src/graphics/Graphics.cc
 
-${OBJECTDIR}/src/graphics/graphics.o: src/graphics/graphics.c 
+${OBJECTDIR}/src/graphics/Shaders.o: src/graphics/Shaders.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/graphics.o src/graphics/graphics.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Shaders.o src/graphics/Shaders.cc
 
-${OBJECTDIR}/src/graphics/shaders.o: src/graphics/shaders.c 
+${OBJECTDIR}/src/graphics/Texture.o: src/graphics/Texture.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/shaders.o src/graphics/shaders.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Texture.o src/graphics/Texture.cc
 
-${OBJECTDIR}/src/graphics/text.o: src/graphics/text.c 
-	${MKDIR} -p ${OBJECTDIR}/src/graphics
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/text.o src/graphics/text.c
-
-${OBJECTDIR}/src/graphics/texture.o: src/graphics/texture.c 
-	${MKDIR} -p ${OBJECTDIR}/src/graphics
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/texture.o src/graphics/texture.c
-
-${OBJECTDIR}/src/list.o: src/list.c 
+${OBJECTDIR}/src/main.o: src/main.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/list.o src/list.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cc
 
-${OBJECTDIR}/src/main.o: src/main.c 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.c
-
-${OBJECTDIR}/src/map/map.o: src/map/map.c 
+${OBJECTDIR}/src/map/map.o: src/map/map.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/map
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/map.o src/map/map.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/map.o src/map/map.cc
 
-${OBJECTDIR}/src/map/shadow.o: src/map/shadow.c 
-	${MKDIR} -p ${OBJECTDIR}/src/map
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/shadow.o src/map/shadow.c
-
-${OBJECTDIR}/src/math/math.o: src/math/math.c 
-	${MKDIR} -p ${OBJECTDIR}/src/math
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/math.o src/math/math.c
-
-${OBJECTDIR}/src/math/v2d.o: src/math/v2d.c 
-	${MKDIR} -p ${OBJECTDIR}/src/math
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/v2d.o src/math/v2d.c
-
-${OBJECTDIR}/src/math/v2i.o: src/math/v2i.c 
-	${MKDIR} -p ${OBJECTDIR}/src/math
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/math/v2i.o src/math/v2i.c
-
-${OBJECTDIR}/src/misc.o: src/misc.c 
+${OBJECTDIR}/src/misc.o: src/misc.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/misc.o src/misc.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/misc.o src/misc.cc
 
-${OBJECTDIR}/src/screen.o: src/screen.c 
-	${MKDIR} -p ${OBJECTDIR}/src
+${OBJECTDIR}/src/views/GameView.o: src/views/GameView.cc 
+	${MKDIR} -p ${OBJECTDIR}/src/views
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/screen.o src/screen.c
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/views/GameView.o src/views/GameView.cc
 
-${OBJECTDIR}/src/screens/game.o: src/screens/game.c 
-	${MKDIR} -p ${OBJECTDIR}/src/screens
+${OBJECTDIR}/src/views/MenuView.o: src/views/MenuView.cc 
+	${MKDIR} -p ${OBJECTDIR}/src/views
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/screens/game.o src/screens/game.c
-
-${OBJECTDIR}/src/screens/menu.o: src/screens/menu.c 
-	${MKDIR} -p ${OBJECTDIR}/src/screens
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/screens/menu.o src/screens/menu.c
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/views/MenuView.o src/views/MenuView.cc
 
 # Subprojects
 .build-subprojects:

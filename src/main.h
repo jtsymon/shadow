@@ -8,11 +8,23 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "misc.h"
-#include "screens/menu.h"
-#include "screens/game.h"
-#include "graphics/shaders.h"
+#include "graphics/Graphics.h"
+#include "views/MenuView.h"
+#include "views/GameView.h"
+#include "engine/Resources.h"
 
-extern void set_screen(screen_t* newScreen);
+extern Vector<double> mouse_pos;
+extern Vector<double> mouse_click;
+extern char mouse_buttons[GLFW_MOUSE_BUTTON_LAST + 1];
+extern uint8_t keys[];
+extern int keymod;
 
+extern int width, height;
+
+extern MenuView menu_view;
+extern GameView game_view;
+
+extern int running;
+
+extern void set_view(View *new_view);
 #endif /* MAIN_H */

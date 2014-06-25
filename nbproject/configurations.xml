@@ -3,34 +3,30 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="include" displayName="include" projectFiles="true">
       <logicalFolder name="engine" displayName="engine" projectFiles="true">
-        <itemPath>src/engine/entity.h</itemPath>
-        <itemPath>include/engine/timer.h</itemPath>
+        <itemPath>src/engine/Entity.h</itemPath>
+        <itemPath>src/engine/Resources.h</itemPath>
+        <itemPath>include/engine/Timing.h</itemPath>
       </logicalFolder>
       <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
-        <itemPath>include/graphics/colour.h</itemPath>
-        <itemPath>include/graphics/font.h</itemPath>
-        <itemPath>include/graphics/graphics.h</itemPath>
-        <itemPath>include/graphics/shaders.h</itemPath>
-        <itemPath>include/graphics/text.h</itemPath>
-        <itemPath>include/graphics/texture.h</itemPath>
-        <itemPath>src/graphics/types.h</itemPath>
+        <itemPath>include/graphics/BitmapFont.h</itemPath>
+        <itemPath>include/graphics/Colours.h</itemPath>
+        <itemPath>include/graphics/Graphics.h</itemPath>
+        <itemPath>include/graphics/Shaders.h</itemPath>
+        <itemPath>include/graphics/Texture.h</itemPath>
       </logicalFolder>
       <logicalFolder name="map" displayName="map" projectFiles="true">
         <itemPath>include/map/map.h</itemPath>
-        <itemPath>include/map/shadow.h</itemPath>
-        <itemPath>include/map/types.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="math" projectFiles="true">
         <itemPath>src/math/math.h</itemPath>
         <itemPath>src/math/vector.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="screens" displayName="screens" projectFiles="true">
-        <itemPath>include/screens/game.h</itemPath>
-        <itemPath>include/screens/menu.h</itemPath>
+      <logicalFolder name="screens" displayName="views" projectFiles="true">
+        <itemPath>include/views/GameView.h</itemPath>
+        <itemPath>include/views/MenuView.h</itemPath>
       </logicalFolder>
+      <itemPath>include/View.h</itemPath>
       <itemPath>include/button.h</itemPath>
-      <itemPath>include/global.h</itemPath>
-      <itemPath>include/list.h</itemPath>
       <itemPath>include/main.h</itemPath>
       <itemPath>src/misc.h</itemPath>
     </logicalFolder>
@@ -44,36 +40,28 @@
     </logicalFolder>
     <logicalFolder name="src" displayName="src" projectFiles="true">
       <logicalFolder name="engine" displayName="engine" projectFiles="true">
-        <itemPath>src/engine/entity.c</itemPath>
-        <itemPath>src/engine/timer.c</itemPath>
+        <itemPath>src/engine/Entity.cc</itemPath>
+        <itemPath>src/engine/Timing.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
-        <itemPath>src/graphics/buffered.c</itemPath>
-        <itemPath>src/graphics/colour.c</itemPath>
-        <itemPath>src/graphics/font.c</itemPath>
-        <itemPath>src/graphics/graphics.c</itemPath>
-        <itemPath>src/graphics/shaders.c</itemPath>
-        <itemPath>src/graphics/text.c</itemPath>
-        <itemPath>src/graphics/texture.c</itemPath>
+        <itemPath>src/graphics/BitmapFont.cc</itemPath>
+        <itemPath>src/graphics/Colours.cc</itemPath>
+        <itemPath>src/graphics/Graphics.cc</itemPath>
+        <itemPath>src/graphics/Shaders.cc</itemPath>
+        <itemPath>src/graphics/Texture.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="map" displayName="map" projectFiles="true">
-        <itemPath>src/map/map.c</itemPath>
-        <itemPath>src/map/shadow.c</itemPath>
+        <itemPath>src/map/map.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="math" projectFiles="true">
-        <itemPath>src/math/math.c</itemPath>
-        <itemPath>src/math/v2d.c</itemPath>
-        <itemPath>src/math/v2i.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="screens" displayName="screens" projectFiles="true">
-        <itemPath>src/screens/game.c</itemPath>
-        <itemPath>src/screens/menu.c</itemPath>
+      <logicalFolder name="screens" displayName="views" projectFiles="true">
+        <itemPath>src/views/GameView.cc</itemPath>
+        <itemPath>src/views/MenuView.cc</itemPath>
       </logicalFolder>
-      <itemPath>src/button.c</itemPath>
-      <itemPath>src/list.c</itemPath>
-      <itemPath>src/main.c</itemPath>
-      <itemPath>src/misc.c</itemPath>
-      <itemPath>src/screen.c</itemPath>
+      <itemPath>src/button.cc</itemPath>
+      <itemPath>src/main.cc</itemPath>
+      <itemPath>src/misc.cc</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -123,45 +111,37 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <cTool>
-          <standard>10</standard>
+        <ccTool>
+          <standard>8</standard>
           <commandLine>${varCOMPILE}</commandLine>
-        </cTool>
+        </ccTool>
         <linkerTool>
           <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
         </linkerTool>
       </compileType>
+      <item path="include/View.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/engine/timer.h" ex="false" tool="3" flavor2="0">
+      <item path="include/engine/Timing.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/global.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/BitmapFont.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/colour.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Colours.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/font.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Graphics.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/graphics.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Shaders.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/shaders.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/graphics/text.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/graphics/texture.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/list.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Texture.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/map/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/map/shadow.h" ex="false" tool="3" flavor2="0">
+      <item path="include/views/GameView.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/map/types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/screens/game.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/screens/menu.h" ex="false" tool="3" flavor2="0">
+      <item path="include/views/MenuView.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/colour.frag" ex="false" tool="3" flavor2="0">
       </item>
@@ -175,57 +155,41 @@
       </item>
       <item path="shaders/texture.vert" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/button.c" ex="false" tool="0" flavor2="0">
+      <item path="src/button.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/engine/entity.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Entity.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/engine/entity.h" ex="false" tool="3" flavor2="0">
+      <item path="src/engine/Entity.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/engine/timer.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Resources.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/graphics/buffered.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Timing.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/colour.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/BitmapFont.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/font.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Colours.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/graphics.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Graphics.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/shaders.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Shaders.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/text.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Texture.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/texture.c" ex="false" tool="0" flavor2="0">
+      <item path="src/main.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/list.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/main.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/map/map.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/map/shadow.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/math/math.c" ex="false" tool="0" flavor2="0">
+      <item path="src/map/map.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/math/math.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/math/v2d.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/math/v2i.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="src/math/vector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/misc.c" ex="false" tool="0" flavor2="0">
+      <item path="src/misc.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/misc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/screen.c" ex="false" tool="0" flavor2="0">
+      <item path="src/views/GameView.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/screens/game.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/screens/menu.c" ex="false" tool="0" flavor2="0">
+      <item path="src/views/MenuView.cc" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -237,11 +201,11 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <standard>10</standard>
-          <commandLine>${varCOMPILE}</commandLine>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <commandLine>${varCOMPILE}</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -253,37 +217,29 @@
           <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
         </linkerTool>
       </compileType>
+      <item path="include/View.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/engine/timer.h" ex="false" tool="3" flavor2="0">
+      <item path="include/engine/Timing.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/global.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/BitmapFont.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/colour.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Colours.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/font.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Graphics.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/graphics.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Shaders.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/graphics/shaders.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/graphics/text.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/graphics/texture.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/list.h" ex="false" tool="3" flavor2="0">
+      <item path="include/graphics/Texture.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/map/map.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/map/shadow.h" ex="false" tool="3" flavor2="0">
+      <item path="include/views/GameView.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/map/types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/screens/game.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/screens/menu.h" ex="false" tool="3" flavor2="0">
+      <item path="include/views/MenuView.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/colour.frag" ex="false" tool="3" flavor2="0">
       </item>
@@ -297,57 +253,41 @@
       </item>
       <item path="shaders/texture.vert" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/button.c" ex="false" tool="0" flavor2="0">
+      <item path="src/button.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/engine/entity.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Entity.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/engine/entity.h" ex="false" tool="3" flavor2="0">
+      <item path="src/engine/Entity.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/engine/timer.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Resources.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/graphics/buffered.c" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Timing.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/colour.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/BitmapFont.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/font.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Colours.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/graphics.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Graphics.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/shaders.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Shaders.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/text.c" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Texture.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/texture.c" ex="false" tool="0" flavor2="0">
+      <item path="src/main.cc" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/graphics/types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/list.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/main.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/map/map.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/map/shadow.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/math/math.c" ex="false" tool="0" flavor2="0">
+      <item path="src/map/map.cc" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/math/math.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/math/v2d.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/math/v2i.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="src/math/vector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/misc.c" ex="false" tool="0" flavor2="0">
+      <item path="src/misc.cc" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/misc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/screen.c" ex="false" tool="0" flavor2="0">
+      <item path="src/views/GameView.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/screens/game.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/screens/menu.c" ex="false" tool="0" flavor2="0">
+      <item path="src/views/MenuView.cc" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

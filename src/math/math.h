@@ -8,14 +8,10 @@
 #ifndef MATH_H
 #define	MATH_H
 
-#include <math.h>
+#include <cmath>
 
 #define M_DELTA         0.00001
 #define SHADOW_DELTA    0.0001
-
-typedef unsigned char bool;
-#define true    1
-#define false   0
 
 #define MATH_CONSTANTS
 #ifdef MATH_CONSTANTS
@@ -60,20 +56,23 @@ typedef unsigned char bool;
 #endif
 #endif
 
-extern double vector_to_angle(double w, double h);
-extern int max(int a, int b);
-extern int min(int a, int b);
-extern double maxd(double a, double b);
-extern float maxf(float a, float b);
-extern double mind(double a, double b);
-extern float minf(float a, float b);
-extern double absd(double d);
-extern float absf(float f);
-extern bool equald(double a, double b);
-extern bool equalf(float a, float b);
-extern int sign(double a);
-extern double angle_sanify(double a);
-extern float angle_sanifyf(float a);
+template <class T>
+inline bool float_equal(T a, T b) {
+    return std::abs(a - b) < M_DELTA;
+}
+inline int sign(double a) {
+    return a > 0 ? 1 : a < 0 ? -1 : 0;
+}
+inline double angle_sanify(double a) {
+    if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
+    return a;
+}
+
+inline float angle_sanifyf(float a) {
+    if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
+    return a;
+}
+
 
 #endif	/* MATH_H */
 

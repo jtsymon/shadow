@@ -8,41 +8,53 @@
 #ifndef BUTTON_H
 #define	BUTTON_H
 
-#include "global.h"
-#include "graphics/graphics.h"
-#include "graphics/font.h"
+#include "graphics/Graphics.h"
+#include "graphics/BitmapFont.h"
+#include <string>
 
-typedef struct {
+class Button {
     int x, y;
     int w, h;
-    char* text;
+    std::string text;
     int text_x, text_y;
     RGBA foreground_color;
     RGBA background_color;
     RGBA hover_background_color;
     RGBA click_background_color;
-    font_t* font;
+    BitmapFont font;
     void (*onclick)();
-} button_t;
 
-extern void button_set_position(button_t* this, int x, int y);
-extern void button_set_size(button_t* this, int w, int h);
-extern void button_set_text(button_t* this, char* text);
-extern void button_set_font(button_t* this, font_t* font);
+    void layout();
 
-extern button_t* button_create(char* text, int x, int y, void (*onclick)());
-extern button_t* button_create_font(char* text, int x, int y, void (*onclick)(), font_t* font);
-extern button_t* button_create_size(char* text, int x, int y, void (*onclick)(), int width, int height);
-extern button_t* button_create_size_font(char* text, int x, int y, void (*onclick)(), int width, int height, font_t* font);
-extern button_t* button_create_size_color(char* text, int x, int y, void (*onclick)(), int width, int height,
-        RGBA foreground_color, RGBA background_color, RGBA hover_background_color, RGBA click_background_color);
-extern button_t* button_create_size_color_font(char* text, int x, int y, void (*onclick)(), int width, int height,
-        RGBA foreground_color, RGBA background_color, RGBA hover_background_color, RGBA click_background_color,
-        font_t* font);
+public:
+    Button(const std::string &text, int x, int y, void (*onclick)());
+    Button(const std::string &text, int x, int y, void (*onclick)(), int width, int height);
 
-extern int button_hover(button_t* this, int x, int y);
-extern void button_draw(button_t* this);
-extern void button_click(button_t* this);
+    void setPosition(int x, int y);
+    void setSize(int w, int h);
+    void setText(char *text);
+    void setFont(BitmapFont font);
+
+    int hover(int x, int y);
+    void draw();
+    void click();
+
+    int getX() {
+        return this->x;
+    }
+
+    int getY() {
+        return this->y;
+    }
+
+    int getW() {
+        return this->w;
+    }
+
+    int getH() {
+        return this->h;
+    }
+};
 
 
 #endif	/* BUTTON_H */

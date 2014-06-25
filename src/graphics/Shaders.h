@@ -16,10 +16,11 @@
 #include <GL/glew.h>
 #include "../misc.h"
 
-extern void shader_error(GLuint object);
-extern GLuint create_shader(const char* filename, GLenum type);
-extern GLuint create_program(GLuint vertex_shader, GLuint fragment_shader);
-extern GLuint create_program_src(const char * vertex_file_path, const char * fragment_file_path);
+
+extern GLuint compile_shader(const std::string &filename, GLenum type);
+extern GLuint compile_program(GLuint vertex, GLuint fragment);
+extern GLuint compile_program(const std::string &vertex, const std::string &fragment);
+
 
 #endif	/* SHADERS_H */
 

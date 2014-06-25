@@ -1,5 +1,5 @@
 
-#include "timer.h"
+#include "Timing.h"
 
 uint64_t ticks_ns() {
     struct timespec time;

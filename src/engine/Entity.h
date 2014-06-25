@@ -11,15 +11,18 @@
 #include <stdio.h>
 #include "../math/math.h"
 #include "../math/vector.h"
-#include "../map/types.h"
+#include "../map/map.h"
 
-typedef struct {
-    v2i pos;
+class Entity {
+public:
+    Vector<int> pos;
     int radius;
-} entity_t;
 
-extern entity_t entity_init(int x, int y);
-extern void entity_move(entity_t *e, v2i input, map_t *map);
+    Entity(int x, int y);
+    void move(Vector<int> motion, Map map);
+};
+
+
 
 #endif	/* ENTITY_H */
 

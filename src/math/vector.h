@@ -11,35 +11,154 @@
 #include <stdint.h>
 #include "math.h"
 
-typedef struct {
-    int x, y;
-} v2i;
+template <class T>
+class Vector {
+public:
+    T x, y;
 
-typedef struct {
-    double x, y;
-} v2d;
+    Vector(T x, T y) : x(x), y(y) {
+    }
+    double dist(Vector<T> v);
+    T dist_sq(Vector<T> v);
+    double magnitude();
+    T dot(Vector v);
+    Vector<T> scale(T factor);
+    Vector<T> add(Vector<T> v);
+    Vector<T> sub(Vector<T> v);
+    Vector<T> normalise();
+    Vector<int> toInt();
+    Vector<double> toDouble();
+    double angle();
+    double angle2();
+};
 
-extern v2d v2i_to_v2d(v2i v);
-extern double v2i_dist(v2i v, v2i w);
-extern int64_t v2i_dist_sq(v2i v, v2i w);
-extern double v2i_mag(v2i v);
-extern int64_t v2i_dot(v2i v, v2i w);
-extern v2i v2i_scale(double s, v2i v);
-extern v2i v2i_add(v2i v, v2i w);
-extern v2i v2i_sub(v2i v, v2i w);
-extern int v2i_side(v2i a, v2i b, v2i c);
-extern double v2i_dist_line_segment(v2i v, v2i w, v2i p, bool *endpoint);
-extern double v2i_angle(v2i v);
+template <class T>
+class LineSegment {
+public:
+    Vector<T> v1, v2;
 
-extern v2i v2d_to_v2i(v2d v);
-extern double v2d_dist(v2d v, v2d w);
-extern double v2d_dist_sq(v2d v, v2d w);
-extern double v2d_mag(v2d v);
-extern double v2d_dot(v2d v, v2d w);
-extern v2d v2d_scale(double s, v2d v);
-extern v2d v2d_add(v2d v, v2d w);
-extern v2d v2d_sub(v2d v, v2d w);
-extern int v2d_side(v2d a, v2d b, v2d c);
-extern double v2d_dist_line_segment(v2d v, v2d w, v2d p);
+    LineSegment(Vector<T> v1, Vector<T> v2) : v1(v1), v2(v2) {
+    }
+
+    int side(Vector<T> v);
+    double dist(Vector<T> p, bool &endpoint);
+    Vector<double> normal(int side);
+};
+
+template <class T>
+double Vector<T>::dist(Vector<T> v) {
+    double dx = this->x - v.x;
+    double dy = this->y - v.y;
+    return sqrt((double)(dx * dx + dy * dy));
+}
+
+template <class T>
+T Vector<T>::dist_sq(Vector<T> v) {
+    double dx = this->x - v.x;
+    double dy = this->y - v.y;
+    return dx * dx + dy * dy;
+}
+
+template <class T>
+double Vector<T>::magnitude() {
+    return std::sqrt((double)(this->x * this->x + this->y * this->y));
+}
+
+template <class T>
+T Vector<T>::dot(Vector<T> v) {
+    return this->x * v.x + this->y * v.y;
+}
+
+template <class T>
+Vector<T> Vector<T>::scale(T factor) {
+    return Vector<T>(this->x * factor, this->y * factor);
+}
+
+template <class T>
+Vector<T> Vector<T>::add(Vector<T> v) {
+
+    return Vector<T>(this->x + v.x, this->y + v.y);
+}
+
+template <class T>
+Vector<T> Vector<T>::sub(Vector<T> v) {
+
+    return Vector<T>(this->x - v.x, this->y - v.y);
+}
+
+template <class T>
+double Vector<T>::angle() {
+    return atan((double)this->y / (double)this->x);
+}
+
+template <class T>
+double Vector<T>::angle2() {
+    if (this->x == 0 && this->y == 0) {
+        return 0;
+    }
+    if (this->x == 0) {
+        return this->y > 0 ? M_PI_2 : M_PI_2 * 3;
+    }
+    double ret = -atan((double)this->y / (double)this->x);
+    if (this->x < 0) {
+        ret += M_PI;
+    }
+    if (ret < 0) {
+        ret += 2 * M_PI;
+    }
+    return ret;
+}
+
+template <class T>
+Vector<T> Vector<T>::normalise() {
+    return this->scale(1.0 / std::abs(this->magnitude()));
+}
+
+template <class T>
+Vector<int> Vector<T>::toInt() {
+    return Vector<int>((int) this->x, (int) this->y);
+}
+
+template <class T>
+Vector<double> Vector<T>::toDouble() {
+    return Vector<double>((double) this->x, (double) this->y);
+}
+
+template <class T>
+int LineSegment<T>::side(Vector<T> v) {
+    return sign((this->v2.x - this->v1.x) * (v.y - this->v1.y) - (this->v2.y - this->v1.y) * (v.x - this->v1.x));
+    // return sign((w.x - v.x) * (p.y - v.y) - (w.y - v.y) * (p.x - v.x));
+}
+
+template <class T>
+double LineSegment<T>::dist(Vector<T> p, bool &endpoint) {
+    // Return minimum distance between line segment (v1, v2) and point p
+    endpoint = true;
+    double l2 = this->v1.dist_sq(this->v2); // i.e. |v2-v1|^2 -  avoid a sqrt
+    if (l2 == 0.0) {
+        return p.dist(this->v1); // v1 == v2 case
+    }
+    // Consider the line extending the segment, parameterized as v1 + t (v2 - v1).
+    // We find projection of point p onto the line. 
+    // It falls where t = [(p - v1) . (v2 - v1)] / |v2 - v1|^2
+    double t = p.sub(v1).dot(this->v2.sub(v1)) / l2;
+    if (t < 0.0) {
+        return p.dist(v1); // Beyond the 'v1' end of the segment
+    } else if (t > 1.0) {
+        return p.dist(v2); // Beyond the 'v2' end of the segment
+    }
+    Vector<double> projection = this->v1.toDouble().add(this->v2.sub(this->v1).toDouble().scale(t)); // Projection falls on the segment
+    endpoint = false;
+    return p.toDouble().dist(projection);
+}
+
+template <class T>
+Vector<double> LineSegment<T>::normal(int side) {
+    if (side == 1) {
+        return Vector<double>((double) (this->v1.y - this->v2.y), (double) (this->v2.x - this->v1.x));
+    } else {
+        return Vector<double>((double) (this->v2.y - this->v1.y), (double) (this->v1.x - this->v2.x));
+    }
+}
 
 #endif	/* VECTOR_H */
