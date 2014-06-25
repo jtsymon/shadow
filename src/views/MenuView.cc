@@ -41,7 +41,6 @@ void MenuView::render() {
         button.draw();
     }
 
-    Graphics::get().flush();
     BitmapFont::standard.drawText(100, 300, "Testing Text _ <- underscore", RGBA(0, 255, 0, 255));
 
     BitmapFont::bold_oblique.texture->draw(RGBA(0, 0, 255, 255), 100, 400, 256, 256);

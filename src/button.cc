@@ -63,16 +63,10 @@ int Button::hover(int x, int y) {
 void Button::draw() {
     Graphics g = Graphics::get();
     // draw background
-    if (mouse_buttons[GLFW_MOUSE_BUTTON_LEFT] &&
-            this->hover(mouse_click.x, mouse_click.y)) {
-        g.set_colour(this->click_background_color);
-    } else if (this->hover(mouse_pos.x, mouse_pos.y)) {
-        g.set_colour(this->hover_background_color);
-    } else {
-        g.set_colour(this->background_color);
-    }
-    g.fill_rectangle(this->x, this->y, this->x + this->w, this->y + this->h);
-    g.flush();
+    RGBA colour = (mouse_buttons[GLFW_MOUSE_BUTTON_LEFT] && this->hover(mouse_click.x, mouse_click.y)) ?
+        this->click_background_color : (this->hover(mouse_pos.x, mouse_pos.y) ?
+            this->hover_background_color : this->background_color);
+    g.fill_rectangle(colour, this->x, this->y, this->x + this->w, this->y + this->h);
     // draw text
     this->font.drawText(this->text_x, this->text_y, this->text, this->foreground_color);
 }

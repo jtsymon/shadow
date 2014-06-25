@@ -10,7 +10,7 @@ GLuint Graphics::vertex_buffer[n_buffers];
 GLuint Graphics::vertex_array[n_buffers];
 GLuint Graphics::shaders[n_shaders];
 
-Graphics::Graphics() : colour(RGBA(0, 0, 0, 255)) {
+Graphics::Graphics() {
     // init shaders
     Graphics::shaders[GRAPHICS_COLOUR_SHADER] = compile_program("shaders/pass_through.vert", "shaders/colour.frag");
     Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through_texture.vert", "shaders/shadow_mask.frag");
@@ -185,41 +185,28 @@ int initGL() {
     return init_mask() + init_vertex_buffers();
 }
 
-void Graphics::set_mode(GLenum mode) {
-    if (mode == this->mode) return;
-    this->flush();
-    this->mode = mode;
-}
-
-void Graphics::set_colour(RGBA colour) {
-    if (colour.r == this->colour.r && colour.g == this->colour.g &&
-            colour.b == this->colour.b && colour.a == this->colour.a) return;
-    this->flush();
-    this->colour = colour;
-}
-
-void Graphics::set_shader(int shader=0) {
-    if (shader == this->shader) return;
-    this->flush();
-    this->shader = shader;
-}
-
-void Graphics::flush() {
-    if (this->p == 0) return;
-
-    GLuint shader = this->shaders[this->shader];
+/**
+ * Draws a number of points
+ * TODO: Add some way of handling shader parameters
+ * (currently this can't properly handle different shaders if have different parameters)
+ * @param colour
+ * @param mode
+ * @param n
+ * @param points
+ */
+void Graphics::draw(RGBA colour, GLuint mode, GLuint shader, int n, GLfloat *points) {
     
     glUseProgram(shader);
 
     glBindVertexArray(Graphics::vertex_array[0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, Graphics::vertex_buffer[0]);
-    glBufferData(GL_ARRAY_BUFFER, this->p * 2 * sizeof (GLfloat), this->buffer, GL_STATIC_DRAW);
-
+    glBufferData(GL_ARRAY_BUFFER, n * 2 * sizeof (GLfloat), points, GL_STATIC_DRAW);
+    
     glUniform4f(glGetUniformLocation(shader, "colour_in"),
-            (float) this->colour.r / 255, (float) this->colour.g / 255,
-            (float) this->colour.b / 255, (float) this->colour.a / 255);
-
+            (float) colour.r / 255, (float) colour.g / 255,
+            (float) colour.b / 255, (float) colour.a / 255);
+    
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, Graphics::vertex_buffer[0]);
     glVertexAttribPointer(
@@ -230,61 +217,31 @@ void Graphics::flush() {
             0, // stride
             (void*) 0 // array buffer offset
             );
-    glDrawArrays(this->mode, 0, this->p);
+    glDrawArrays(mode, 0, n);
+    
     glDisableVertexAttribArray(0);
-
-    this->reset();
 }
 
-void Graphics::reset() {
-    this->p = 0;
+void Graphics::draw(Batch &batch) {
+    this->draw(batch.colour, batch.mode, batch.shader, batch.p, batch.buffer);
 }
 
-int Graphics::check_space() {
-    return render_buffer_size - this->p;
-}
-
-int Graphics::add(GLfloat x, GLfloat y) {
-    if (render_buffer_size - this->p <= 0) {
-        this->flush();
-    }
-    this->buffer[this->p << 1] = x;
-    this->buffer[(this->p << 1) + 1] = y;
-    return render_buffer_size - ++this->p;
-}
-
-int Graphics::add(int n, const GLfloat points[]) {
-    if (render_buffer_size - this->p <= n - 1) {
-        this->flush();
-    }
-    int i;
-    for (i = 0; i < n; i++) {
-        this->buffer[this->p << 1] = points[i << 1];
-        this->buffer[(p << 1) + 1] = points[(i << 1) + 1];
-        this->p++;
-    }
-    return render_buffer_size - this->p;
-}
-
-void Graphics::fill_triangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-    this->set_mode(GL_TRIANGLES);
-
-    const GLfloat points[] = {
+void Graphics::fill_triangle(RGBA colour, int x1, int y1, int x2, int y2, int x3, int y3) {
+    
+    GLfloat points[] = {
         game_to_gl_x(x1), game_to_gl_y(y1),
         game_to_gl_x(x2), game_to_gl_y(y2),
         game_to_gl_x(x3), game_to_gl_y(y3)
     };
-
-    this->add(3, points);
+    
+    this->draw(colour, GL_TRIANGLES, this->shaders[GRAPHICS_COLOUR_SHADER], 3, points);
 }
 
-void Graphics::fill_rectangle(int x1, int y1, int x2, int y2) {
+void Graphics::fill_rectangle(RGBA colour, int x1, int y1, int x2, int y2) {
     float xa = game_to_gl_x(x1), ya = game_to_gl_y(y1),
             xb = game_to_gl_x(x2), yb = game_to_gl_y(y2);
 
-    this->set_mode(GL_TRIANGLES);
-
-    const GLfloat points[] = {
+    GLfloat points[] = {
         xa, ya,
         xb, ya,
         xb, yb,
@@ -292,6 +249,35 @@ void Graphics::fill_rectangle(int x1, int y1, int x2, int y2) {
         xa, yb,
         xb, yb
     };
+    
+    this->draw(colour, GL_TRIANGLES, this->shaders[GRAPHICS_COLOUR_SHADER], 6, points);
+}
 
-    this->add(6, points);
+int Batch::check_space() {
+    return this->size - this->p;
+}
+
+int Batch::add(GLfloat x, GLfloat y) {
+    int remaining = this->size - (this->p + 1);
+    if (remaining < 0) {
+        throw Exception("Batch out of space!");
+    }
+    this->buffer[this->p << 1] = x;
+    this->buffer[(this->p << 1) + 1] = y;
+    this->p++;
+    return remaining;
+}
+
+int Batch::add(int n, const GLfloat points[]) {
+    int remaining = this->size - (this->p + n);
+    if (remaining < 0) {
+        throw Exception("Batch out of space!");
+    }
+    int i;
+    for (i = 0; i < n; i++) {
+        this->buffer[this->p << 1] = points[i << 1];
+        this->buffer[(this->p << 1) + 1] = points[(i << 1) + 1];
+        this->p++;
+    }
+    return remaining;
 }

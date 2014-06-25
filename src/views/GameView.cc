@@ -63,8 +63,7 @@ void GameView::render() {
     this->player.move(input, this->map);
     
     // draw the map
-    g.set_colour(RGBA(255, 0, 0, 255));
-    g.set_mode(GL_LINES);
+    Batch map_batch(GL_LINES, RGBA(255, 0, 0, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER], map.segments.size() * 2);
     for(MapSegment segment : map.segments) {
         const GLfloat points[] = {
             game_to_gl_x(map.points[segment.a].x),
@@ -72,8 +71,9 @@ void GameView::render() {
             game_to_gl_x(map.points[segment.b].x),
             game_to_gl_y(map.points[segment.b].y)
         };
-        g.add(2, points);
+        map_batch.add(2, points);
     }
+    g.draw(map_batch);
     
 //    double a;
 //    for(a = 0; a < M_PI; a += M_PI_4) {
@@ -94,9 +94,11 @@ void GameView::render() {
     this->map.shadow(this->player.pos);
     
     // draw player
-    g.set_colour(RGBA(128, 128, 128, 255));
-    g.fill_rectangle(this->player.pos.x - 5, this->player.pos.y - 5, this->player.pos.x + 5, this->player.pos.y + 5);
-    g.flush();
+    g.fill_rectangle(
+            RGBA(128, 128, 128, 255),
+            this->player.pos.x - 5, this->player.pos.y - 5,
+            this->player.pos.x + 5, this->player.pos.y + 5
+    );
     
     std::string message = "Player: " + std::to_string(this->player.pos.x) + "," + std::to_string(this->player.pos.y);
     BitmapFont::standard.drawText(350, 10, message, RGBA(0, 255, 0, 255));

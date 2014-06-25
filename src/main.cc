@@ -107,7 +107,6 @@ int main(int argc, char* argv[]) {
             view->render();
 
             // make sure to render buffered data
-            g.flush();
             glfwSwapBuffers(context);
             glfwPollEvents();
         }

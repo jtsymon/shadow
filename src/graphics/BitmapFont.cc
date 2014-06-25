@@ -59,7 +59,6 @@ int BitmapFont::textWidth(const std::string &text) {
 void BitmapFont::drawText(int x, int y, const std::string &text, RGBA colour) {
 
     Graphics g = Graphics::get();
-    g.flush();
 
     int i;
     int len = text.length();
