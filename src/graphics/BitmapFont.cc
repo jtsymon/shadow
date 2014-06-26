@@ -4,8 +4,15 @@
 #include <fstream>
 #include <iostream>
 
-BitmapFont BitmapFont::standard("data/default");
-BitmapFont BitmapFont::bold_oblique("data/bold_oblique");
+BitmapFont *BitmapFont::standard() {
+    static BitmapFont *font = new BitmapFont("data/default");
+    return font;
+}
+
+BitmapFont *BitmapFont::bold_oblique() {
+    static BitmapFont *font = new BitmapFont("data/bold_oblique");
+    return font;
+}
 
 BitmapFont::BitmapFont(const std::string &name) : name(name) {
 

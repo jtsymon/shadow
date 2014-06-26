@@ -15,7 +15,7 @@ text(text), x(x), y(y), onclick(onclick), w(150), h(50),
 foreground_color(default_foreground_color), background_color(default_background_color),
 hover_background_color(default_hover_background_color),
 click_background_color(default_click_background_color),
-font(BitmapFont::standard) {
+font(BitmapFont::standard()) {
     std::cout << "Button: " << this->x << "," << this->y << " : " << this->w << "," << this->h << std::endl;
     this->layout();
 }
@@ -25,13 +25,13 @@ text(text), x(x), y(y), onclick(onclick), w(w), h(h),
 foreground_color(default_foreground_color), background_color(default_background_color),
 hover_background_color(default_hover_background_color),
 click_background_color(default_click_background_color),
-font(BitmapFont::standard) {
+font(BitmapFont::standard()) {
     this->layout();
 }
 
 void Button::layout() {
-    this->text_x = this->x + (this->w - this->font.textWidth(this->text)) / 2;
-    this->text_y = this->y + (this->h - (this->font.getH() / 2)) / 2;
+    this->text_x = this->x + (this->w - this->font->textWidth(this->text)) / 2;
+    this->text_y = this->y + (this->h - (this->font->getH() / 2)) / 2;
 }
 
 void Button::setPosition(int x, int y) {
@@ -51,7 +51,7 @@ void Button::setText(char *text) {
     this->layout();
 }
 
-void Button::setFont(BitmapFont font) {
+void Button::setFont(BitmapFont *font) {
     this->font = font;
     this->layout();
 }
@@ -68,7 +68,7 @@ void Button::draw() {
             this->hover_background_color : this->background_color);
     g.fill_rectangle(colour, this->x, this->y, this->x + this->w, this->y + this->h);
     // draw text
-    this->font.drawText(this->text_x, this->text_y, this->text, this->foreground_color);
+    this->font->drawText(this->text_x, this->text_y, this->text, this->foreground_color);
 }
 
 void Button::click() {

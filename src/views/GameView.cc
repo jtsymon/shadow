@@ -101,11 +101,11 @@ void GameView::render() {
     );
     
     std::string message = "Player: " + std::to_string(this->player.pos.x) + "," + std::to_string(this->player.pos.y);
-    BitmapFont::standard.drawText(350, 10, message, RGBA(0, 255, 0, 255));
+    BitmapFont::standard()->drawText(350, 10, message, RGBA(0, 255, 0, 255));
     
     // draw fps
     message = "Render time: " + std::to_string(ticks_ms() - render_time) + "ms";
-    BitmapFont::standard.drawText(10, 10, message, RGBA(0, 255, 0, 255));
+    BitmapFont::standard()->drawText(10, 10, message, RGBA(0, 255, 0, 255));
     // std::cout << message << std::endl;
 }
 
@@ -113,7 +113,7 @@ void GameView::key_callback(int key, int scancode, int action, int mods) {
     if(action == GLFW_RELEASE) {
         switch(key) {
             case GLFW_KEY_ESCAPE:
-                set_view(&menu_view);
+                set_view(menu_view);
 				break;
             case GLFW_KEY_P:
                 update = !update;

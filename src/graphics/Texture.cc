@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "Graphics.h"
+#include "../main.h"
 #include <string.h>
 
 static GLubyte *load_png(const char *name, unsigned int *width, unsigned int *height, int *bit_depth, int *colour_type) {
@@ -114,11 +115,12 @@ static GLubyte *load_png(const char *name, unsigned int *width, unsigned int *he
     return outData;
 }
 
-Texture::Texture(const std::string &filename) {
+Texture::Texture(const std::string &filename) : texture(0) {
     GLubyte *image_data = load_png(filename.c_str(), &this->width, &this->height, &this->bit_depth, &this->colour_type);
     if (!image_data) {
         throw Exception("Failed to load texture");
     }
+
     // Create The Texture
     glGenTextures(1, &this->texture);
 

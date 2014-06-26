@@ -21,7 +21,7 @@ class Button {
     RGBA background_color;
     RGBA hover_background_color;
     RGBA click_background_color;
-    BitmapFont font;
+    BitmapFont *font;
     void (*onclick)();
 
     void layout();
@@ -33,7 +33,7 @@ public:
     void setPosition(int x, int y);
     void setSize(int w, int h);
     void setText(char *text);
-    void setFont(BitmapFont font);
+    void setFont(BitmapFont *font);
 
     int hover(int x, int y);
     void draw();

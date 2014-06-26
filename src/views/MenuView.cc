@@ -3,14 +3,14 @@
 #include <iostream>
 
 void play_game() {
-    set_view(&game_view);
+    set_view(game_view);
 }
 
 MenuView::MenuView() : background_color(HSV(0, 100, 100)) {
     Button button("Play", 100, 100, play_game);
     this->buttons.push_back(button);
     button = Button("Create map", 100, 160, NULL);
-    button.setFont(BitmapFont::bold_oblique);
+    button.setFont(BitmapFont::bold_oblique());
     this->buttons.push_back(button);
     printf("created menu\n");
 }
@@ -41,11 +41,11 @@ void MenuView::render() {
         button.draw();
     }
 
-    BitmapFont::standard.drawText(100, 300, "Testing Text _ <- underscore", RGBA(0, 255, 0, 255));
+    BitmapFont::standard()->drawText(100, 300, "Testing Text _ <- underscore", RGBA(0, 255, 0, 255));
 
-    BitmapFont::bold_oblique.texture->draw(RGBA(0, 0, 255, 255), 100, 400, 256, 256);
+    BitmapFont::bold_oblique()->texture->draw(RGBA(0, 0, 255, 255), 100, 400, 256, 256);
 
-    BitmapFont::bold_oblique.texture->drawRegion(RGBA(255, 0, 255, 255), 400, 250, 100, 100, 0, 0, 100, 100);
+    BitmapFont::bold_oblique()->texture->drawRegion(RGBA(255, 0, 255, 255), 400, 250, 100, 100, 0, 0, 100, 100);
 }
 
 void MenuView::key_callback(int key, int scancode, int action, int mods) {

@@ -21,8 +21,8 @@ extern int keymod;
 
 extern int width, height;
 
-extern MenuView menu_view;
-extern GameView game_view;
+extern MenuView *menu_view;
+extern GameView *game_view;
 
 extern int running;
 

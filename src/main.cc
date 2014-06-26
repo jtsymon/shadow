@@ -8,8 +8,8 @@ char mouse_buttons[GLFW_MOUSE_BUTTON_LAST + 1];
 uint8_t keys[GLFW_KEY_LAST + 1];
 int keymod;
 int width, height;
-MenuView menu_view;
-GameView game_view;
+MenuView *menu_view;
+GameView *game_view;
 int running = 1;
 
 static View *view;
@@ -88,11 +88,11 @@ int main(int argc, char* argv[]) {
 
     int ret = initGL();
     
-    Graphics g = Graphics::get();
-    
     if (ret == 0) {
         
-        view = &menu_view;
+        menu_view = new MenuView;
+        game_view = new GameView;
+        view = menu_view;
         
 //        while(true) {
 //            glClearColor(1.f, 0.f, 0.f, 1.f);

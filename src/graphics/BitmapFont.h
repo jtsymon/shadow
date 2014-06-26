@@ -23,9 +23,11 @@ private:
 
 public:
     Texture *texture; // Storage For Our Font Texture
-
-    static BitmapFont standard;
-    static BitmapFont bold_oblique;
+    
+    static BitmapFont *standard();
+    static BitmapFont *bold_oblique();
+    
+    static void init();
 
     BitmapFont(const std::string &name);
 
