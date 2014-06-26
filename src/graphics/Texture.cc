@@ -144,13 +144,12 @@ Texture::Texture(const std::string &filename) : texture(0) {
 static void _draw_texture(GLuint texture, RGBA colour, const GLfloat data[]) {
 
     GLuint shader = Graphics::shaders[GRAPHICS_TEXTURE_SHADER];
-    GLuint texID = glGetUniformLocation(shader, "texture");
     glUseProgram(shader);
     // Bind our texture in Texture Unit
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     // Set our "renderedTexture" sampler to user Texture Unit 0
-    glUniform1i(texID, 0);
+    glUniform1i(glGetUniformLocation(shader, "texture"), 0);
 
     glUniform4f(glGetUniformLocation(shader, "colour_in"),
             (float) colour.r / 255, (float) colour.g / 255,

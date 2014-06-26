@@ -13,8 +13,9 @@ GLuint Graphics::shaders[n_shaders];
 Graphics::Graphics() {
     // init shaders
     Graphics::shaders[GRAPHICS_COLOUR_SHADER] = compile_program("shaders/pass_through.vert", "shaders/colour.frag");
-    Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through_texture.vert", "shaders/shadow_mask.frag");
+    Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through.vert", "shaders/shadow_mask.frag");
     Graphics::shaders[GRAPHICS_TEXTURE_SHADER] = compile_program("shaders/texture.vert", "shaders/texture.frag");
+    Graphics::shaders[GRAPHICS_BLUR_SHADER] = compile_program("shaders/texture.vert", "shaders/blur.frag");
 }
 
 Graphics& Graphics::get() {
@@ -51,59 +52,6 @@ int init_vertex_buffers() {
     return 0;
 }
 
-int init_mask() {
-    //        // The framebuffer, which regroups 0 or more textures, and 0 or 1 depth buffer.
-    //        glGenFramebuffers(1, &RENDER.mask.framebuffer);
-    //        // The texture to render to
-    //        glGenTextures(1, &RENDER.mask.texture);
-    //
-    //        glBindFramebuffer(GL_FRAMEBUFFER, RENDER.mask.framebuffer);
-    //
-    //        // "Bind" the newly created texture : all future texture functions will modify this texture
-    //        glBindTexture(GL_TEXTURE_2D, RENDER.mask.texture);
-    //
-    //        // Give an empty image to OpenGL ( the last "0" means "empty" )
-    //        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RENDER.width, RENDER.height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-    //
-    //        // Poor filtering
-    //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    //
-    //        // Set "renderedTexture" as our colour attachement #0
-    //        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, RENDER.mask.texture, 0);
-    //
-    //        //    // Set the list of draw buffers.
-    //        //    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-    //        //    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-    //
-    //        // Always check that our framebuffer is ok
-    //        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    //            fputs("Failed to generate framebuffers", stderr);
-    //            return 2;
-    //        }
-    //        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //
-    //        //    static const GLfloat fullscreen_quad[] = {
-    //        //        -1.0f, -1.0f, 0.0f,
-    //        //        1.0f, -1.0f, 0.0f,
-    //        //        -1.0f, 1.0f, 0.0f,
-    //        //        -1.0f, 1.0f, 0.0f,
-    //        //        1.0f, -1.0f, 0.0f,
-    //        //        1.0f, 1.0f, 0.0f,
-    //        //    };
-    //
-    //        glGenVertexArrays(1, &RENDER.mask.vertex_array);
-    //        glBindVertexArray(RENDER.mask.vertex_array);
-    //
-    //        glGenBuffers(1, &RENDER.mask.vertex_buffer);
-    //        // glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
-    //        // glBufferData(GL_ARRAY_BUFFER, sizeof (fullscreen_quad), fullscreen_quad, GL_STATIC_DRAW);
-
-    return 0;
-}
-
 /**
  *  General OpenGL initialization function
  */
@@ -134,7 +82,7 @@ int initGL() {
 
     update_dimensions();
 
-    return init_mask() + init_vertex_buffers();
+    return init_vertex_buffers();
 }
 
 /**

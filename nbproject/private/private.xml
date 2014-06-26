@@ -8,17 +8,15 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jts/git/shadow/src/graphics/Graphics.cc</file>
-            <file>file:/home/jts/git/shadow/src/graphics/Graphics.h</file>
             <file>file:/home/jts/git/shadow/src/map/map.cc</file>
-            <file>file:/home/jts/git/shadow/src/map/map.h</file>
-            <file>file:/home/jts/git/shadow/src/engine/Entity.cc</file>
+            <file>file:/home/jts/git/shadow/shaders/texture.frag</file>
             <file>file:/home/jts/git/shadow/src/graphics/Buffer.cc</file>
-            <file>file:/home/jts/git/shadow/src/views/GameView.h</file>
             <file>file:/home/jts/git/shadow/src/views/GameView.cc</file>
-            <file>file:/home/jts/git/shadow/src/graphics/Buffer.h</file>
+            <file>file:/home/jts/git/shadow/shaders/texture.vert</file>
             <file>file:/home/jts/git/shadow/src/graphics/Texture.cc</file>
-            <file>file:/home/jts/git/shadow/src/graphics/Texture.h</file>
-            <file>file:/home/jts/git/shadow/src/graphics/BitmapFont.cc</file>
+            <file>file:/home/jts/git/shadow/src/main.cc</file>
+            <file>file:/home/jts/git/shadow/shaders/blur.frag</file>
+            <file>file:/home/jts/git/shadow/shaders/shadow_mask.frag</file>
         </group>
     </open-files>
 </project-private>

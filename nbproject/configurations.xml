@@ -32,9 +32,9 @@
       <itemPath>src/misc.h</itemPath>
     </logicalFolder>
     <logicalFolder name="shaders" displayName="shaders" projectFiles="true">
+      <itemPath>shaders/blur.frag</itemPath>
       <itemPath>shaders/colour.frag</itemPath>
       <itemPath>shaders/pass_through.vert</itemPath>
-      <itemPath>shaders/pass_through_texture.vert</itemPath>
       <itemPath>shaders/shadow_mask.frag</itemPath>
       <itemPath>shaders/texture.frag</itemPath>
       <itemPath>shaders/texture.vert</itemPath>
@@ -143,11 +143,11 @@
       </item>
       <item path="include/views/MenuView.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="shaders/blur.frag" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="shaders/colour.frag" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/pass_through.vert" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="shaders/pass_through_texture.vert" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/shadow_mask.frag" ex="false" tool="3" flavor2="0">
       </item>
@@ -245,11 +245,11 @@
       </item>
       <item path="include/views/MenuView.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="shaders/blur.frag" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="shaders/colour.frag" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/pass_through.vert" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="shaders/pass_through_texture.vert" ex="false" tool="3" flavor2="0">
       </item>
       <item path="shaders/shadow_mask.frag" ex="false" tool="3" flavor2="0">
       </item>

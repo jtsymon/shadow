@@ -69,6 +69,7 @@ class Map {
     RayCollision shadow_raycast(Vector<int> p, double angle);
     
     Buffer mask;
+    Buffer blur;
 
 public:
     // unique endpoints of line_segments

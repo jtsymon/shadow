@@ -79,7 +79,7 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     return polygon;
 }
 
-Map::Map(const std::string &filename) : mask(width, height) {
+Map::Map(const std::string &filename) : mask(width, height), blur(width, height) {
     std::ifstream file(filename.c_str(), std::ios::in);
     if (!file.is_open()) {
         throw Exception("Failed to open " + filename);
@@ -429,12 +429,12 @@ void Map::shadow(Vector<int> p) {
 
     // Draw shadow mask
     mask.begin();
-    
+
     // background color
     glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
-	// clear the screen
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    // clear the screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glUseProgram(Graphics::shaders[GRAPHICS_SHADOW_SHADER]);
 
     glBindVertexArray(Graphics::vertex_array[0]);
@@ -454,14 +454,62 @@ void Map::shadow(Vector<int> p) {
             );
     glDrawArrays(GL_TRIANGLE_FAN, 0, size);
     glDisableVertexAttribArray(0);
-    
+
     glUseProgram(0);
-    
+
     mask.end();
-    
+
+    blur.begin();
+
+    // background color
+    glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
+    // clear the screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    GLuint shader = Graphics::shaders[GRAPHICS_BLUR_SHADER];
+
+    glUseProgram(shader);
+
+    // Bind our texture in Texture Unit
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mask.getTexture());
+    // Set our "renderedTexture" sampler to user Texture Unit 0
+    glUniform1i(glGetUniformLocation(shader, "texture"), 0);
+
+    glUniform2f(glGetUniformLocation(shader, "pixel_size"), 1.f / width, 1.f / height);
+
+    glBindVertexArray(Graphics::vertex_array[0]);
+
+    const GLfloat points[] = {
+        -1, 1, 0, 0,
+        1, 1, 1, 0,
+        1, -1, 1, 1,
+        -1, -1, 0, 1
+    };
+
+    glBindBuffer(GL_ARRAY_BUFFER, Graphics::vertex_buffer[0]);
+    glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof (GLfloat), points, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, Graphics::vertex_buffer[0]);
+    glVertexAttribPointer(
+            0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+            4, // size
+            GL_FLOAT, // type
+            GL_FALSE, // normalized?
+            0, // stride
+            (void*) 0 // array buffer offset
+            );
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glDisableVertexAttribArray(0);
+
+    glUseProgram(0);
+
+    blur.end();
+
     glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
-    
-    mask.draw(RGBA(255, 0, 0, 255), 0, 0, width, height);
-    
+
+    blur.draw(RGBA(0, 0, 0, 255), 0, 0, width, height);
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
