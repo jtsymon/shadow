@@ -8,5 +8,5 @@ uniform sampler2D renderedTexture;
 
 void main(){
     // color = texture2D(renderedTexture, UV).rgb;
-    color = vec4(1, 1, 0, 1);
+    color = vec4(1, 1, 1, 1);
 }

@@ -9,6 +9,7 @@
       </logicalFolder>
       <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
         <itemPath>include/graphics/BitmapFont.h</itemPath>
+        <itemPath>src/graphics/Buffer.h</itemPath>
         <itemPath>include/graphics/Colours.h</itemPath>
         <itemPath>include/graphics/Graphics.h</itemPath>
         <itemPath>include/graphics/Shaders.h</itemPath>
@@ -45,6 +46,7 @@
       </logicalFolder>
       <logicalFolder name="graphics" displayName="graphics" projectFiles="true">
         <itemPath>src/graphics/BitmapFont.cc</itemPath>
+        <itemPath>src/graphics/Buffer.cc</itemPath>
         <itemPath>src/graphics/Colours.cc</itemPath>
         <itemPath>src/graphics/Graphics.cc</itemPath>
         <itemPath>src/graphics/Shaders.cc</itemPath>
@@ -52,8 +54,6 @@
       </logicalFolder>
       <logicalFolder name="map" displayName="map" projectFiles="true">
         <itemPath>src/map/map.cc</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="math" projectFiles="true">
       </logicalFolder>
       <logicalFolder name="screens" displayName="views" projectFiles="true">
         <itemPath>src/views/GameView.cc</itemPath>
@@ -167,6 +167,10 @@
       </item>
       <item path="src/graphics/BitmapFont.cc" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/graphics/Buffer.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/graphics/Buffer.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/graphics/Colours.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/graphics/Graphics.cc" ex="false" tool="1" flavor2="0">
@@ -253,35 +257,39 @@
       </item>
       <item path="shaders/texture.vert" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/button.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/button.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/engine/Entity.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Entity.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/engine/Entity.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/engine/Resources.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/engine/Timing.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/engine/Timing.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/BitmapFont.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/BitmapFont.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/Colours.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Buffer.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/Graphics.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Buffer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/graphics/Shaders.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Colours.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/graphics/Texture.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Graphics.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/main.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Shaders.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/map/map.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/graphics/Texture.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/map/map.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/math/math.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/math/vector.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/misc.cc" ex="false" tool="0" flavor2="0">
+      <item path="src/misc.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/misc.h" ex="false" tool="3" flavor2="0">
       </item>

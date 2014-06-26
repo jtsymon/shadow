@@ -73,7 +73,10 @@ void GameView::render() {
         };
         map_batch.add(2, points);
     }
+    // glLineWidth(5.0);
     g.draw(map_batch);
+    
+    g.fill_rectangle(RGBA(0, 255, 0, 255), 100, 300, 200, 400);
     
 //    double a;
 //    for(a = 0; a < M_PI; a += M_PI_4) {

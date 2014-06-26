@@ -1,6 +1,8 @@
 #include "Texture.h"
+#include <png.h>
 #include "Graphics.h"
 #include "../main.h"
+#include "../misc.h"
 #include <string.h>
 
 static GLubyte *load_png(const char *name, unsigned int *width, unsigned int *height, int *bit_depth, int *colour_type) {

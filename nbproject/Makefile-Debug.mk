@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/engine/Entity.o \
 	${OBJECTDIR}/src/engine/Timing.o \
 	${OBJECTDIR}/src/graphics/BitmapFont.o \
+	${OBJECTDIR}/src/graphics/Buffer.o \
 	${OBJECTDIR}/src/graphics/Colours.o \
 	${OBJECTDIR}/src/graphics/Graphics.o \
 	${OBJECTDIR}/src/graphics/Shaders.o \
@@ -93,6 +94,11 @@ ${OBJECTDIR}/src/graphics/BitmapFont.o: src/graphics/BitmapFont.cc
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/BitmapFont.o src/graphics/BitmapFont.cc
+
+${OBJECTDIR}/src/graphics/Buffer.o: src/graphics/Buffer.cc 
+	${MKDIR} -p ${OBJECTDIR}/src/graphics
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Buffer.o src/graphics/Buffer.cc
 
 ${OBJECTDIR}/src/graphics/Colours.o: src/graphics/Colours.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics

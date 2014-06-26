@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/engine/Entity.o \
 	${OBJECTDIR}/src/engine/Timing.o \
 	${OBJECTDIR}/src/graphics/BitmapFont.o \
+	${OBJECTDIR}/src/graphics/Buffer.o \
 	${OBJECTDIR}/src/graphics/Colours.o \
 	${OBJECTDIR}/src/graphics/Graphics.o \
 	${OBJECTDIR}/src/graphics/Shaders.o \
@@ -77,57 +78,62 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow: ${OBJECTFILES}
 ${OBJECTDIR}/src/button.o: src/button.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/button.o src/button.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/button.o src/button.cc
 
 ${OBJECTDIR}/src/engine/Entity.o: src/engine/Entity.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/engine
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/Entity.o src/engine/Entity.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/Entity.o src/engine/Entity.cc
 
 ${OBJECTDIR}/src/engine/Timing.o: src/engine/Timing.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/engine
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/Timing.o src/engine/Timing.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/engine/Timing.o src/engine/Timing.cc
 
 ${OBJECTDIR}/src/graphics/BitmapFont.o: src/graphics/BitmapFont.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/BitmapFont.o src/graphics/BitmapFont.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/BitmapFont.o src/graphics/BitmapFont.cc
+
+${OBJECTDIR}/src/graphics/Buffer.o: src/graphics/Buffer.cc 
+	${MKDIR} -p ${OBJECTDIR}/src/graphics
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Buffer.o src/graphics/Buffer.cc
 
 ${OBJECTDIR}/src/graphics/Colours.o: src/graphics/Colours.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Colours.o src/graphics/Colours.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Colours.o src/graphics/Colours.cc
 
 ${OBJECTDIR}/src/graphics/Graphics.o: src/graphics/Graphics.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Graphics.o src/graphics/Graphics.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Graphics.o src/graphics/Graphics.cc
 
 ${OBJECTDIR}/src/graphics/Shaders.o: src/graphics/Shaders.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Shaders.o src/graphics/Shaders.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Shaders.o src/graphics/Shaders.cc
 
 ${OBJECTDIR}/src/graphics/Texture.o: src/graphics/Texture.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/graphics
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Texture.o src/graphics/Texture.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/graphics/Texture.o src/graphics/Texture.cc
 
 ${OBJECTDIR}/src/main.o: src/main.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cc
 
 ${OBJECTDIR}/src/map/map.o: src/map/map.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/map
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/map.o src/map/map.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/map.o src/map/map.cc
 
 ${OBJECTDIR}/src/misc.o: src/misc.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/misc.o src/misc.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/misc.o src/misc.cc
 
 ${OBJECTDIR}/src/views/GameView.o: src/views/GameView.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/views

@@ -79,7 +79,7 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     return polygon;
 }
 
-Map::Map(const std::string &filename) {
+Map::Map(const std::string &filename) : mask(width, height) {
     std::ifstream file(filename.c_str(), std::ios::in);
     if (!file.is_open()) {
         throw Exception("Failed to open " + filename);
@@ -428,9 +428,13 @@ void Map::shadow(Vector<int> p) {
     data[i++] = game_to_gl_y(p.y);
 
     // Draw shadow mask
-
-    //glDisable(GL_BLEND);
-
+    mask.begin();
+    
+    // background color
+    glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
+	// clear the screen
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     glUseProgram(Graphics::shaders[GRAPHICS_SHADOW_SHADER]);
 
     glBindVertexArray(Graphics::vertex_array[0]);
@@ -450,41 +454,14 @@ void Map::shadow(Vector<int> p) {
             );
     glDrawArrays(GL_TRIANGLE_FAN, 0, size);
     glDisableVertexAttribArray(0);
-
-    //    glEnableClientState(GL_VERTEX_ARRAY);
-    //    glVertexPointer(2, GL_FLOAT, 0, data);
-    //    glDrawArrays(GL_POLYGON, 0, size);
-    //    glDisableClientState(GL_VERTEX_ARRAY);
-
-    //glEnable(GL_BLEND);
-
-    /*
-    glColor3ub(0,255,0);
-    glViewport(0, 0, width, height);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // draw to the screen
-    GLuint texID = glGetUniformLocation(RENDER.mask.program, "renderedTexture");
-    glUseProgram(RENDER.mask.program);
-    // Bind our texture in Texture Unit
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, RENDER.mask.texture);
-    // Set our "renderedTexture" sampler to user Texture Unit 0
-    glUniform1i(texID, 0);
-
-    // 1rst attribute buffer : vertices
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, RENDER.mask.vertex_buffer);
-    glVertexAttribPointer(
-                    0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
-                    3, // size
-                    GL_FLOAT, // type
-                    GL_FALSE, // normalized?
-                    0, // stride
-                    (void*) 0 // array buffer offset
-                    );
-    glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
-    glDisableVertexAttribArray(0);
+    
     glUseProgram(0);
-     */
+    
+    mask.end();
+    
+    glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+    
+    mask.draw(RGBA(255, 0, 0, 255), 0, 0, width, height);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

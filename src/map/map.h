@@ -10,6 +10,7 @@
 
 #include "../misc.h"
 #include "../graphics/Shaders.h"
+#include "../graphics/Buffer.h"
 #include "../math/vector.h"
 #include <vector>
 #include <string>
@@ -66,6 +67,8 @@ class Map {
     RayCollision __raycast(Vector<int> p, double m, double c, double cosa, double sina);
     RayCollision __raycast_v(Vector<int> p, double sina);
     RayCollision shadow_raycast(Vector<int> p, double angle);
+    
+    Buffer mask;
 
 public:
     // unique endpoints of line_segments
