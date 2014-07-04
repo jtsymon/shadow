@@ -11,7 +11,7 @@
 #include "../math/vector.h"
 #include "../math/math.h"
 
-Vector<int> Map::point_read(const std::string &line) {
+MapNode Map::point_read(const std::string &line) {
     char *buf = (char*) line.c_str();
     if (*buf > '9' || *buf < '0') throw Exception("Invalid point encountered: " + line);
     // advance to end of number
@@ -27,7 +27,7 @@ Vector<int> Map::point_read(const std::string &line) {
     if (*buf == '\n' || *buf == ' ') *buf = '\0';
     else if (*buf) throw Exception("Invalid point encountered: " + line);
 
-    Vector<int> point(atoi(x), atoi(y));
+    MapNode point(atoi(x), atoi(y));
     std::cout << "Point: " << point.x << "," << point.y << std::endl;
 
     return point;
@@ -122,10 +122,41 @@ Map::Map(const std::string &filename) : mask(width, height), blur(width, height)
         }
     }
     std::cout << "loaded " << filename << std::endl;
+    
+    for (int i = 0; i < this->points.size(); i++) {
+        MapNode point = this->points[i];
+        for (MapNode endpoint : this->points) {
+            if (point.x == endpoint.x && point.y == endpoint.y) continue;
+            bool visible = this->can_see(point, endpoint);
+            if (visible) {
+                std::cout << "(" << point.x << "," << point.y << ") can see (" << endpoint.x << "," << endpoint.y << ")"  << std::endl;
+                this->points[i].visible.push_back(static_cast<Vector<int>>(endpoint));
+            }
+        }
+    }
+    
+    for (MapNode point : this->points) {
+        if (point.visible.size() > 0) {
+            std::cout << "GOT ONE" << std::endl;
+        }
+    }
+    
+    std::cout << "generated visibility graph" << std::endl;
 }
 
 #define NoCollision RayCollision(0, 0, INFINITY)
 
+/**
+ * Test if a ray cast from p with gradient m passes between s1 and s2
+ * @param p     start point
+ * @param m     pre-calculated gradient
+ * @param c     pre-calculated y-intercept (constant)
+ * @param cosa  pre-calculated cosine of angle
+ * @param sina  pre-calculated sine of angle
+ * @param s1    start of line-segment
+ * @param s2    end of line-segment
+ * @return      RayCollision object representing the collision with the line segment, if any
+ */
 RayCollision __ray_intersect(Vector<int> p, double m, double c,
         double cosa, double sina, Vector<int> s1, Vector<int> s2) {
 
@@ -222,6 +253,14 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
     return RayCollision(ex, ey, dist);
 }
 
+/**
+ * Test if a vertical ray cast from p passes between s1 and s2
+ * @param p     start point
+ * @param sina  pre-calculated sine of angle
+ * @param s1    start of line-segment
+ * @param s2    end of line-segment
+ * @return      RayCollision object representing the collision with the line segment, if any
+ */
 RayCollision __ray_intersect_v(Vector<int> p, double sina, Vector<int> s1, Vector<int> s2) {
     // parallel lines (vertical line segment) case
 
@@ -258,40 +297,59 @@ RayCollision __ray_intersect_v(Vector<int> p, double sina, Vector<int> s1, Vecto
     return NoCollision;
 }
 
-RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, double sina) {
+/**
+ * Find the closest collision of a ray cast from p with gradient m
+ * @param p     start point
+ * @param m     pre-calculated gradient
+ * @param c     pre-calculated y-intercept (constant)
+ * @param cosa  pre-calculated cosine of angle
+ * @param sina  pre-calculated sine of angle
+ * @return      RayCollision object representing the collision, if any
+ */
+RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, double sina, double min_dist = -1) {
     RayCollision collision = NoCollision;
     for (MapSegment wall : this->segments) {
 
         RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
-                Vector<int>(this->points[wall.a].x, this->points[wall.a].y),
-                Vector<int>(this->points[wall.b].x, this->points[wall.b].y));
+                this->points[wall.a], this->points[wall.b]);
         //            if(new_collision.dist != INFINITY) {
         //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
         //            }
-        if (new_collision.dist < collision.dist) {
+        if (new_collision.dist < collision.dist && new_collision.dist > min_dist) {
             collision = new_collision;
         }
     }
     return collision;
 }
 
-RayCollision Map::__raycast_v(Vector<int> p, double sina) {
+/**
+ * Find the closest collision of a vertical ray cast from p
+ * @param p     start point
+ * @param sina  pre-calculated sine of angle
+ * @return      RayCollision object representing the collision, if any
+ */
+RayCollision Map::__raycast_v(Vector<int> p, double sina, double min_dist = -1) {
     RayCollision collision = NoCollision;
     for (MapSegment wall : this->segments) {
 
         RayCollision new_collision = __ray_intersect_v(p, sina,
-                Vector<int>(this->points[wall.a].x, this->points[wall.a].y),
-                Vector<int>(this->points[wall.b].x, this->points[wall.b].y));
+                this->points[wall.a], this->points[wall.b]);
         //            if(new_collision.dist != INFINITY) {
         //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
         //            }
-        if (new_collision.dist < collision.dist) {
+        if (new_collision.dist < collision.dist && new_collision.dist > min_dist) {
             collision = new_collision;
         }
     }
     return collision;
 }
 
+/**
+ * Find the closest collision of a ray cast from p
+ * @param p     start point
+ * @param angle angle of ray
+ * @return      RayCollision object representing the collision, if any
+ */
 RayCollision Map::raycast(Vector<int> p, double angle) {
 
     double cosa = cos(angle);
@@ -306,7 +364,14 @@ RayCollision Map::raycast(Vector<int> p, double angle) {
     }
 }
 
+/**
+ * Find the closest collision of a ray cast from p, bounded by the edges of the visible map
+ * @param p     start point
+ * @param angle angle of ray
+ * @return      RayCollision object representing the collision, if any
+ */
 RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
+    
     double cosa = cos(angle);
     double sina = -sin(angle);
     RayCollision collision(0, 0, INFINITY);
@@ -509,7 +574,22 @@ void Map::shadow(Vector<int> p) {
 
     glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
-    blur.draw(RGBA(0, 0, 0, 255), 0, 0, width, height);
+    blur.draw(RGBA(128, 128, 128, 255), 0, 0, width, height);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+bool Map::can_see(Vector<int> start, Vector<int> end) {
+    double dist = start.dist(end);
+    double angle = angle_sanify(atan2(start.y - end.y, end.x - start.x));
+    double cosa = cos(angle);
+    double sina = -sin(angle);
+    double m;
+    if (std::abs(cosa) > M_DELTA) m = sina / cosa;
+    
+    RayCollision collision = (std::abs(cosa) > M_DELTA) ?
+        __raycast(start, m, (double)start.y - m * start.x, cosa, sina, 0) :
+        __raycast_v(start, sina, 0);
+    
+    return (dist <= collision.dist);
 }

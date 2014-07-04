@@ -51,6 +51,12 @@ public:
     }
 };
 
+class MapNode : public Vector<int> {
+public:
+    std::vector<Vector<int>> visible;
+    MapNode(int x, int y) : Vector<int>::Vector(x, y) { }
+};
+
 //    class ShadowMask {
 //        GLuint texture;
 //        GLuint framebuffer;
@@ -61,19 +67,20 @@ public:
 //    };
 
 class Map {
-    Vector<int> point_read(const std::string &line);
+    MapNode point_read(const std::string &line);
     MapSegment segment_read(const std::string &line);
     std::vector<int> polygon_read(const std::string &line);
-    RayCollision __raycast(Vector<int> p, double m, double c, double cosa, double sina);
-    RayCollision __raycast_v(Vector<int> p, double sina);
+    RayCollision __raycast(Vector<int> p, double m, double c, double cosa, double sina, double min_dist);
+    RayCollision __raycast_v(Vector<int> p, double sina, double min_dist);
     RayCollision shadow_raycast(Vector<int> p, double angle);
+    bool can_see(Vector<int> start, Vector<int> end);
     
     Buffer mask;
     Buffer blur;
 
 public:
     // unique endpoints of line_segments
-    std::vector<Vector<int>> points;
+    std::vector<MapNode> points;
     // line segments made up from points
     std::vector<MapSegment> segments;
     // combinations of line segments, used for drawing wall textures

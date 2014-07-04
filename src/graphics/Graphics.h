@@ -40,6 +40,7 @@ public:
     int add(GLfloat x, GLfloat y);
     int add(int n, const GLfloat points[]);
     int check_space();
+    void clear();
 };
 
 class Graphics {

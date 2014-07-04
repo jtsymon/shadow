@@ -124,6 +124,7 @@ void Graphics::draw(RGBA colour, GLuint mode, GLuint shader, int n, GLfloat *poi
 
 void Graphics::draw(Batch &batch) {
     this->draw(batch.colour, batch.mode, batch.shader, batch.p, batch.buffer);
+    batch.clear();
 }
 
 void Graphics::fill_triangle(RGBA colour, int x1, int y1, int x2, int y2, int x3, int y3) {
@@ -180,4 +181,8 @@ int Batch::add(int n, const GLfloat points[]) {
         this->p++;
     }
     return remaining;
+}
+
+void Batch::clear() {
+    this->p = 0;
 }

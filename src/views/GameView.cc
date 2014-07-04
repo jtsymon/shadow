@@ -94,7 +94,21 @@ void GameView::render() {
 //        }
 //    }
     // for(i = 0; i < 40; i++)
-    this->map.shadow(this->player.pos);
+    // this->map.shadow(this->player.pos);
+    
+    Batch visibility_lines(GL_LINES, RGBA(0, 0, 255, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
+    for (MapNode start : this->map.points) {
+        for(Vector<int> end : start.visible) {
+            const GLfloat points[] = {
+                game_to_gl_x(start.x),
+                game_to_gl_y(start.y),
+                game_to_gl_x(end.x),
+                game_to_gl_y(end.y)
+            };
+            visibility_lines.add(2, points);
+        }
+    }
+    g.draw(visibility_lines);
     
     // draw player
     g.fill_rectangle(

@@ -2,21 +2,18 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <data xmlns="http://www.netbeans.org/ns/make-project-private/1">
         <activeConfTypeElem>1</activeConfTypeElem>
-        <activeConfIndexElem>1</activeConfIndexElem>
+        <activeConfIndexElem>0</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jts/git/shadow/src/graphics/Graphics.cc</file>
+            <file>file:/home/jts/git/shadow/src/graphics/Graphics.h</file>
             <file>file:/home/jts/git/shadow/src/map/map.cc</file>
-            <file>file:/home/jts/git/shadow/shaders/texture.frag</file>
-            <file>file:/home/jts/git/shadow/src/graphics/Buffer.cc</file>
+            <file>file:/home/jts/git/shadow/src/map/map.h</file>
             <file>file:/home/jts/git/shadow/src/views/GameView.cc</file>
-            <file>file:/home/jts/git/shadow/shaders/texture.vert</file>
             <file>file:/home/jts/git/shadow/src/graphics/Texture.cc</file>
             <file>file:/home/jts/git/shadow/src/main.cc</file>
-            <file>file:/home/jts/git/shadow/shaders/blur.frag</file>
-            <file>file:/home/jts/git/shadow/shaders/shadow_mask.frag</file>
         </group>
     </open-files>
 </project-private>
