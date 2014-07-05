@@ -4,12 +4,15 @@
 #include <stdio.h>
 #include <cmath>
 #include <list>
+#include <utility>
 #include <fstream>
 #include <iostream>
 
 #include "../main.h"
 #include "../math/vector.h"
 #include "../math/math.h"
+
+#define path_node_dist 5
 
 MapNode Map::point_read(const std::string &line) {
     char *buf = (char*) line.c_str();
@@ -79,6 +82,10 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     return polygon;
 }
 
+bool node_sorter(std::pair<MapNode*, double> first, std::pair<MapNode*, double> second) {
+    return first.second < second.second;
+}
+
 Map::Map(const std::string &filename) : mask(width, height), blur(width, height) {
     std::ifstream file(filename.c_str(), std::ios::in);
     if (!file.is_open()) {
@@ -123,25 +130,73 @@ Map::Map(const std::string &filename) : mask(width, height), blur(width, height)
     }
     std::cout << "loaded " << filename << std::endl;
     
-    for (int i = 0; i < this->points.size(); i++) {
-        MapNode point = this->points[i];
-        for (MapNode endpoint : this->points) {
+    // populate lists of connections between nodes
+    for (MapSegment line : this->segments) {
+        this->points[line.a].connected.push_back(&this->points[line.b]);
+        this->points[line.b].connected.push_back(&this->points[line.a]);
+    }
+    
+    for (MapNode point : this->points) {
+        int size = point.connected.size();
+        if (size == 1) {
+            // single line case
+            MapNode node(point.add(point.sub(*point.connected[0]).toDouble().normalise().scale(path_node_dist).toInt()));
+            this->path_nodes.push_back(node);
+        } else if (size > 1) {
+            // meeting of multiple lines case
+            std::list<std::pair<MapNode*, double>> sorted;
+            for (MapNode *end : point.connected) {
+                sorted.push_back(std::pair<MapNode*, double>(end, point.sub(*end).angle()));
+            }
+            // sort the connected nodes in order of angle
+            sorted.sort(node_sorter);
+            
+            std::pair<MapNode*, double> prev = sorted.back();
+            for (std::pair<MapNode*, double> next : sorted) {
+                // get the vector between each pair of adjacent nodes in the sorted list
+                // get the normal of that vector
+                // add that to the central point as with the single line case
+                LineSegment<int> line(*next.first, *prev.first);
+                Vector<int> normal = line.normal(line.side(point)).normalise().scale(path_node_dist).toInt();
+                
+                MapNode node(point.add(normal));
+                this->path_nodes.push_back(node);
+                
+                prev = next;
+            }
+            sorted.clear();
+        } else {
+            // single point, invalid
+            throw Exception("Encountered lone point, invalid!");
+        }
+    }
+    
+    int i = 0;
+    for (MapNode node : this->path_nodes) {
+        std::cout << "path_node (" << node.x << "," << node.y << ")" << std::endl;
+        i++;
+    }
+    std::cout << i << " path nodes" << std::endl;
+    
+    int connections = 0;
+    
+    int size = this->path_nodes.size();
+    for (int i = 0; i < size; i++) {
+        MapNode point = this->path_nodes[i];
+        for (int j = i; j < size; j++) {
+            MapNode endpoint = this->path_nodes[j];
             if (point.x == endpoint.x && point.y == endpoint.y) continue;
             bool visible = this->can_see(point, endpoint);
             if (visible) {
                 std::cout << "(" << point.x << "," << point.y << ") can see (" << endpoint.x << "," << endpoint.y << ")"  << std::endl;
-                this->points[i].visible.push_back(static_cast<Vector<int>>(endpoint));
+                this->path_nodes[i].connected.push_back(&this->path_nodes[j]);
+                this->path_nodes[j].connected.push_back(&this->path_nodes[i]);
+                connections += 2;
             }
         }
     }
     
-    for (MapNode point : this->points) {
-        if (point.visible.size() > 0) {
-            std::cout << "GOT ONE" << std::endl;
-        }
-    }
-    
-    std::cout << "generated visibility graph" << std::endl;
+    std::cout << "generated visibility graph (" << connections << " connections)" << std::endl;
 }
 
 #define NoCollision RayCollision(0, 0, INFINITY)
@@ -306,7 +361,7 @@ RayCollision __ray_intersect_v(Vector<int> p, double sina, Vector<int> s1, Vecto
  * @param sina  pre-calculated sine of angle
  * @return      RayCollision object representing the collision, if any
  */
-RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, double sina, double min_dist = -1) {
+RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, double sina) {
     RayCollision collision = NoCollision;
     for (MapSegment wall : this->segments) {
 
@@ -315,7 +370,7 @@ RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, doub
         //            if(new_collision.dist != INFINITY) {
         //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
         //            }
-        if (new_collision.dist < collision.dist && new_collision.dist > min_dist) {
+        if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
     }
@@ -328,7 +383,7 @@ RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, doub
  * @param sina  pre-calculated sine of angle
  * @return      RayCollision object representing the collision, if any
  */
-RayCollision Map::__raycast_v(Vector<int> p, double sina, double min_dist = -1) {
+RayCollision Map::__raycast_v(Vector<int> p, double sina) {
     RayCollision collision = NoCollision;
     for (MapSegment wall : this->segments) {
 
@@ -337,7 +392,7 @@ RayCollision Map::__raycast_v(Vector<int> p, double sina, double min_dist = -1) 
         //            if(new_collision.dist != INFINITY) {
         //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
         //            }
-        if (new_collision.dist < collision.dist && new_collision.dist > min_dist) {
+        if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
     }
@@ -588,8 +643,8 @@ bool Map::can_see(Vector<int> start, Vector<int> end) {
     if (std::abs(cosa) > M_DELTA) m = sina / cosa;
     
     RayCollision collision = (std::abs(cosa) > M_DELTA) ?
-        __raycast(start, m, (double)start.y - m * start.x, cosa, sina, 0) :
-        __raycast_v(start, sina, 0);
+        __raycast(start, m, (double)start.y - m * start.x, cosa, sina) :
+        __raycast_v(start, sina);
     
     return (dist <= collision.dist);
 }

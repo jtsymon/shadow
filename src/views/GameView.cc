@@ -8,7 +8,7 @@
 int player_speed = 2;
 uint64_t render_time;
 
-GameView::GameView() : player{Entity(320, 320)}, map{Map("data/test.map")} {
+GameView::GameView() : player{Entity(320, 320)}, map{Map("data/simple.map")} {
     
 }
 
@@ -76,34 +76,18 @@ void GameView::render() {
     // glLineWidth(5.0);
     g.draw(map_batch);
     
-    g.fill_rectangle(RGBA(0, 255, 0, 255), 100, 300, 200, 400);
+    // g.fill_rectangle(RGBA(0, 255, 0, 255), 100, 300, 200, 400);
     
-//    double a;
-//    for(a = 0; a < M_PI; a += M_PI_4) {
-//
-//        ray_collision_t collision = map_raycast_a(game_data.player.pos.x, game_data.player.pos.y, a, game_data.map);
-//
-//        if(collision.dist == INFINITY) {
-//            // printf("no collision\n");
-//        } else {
-//            glColor3ub(0, 255, 0);
-//            glBegin(GL_LINES);
-//            glVertex2d(game_to_gl_x(game_data.player.pos.x), game_to_gl_y(game_data.player.pos.y));
-//            glVertex2d(game_to_gl_x(collision.x), game_to_gl_y(collision.y));
-//            glEnd();
-//        }
-//    }
-    // for(i = 0; i < 40; i++)
     // this->map.shadow(this->player.pos);
     
-    Batch visibility_lines(GL_LINES, RGBA(0, 0, 255, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
-    for (MapNode start : this->map.points) {
-        for(Vector<int> end : start.visible) {
+    Batch visibility_lines(GL_LINES, RGBA(255, 255, 0, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER], 10248);
+    for (MapNode start : this->map.path_nodes) {
+        for(MapNode *end : start.connected) {
             const GLfloat points[] = {
                 game_to_gl_x(start.x),
                 game_to_gl_y(start.y),
-                game_to_gl_x(end.x),
-                game_to_gl_y(end.y)
+                game_to_gl_x(end->x),
+                game_to_gl_y(end->y)
             };
             visibility_lines.add(2, points);
         }

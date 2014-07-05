@@ -73,8 +73,7 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
-      <itemPath>TODO</itemPath>
-      <itemPath>data/test.map</itemPath>
+      <itemPath>data/simple.map</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -86,7 +85,6 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
-      <itemPath>TODO</itemPath>
       <itemPath>data/test.map</itemPath>
     </logicalFolder>
   </logicalFolder>

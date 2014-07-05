@@ -88,25 +88,7 @@ Vector<T> Vector<T>::sub(Vector<T> v) {
 
 template <class T>
 double Vector<T>::angle() {
-    return atan((double)this->y / (double)this->x);
-}
-
-template <class T>
-double Vector<T>::angle2() {
-    if (this->x == 0 && this->y == 0) {
-        return 0;
-    }
-    if (this->x == 0) {
-        return this->y > 0 ? M_PI_2 : M_PI_2 * 3;
-    }
-    double ret = -atan((double)this->y / (double)this->x);
-    if (this->x < 0) {
-        ret += M_PI;
-    }
-    if (ret < 0) {
-        ret += 2 * M_PI;
-    }
-    return ret;
+    return std::atan2((double)this->y, (double)this->x);
 }
 
 template <class T>
