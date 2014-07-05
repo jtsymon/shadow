@@ -29,7 +29,6 @@ public:
     Vector<int> toInt();
     Vector<double> toDouble();
     double angle();
-    double angle2();
 };
 
 template <class T>
