@@ -14,7 +14,7 @@
 
 #define path_node_dist 5
 
-MapNode Map::point_read(const std::string &line) {
+MapNode<WallConnection> Map::point_read(const std::string &line) {
     char *buf = (char*) line.c_str();
     if (*buf > '9' || *buf < '0') throw Exception("Invalid point encountered: " + line);
     // advance to end of number
@@ -30,7 +30,7 @@ MapNode Map::point_read(const std::string &line) {
     if (*buf == '\n' || *buf == ' ') *buf = '\0';
     else if (*buf) throw Exception("Invalid point encountered: " + line);
 
-    MapNode point(atoi(x), atoi(y));
+    MapNode<WallConnection> point(atoi(x), atoi(y));
     std::cout << "Point: " << point.x << "," << point.y << std::endl;
 
     return point;
@@ -82,7 +82,7 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     return polygon;
 }
 
-bool node_sorter(std::pair<MapNode*, double> first, std::pair<MapNode*, double> second) {
+bool node_sorter(std::pair<WallConnection*, double> first, std::pair<WallConnection*, double> second) {
     return first.second < second.second;
 }
 
@@ -136,30 +136,30 @@ Map::Map(const std::string &filename) : mask(width, height), blur(width, height)
         this->points[line.b].connected.push_back(&this->points[line.a]);
     }
     
-    for (MapNode point : this->points) {
+    for (WallConnection point : this->points) {
         int size = point.connected.size();
         if (size == 1) {
             // single line case
-            MapNode node(point.add(point.sub(*point.connected[0]).toDouble().normalise().scale(path_node_dist).toInt()));
+            MapNode<PathConnection> node(point.add(point.sub(*point.connected[0]).toDouble().normalise().scale(path_node_dist).toInt()));
             this->path_nodes.push_back(node);
         } else if (size > 1) {
             // meeting of multiple lines case
-            std::list<std::pair<MapNode*, double>> sorted;
-            for (MapNode *end : point.connected) {
-                sorted.push_back(std::pair<MapNode*, double>(end, point.sub(*end).angle()));
+            std::list<std::pair<WallConnection*, double>> sorted;
+            for (WallConnection *end : point.connected) {
+                sorted.push_back(std::pair<WallConnection*, double>(end, point.sub(*end).angle()));
             }
             // sort the connected nodes in order of angle
             sorted.sort(node_sorter);
             
-            std::pair<MapNode*, double> prev = sorted.back();
-            for (std::pair<MapNode*, double> next : sorted) {
+            std::pair<WallConnection*, double> prev = sorted.back();
+            for (std::pair<WallConnection*, double> next : sorted) {
                 // get the vector between each pair of adjacent nodes in the sorted list
                 // get the normal of that vector
                 // add that to the central point as with the single line case
                 LineSegment<int> line(*next.first, *prev.first);
                 Vector<int> normal = line.normal(line.side(point)).normalise().scale(path_node_dist).toInt();
                 
-                MapNode node(point.add(normal));
+                MapNode<PathConnection> node(point.add(normal));
                 this->path_nodes.push_back(node);
                 
                 prev = next;
@@ -172,7 +172,7 @@ Map::Map(const std::string &filename) : mask(width, height), blur(width, height)
     }
     
     int i = 0;
-    for (MapNode node : this->path_nodes) {
+    for (MapNode<PathConnection> node : this->path_nodes) {
         std::cout << "path_node (" << node.x << "," << node.y << ")" << std::endl;
         i++;
     }
@@ -182,15 +182,16 @@ Map::Map(const std::string &filename) : mask(width, height), blur(width, height)
     
     int size = this->path_nodes.size();
     for (int i = 0; i < size; i++) {
-        MapNode point = this->path_nodes[i];
+        MapNode<PathConnection> point = this->path_nodes[i];
         for (int j = i; j < size; j++) {
-            MapNode endpoint = this->path_nodes[j];
+            MapNode<PathConnection> endpoint = this->path_nodes[j];
             if (point.x == endpoint.x && point.y == endpoint.y) continue;
             bool visible = this->can_see(point, endpoint);
             if (visible) {
                 std::cout << "(" << point.x << "," << point.y << ") can see (" << endpoint.x << "," << endpoint.y << ")"  << std::endl;
-                this->path_nodes[i].connected.push_back(&this->path_nodes[j]);
-                this->path_nodes[j].connected.push_back(&this->path_nodes[i]);
+                double dist = point.dist(endpoint);
+                this->path_nodes[i].connected.push_back(PathConnection(&this->path_nodes[j], dist));
+                this->path_nodes[j].connected.push_back(PathConnection(&this->path_nodes[i], dist));
                 connections += 2;
             }
         }

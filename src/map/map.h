@@ -51,15 +51,27 @@ public:
     }
 };
 
+template <class T>
 class MapNode : public Vector<int> {
 public:
-    std::vector<MapNode*> connected;
+    std::vector<T> connected;
     MapNode(int x, int y) : Vector<int>::Vector(x, y) { }
     MapNode(Vector<int> vec) : Vector<int>::Vector(vec.x, vec.y) { }
 };
 
+class WallConnection : public MapNode<WallConnection*> {
+    using MapNode<WallConnection*>::MapNode;
+};
+
+class PathConnection {
+public:
+    MapNode<PathConnection> *node;
+    double                   dist;
+    PathConnection(MapNode<PathConnection> *node, double dist) : node(node), dist(dist) { }
+};
+
 class Map {
-    MapNode point_read(const std::string &line);
+    MapNode<WallConnection> point_read(const std::string &line);
     MapSegment segment_read(const std::string &line);
     std::vector<int> polygon_read(const std::string &line);
     RayCollision __raycast(Vector<int> p, double m, double c, double cosa, double sina);
@@ -72,9 +84,9 @@ class Map {
 
 public:
     // unique endpoints of line_segments
-    std::vector<MapNode> points;
+    std::vector<WallConnection> points;
     // pathfinding graph nodes
-    std::vector<MapNode> path_nodes;
+    std::vector<MapNode<PathConnection>> path_nodes;
     // line segments made up from points
     std::vector<MapSegment> segments;
     // combinations of line segments, used for drawing wall textures

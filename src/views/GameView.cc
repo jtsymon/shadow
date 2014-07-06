@@ -81,13 +81,13 @@ void GameView::render() {
     // this->map.shadow(this->player.pos);
     
     Batch visibility_lines(GL_LINES, RGBA(255, 255, 0, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER], 10248);
-    for (MapNode start : this->map.path_nodes) {
-        for(MapNode *end : start.connected) {
+    for (MapNode<PathConnection> start : this->map.path_nodes) {
+        for(PathConnection connected : start.connected) {
             const GLfloat points[] = {
                 game_to_gl_x(start.x),
                 game_to_gl_y(start.y),
-                game_to_gl_x(end->x),
-                game_to_gl_y(end->y)
+                game_to_gl_x(connected.node->x),
+                game_to_gl_y(connected.node->y)
             };
             visibility_lines.add(2, points);
         }
