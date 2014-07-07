@@ -16,7 +16,9 @@
         <itemPath>include/graphics/Texture.h</itemPath>
       </logicalFolder>
       <logicalFolder name="map" displayName="map" projectFiles="true">
-        <itemPath>include/map/map.h</itemPath>
+        <itemPath>include/map/Map.h</itemPath>
+        <itemPath>src/map/PathFinder.h</itemPath>
+        <itemPath>include/map/types.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="math" projectFiles="true">
         <itemPath>src/math/math.h</itemPath>
@@ -26,8 +28,8 @@
         <itemPath>include/views/GameView.h</itemPath>
         <itemPath>include/views/MenuView.h</itemPath>
       </logicalFolder>
+      <itemPath>include/Button.h</itemPath>
       <itemPath>include/View.h</itemPath>
-      <itemPath>include/button.h</itemPath>
       <itemPath>include/main.h</itemPath>
       <itemPath>src/misc.h</itemPath>
     </logicalFolder>
@@ -53,13 +55,14 @@
         <itemPath>src/graphics/Texture.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="map" displayName="map" projectFiles="true">
-        <itemPath>src/map/map.cc</itemPath>
+        <itemPath>src/map/Map.cc</itemPath>
+        <itemPath>src/map/PathFinder.cc</itemPath>
       </logicalFolder>
       <logicalFolder name="screens" displayName="views" projectFiles="true">
         <itemPath>src/views/GameView.cc</itemPath>
         <itemPath>src/views/MenuView.cc</itemPath>
       </logicalFolder>
-      <itemPath>src/button.cc</itemPath>
+      <itemPath>src/Button.cc</itemPath>
       <itemPath>src/main.cc</itemPath>
       <itemPath>src/misc.cc</itemPath>
     </logicalFolder>
@@ -117,9 +120,9 @@
           <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
         </linkerTool>
       </compileType>
-      <item path="include/View.h" ex="false" tool="3" flavor2="0">
+      <item path="include/Button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/button.h" ex="false" tool="3" flavor2="0">
+      <item path="include/View.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/engine/Timing.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -135,7 +138,9 @@
       </item>
       <item path="include/main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/map/map.h" ex="false" tool="3" flavor2="0">
+      <item path="include/map/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/map/types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/views/GameView.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -153,7 +158,7 @@
       </item>
       <item path="shaders/texture.vert" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/button.cc" ex="false" tool="1" flavor2="0">
+      <item path="src/Button.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/engine/Entity.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -179,7 +184,11 @@
       </item>
       <item path="src/main.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/map/map.cc" ex="false" tool="1" flavor2="0">
+      <item path="src/map/Map.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/map/PathFinder.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/map/PathFinder.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/math/math.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -219,9 +228,9 @@
           <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
         </linkerTool>
       </compileType>
-      <item path="include/View.h" ex="false" tool="3" flavor2="0">
+      <item path="include/Button.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/button.h" ex="false" tool="3" flavor2="0">
+      <item path="include/View.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/engine/Timing.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -237,7 +246,9 @@
       </item>
       <item path="include/main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/map/map.h" ex="false" tool="3" flavor2="0">
+      <item path="include/map/Map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/map/types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/views/GameView.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -255,7 +266,7 @@
       </item>
       <item path="shaders/texture.vert" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/button.cc" ex="false" tool="1" flavor2="0">
+      <item path="src/Button.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/engine/Entity.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -281,7 +292,11 @@
       </item>
       <item path="src/main.cc" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/map/map.cc" ex="false" tool="1" flavor2="0">
+      <item path="src/map/Map.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/map/PathFinder.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/map/PathFinder.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/math/math.h" ex="false" tool="3" flavor2="0">
       </item>

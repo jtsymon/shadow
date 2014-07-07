@@ -29,6 +29,9 @@ public:
     Vector<int> toInt();
     Vector<double> toDouble();
     double angle();
+    bool operator==(const Vector<T> &other) const {
+        return (this->x == other.x && this->y == other.y);
+    }
 };
 
 template <class T>

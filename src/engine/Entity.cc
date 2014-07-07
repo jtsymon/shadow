@@ -11,7 +11,7 @@ void Entity::move(Vector<int> input, Map map) {
 
     Vector<int> pos = this->pos.add(input);
 
-    printf("\nmotion: %d, %d\n", input.x, input.y);
+    // printf("\nmotion: %d, %d\n", input.x, input.y);
 
     int rad = this->radius ? this->radius : 1;
 
@@ -29,9 +29,9 @@ void Entity::move(Vector<int> input, Map map) {
                 }
             }
             int side = segment.side(this->pos);
-            printf("side: %d\n", side);
+            printf("side: %d; ", side);
             Vector<double> normal = segment.normal(side).normalise();
-            printf("normal: %f, %f\n", normal.x, normal.y);
+            printf("normal: (%f, %f)\n", normal.x, normal.y);
             // correct position
             pos = pos.add(normal.scale(rad - dist + 1).toInt());
         }

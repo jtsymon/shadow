@@ -10,7 +10,7 @@
 
 
 #include "../View.h"
-#include "../button.h"
+#include "../Button.h"
 #include <list>
 
 class MenuView : public View {

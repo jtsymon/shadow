@@ -1,5 +1,5 @@
-
 #include "Graphics.h"
+
 #include "../misc.h"
 #include "Colours.h"
 #include "BitmapFont.h"

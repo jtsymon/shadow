@@ -1,5 +1,5 @@
 /* 
- * File:   map.h
+ * File:   Map.h
  * Author: jts
  *
  * Created on 11 January 2014, 1:37 PM
@@ -12,6 +12,8 @@
 #include "../graphics/Shaders.h"
 #include "../graphics/Buffer.h"
 #include "../math/vector.h"
+#include "types.h"
+#include "PathFinder.h"
 #include <vector>
 #include <string>
 
@@ -33,7 +35,7 @@
  * segmentid,segmentid,segmentid,segmentid:texture
  */
 
-class MapSegment {
+struct MapSegment {
 public:
     // indices into the point array
     int a, b;
@@ -42,7 +44,7 @@ public:
     }
 };
 
-class RayCollision {
+struct RayCollision {
 public:
     int x, y;
     double dist;
@@ -51,26 +53,10 @@ public:
     }
 };
 
-template <class T>
-class MapNode : public Vector<int> {
-public:
-    std::vector<T> connected;
-    MapNode(int x, int y) : Vector<int>::Vector(x, y) { }
-    MapNode(Vector<int> vec) : Vector<int>::Vector(vec.x, vec.y) { }
-};
-
-class WallConnection : public MapNode<WallConnection*> {
-    using MapNode<WallConnection*>::MapNode;
-};
-
-class PathConnection {
-public:
-    MapNode<PathConnection> *node;
-    double                   dist;
-    PathConnection(MapNode<PathConnection> *node, double dist) : node(node), dist(dist) { }
-};
-
 class Map {
+    
+    friend class PathFinder;
+    
     MapNode<WallConnection> point_read(const std::string &line);
     MapSegment segment_read(const std::string &line);
     std::vector<int> polygon_read(const std::string &line);
@@ -85,12 +71,12 @@ class Map {
 public:
     // unique endpoints of line_segments
     std::vector<WallConnection> points;
-    // pathfinding graph nodes
-    std::vector<MapNode<PathConnection>> path_nodes;
     // line segments made up from points
     std::vector<MapSegment> segments;
     // combinations of line segments, used for drawing wall textures
     std::vector<std::vector<int>> polygons;
+    
+    PathFinder pathfinder;
 
     Map(const std::string &name);
     RayCollision raycast(Vector<int> p, double angle);

@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "../math/math.h"
 #include "../math/vector.h"
-#include "../map/map.h"
+#include "../map/Map.h"
 
 class Entity {
 public:

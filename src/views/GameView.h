@@ -12,7 +12,7 @@
 #include <semaphore.h>
 
 #include "../View.h"
-#include "../map/map.h"
+#include "../map/Map.h"
 #include "../engine/Entity.h"
 
 class GameView : public View {

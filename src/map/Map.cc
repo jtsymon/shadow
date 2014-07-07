@@ -1,18 +1,14 @@
-#include "map.h"
+#include "Map.h"
 
 #include <sys/stat.h>
 #include <stdio.h>
 #include <cmath>
-#include <list>
-#include <utility>
 #include <fstream>
 #include <iostream>
 
 #include "../main.h"
 #include "../math/vector.h"
 #include "../math/math.h"
-
-#define path_node_dist 5
 
 MapNode<WallConnection> Map::point_read(const std::string &line) {
     char *buf = (char*) line.c_str();
@@ -82,10 +78,6 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     return polygon;
 }
 
-bool node_sorter(std::pair<WallConnection*, double> first, std::pair<WallConnection*, double> second) {
-    return first.second < second.second;
-}
-
 Map::Map(const std::string &filename) : mask(width, height), blur(width, height) {
     std::ifstream file(filename.c_str(), std::ios::in);
     if (!file.is_open()) {
@@ -136,68 +128,7 @@ Map::Map(const std::string &filename) : mask(width, height), blur(width, height)
         this->points[line.b].connected.push_back(&this->points[line.a]);
     }
     
-    for (WallConnection point : this->points) {
-        int size = point.connected.size();
-        if (size == 1) {
-            // single line case
-            MapNode<PathConnection> node(point.add(point.sub(*point.connected[0]).toDouble().normalise().scale(path_node_dist).toInt()));
-            this->path_nodes.push_back(node);
-        } else if (size > 1) {
-            // meeting of multiple lines case
-            std::list<std::pair<WallConnection*, double>> sorted;
-            for (WallConnection *end : point.connected) {
-                sorted.push_back(std::pair<WallConnection*, double>(end, point.sub(*end).angle()));
-            }
-            // sort the connected nodes in order of angle
-            sorted.sort(node_sorter);
-            
-            std::pair<WallConnection*, double> prev = sorted.back();
-            for (std::pair<WallConnection*, double> next : sorted) {
-                // get the vector between each pair of adjacent nodes in the sorted list
-                // get the normal of that vector
-                // add that to the central point as with the single line case
-                LineSegment<int> line(*next.first, *prev.first);
-                Vector<int> normal = line.normal(line.side(point)).normalise().scale(path_node_dist).toInt();
-                
-                MapNode<PathConnection> node(point.add(normal));
-                this->path_nodes.push_back(node);
-                
-                prev = next;
-            }
-            sorted.clear();
-        } else {
-            // single point, invalid
-            throw Exception("Encountered lone point, invalid!");
-        }
-    }
-    
-    int i = 0;
-    for (MapNode<PathConnection> node : this->path_nodes) {
-        std::cout << "path_node (" << node.x << "," << node.y << ")" << std::endl;
-        i++;
-    }
-    std::cout << i << " path nodes" << std::endl;
-    
-    int connections = 0;
-    
-    int size = this->path_nodes.size();
-    for (int i = 0; i < size; i++) {
-        MapNode<PathConnection> point = this->path_nodes[i];
-        for (int j = i; j < size; j++) {
-            MapNode<PathConnection> endpoint = this->path_nodes[j];
-            if (point.x == endpoint.x && point.y == endpoint.y) continue;
-            bool visible = this->can_see(point, endpoint);
-            if (visible) {
-                std::cout << "(" << point.x << "," << point.y << ") can see (" << endpoint.x << "," << endpoint.y << ")"  << std::endl;
-                double dist = point.dist(endpoint);
-                this->path_nodes[i].connected.push_back(PathConnection(&this->path_nodes[j], dist));
-                this->path_nodes[j].connected.push_back(PathConnection(&this->path_nodes[i], dist));
-                connections += 2;
-            }
-        }
-    }
-    
-    std::cout << "generated visibility graph (" << connections << " connections)" << std::endl;
+    this->pathfinder = PathFinder(this);
 }
 
 #define NoCollision RayCollision(0, 0, INFINITY)
@@ -498,16 +429,7 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
     return collision;
 }
 
-static bool sorter(double first, double second) {
-    return first >= second;
-}
-
 void Map::shadow(Vector<int> p) {
-    // draw to the framebuffer
-    // glBindFramebuffer(GL_FRAMEBUFFER, RENDER.mask.framebuffer);
-    // glClearColor(255, 0, 0, 255);
-
-    int i;
     std::list<double> angles;
     for (Vector<int> point : this->points) {
         double angle = atan2(p.y - point.y, point.x - p.x);
@@ -522,13 +444,13 @@ void Map::shadow(Vector<int> p) {
     angles.push_back(angle_sanify(atan2(p.y - height, -p.x)));
 
     // sort the list clockwise
-    angles.sort(sorter);
+    angles.sort();
 
     int size = angles.size() + 3;
     // TODO: Maybe use a Batch once I implement parameter handling -- not practical yet
     // Batch shadow_batch(GL_TRIANGLE_FAN, RGBA colour, GLuint shader, int size=1024)
     GLfloat data[size * 2];
-    i = 0;
+    int i = 0;
 
     data[i++] = game_to_gl_x(p.x);
     data[i++] = game_to_gl_y(p.y);

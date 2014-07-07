@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/button.o \
+	${OBJECTDIR}/src/Button.o \
 	${OBJECTDIR}/src/engine/Entity.o \
 	${OBJECTDIR}/src/engine/Timing.o \
 	${OBJECTDIR}/src/graphics/BitmapFont.o \
@@ -45,7 +45,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/graphics/Shaders.o \
 	${OBJECTDIR}/src/graphics/Texture.o \
 	${OBJECTDIR}/src/main.o \
-	${OBJECTDIR}/src/map/map.o \
+	${OBJECTDIR}/src/map/Map.o \
+	${OBJECTDIR}/src/map/PathFinder.o \
 	${OBJECTDIR}/src/misc.o \
 	${OBJECTDIR}/src/views/GameView.o \
 	${OBJECTDIR}/src/views/MenuView.o
@@ -75,10 +76,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shadow ${OBJECTFILES} ${LDLIBSOPTIONS} -lGL -lglfw -lGLEW -lm -lpng -lpthread
 
-${OBJECTDIR}/src/button.o: src/button.cc 
+${OBJECTDIR}/src/Button.o: src/Button.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/button.o src/button.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Button.o src/Button.cc
 
 ${OBJECTDIR}/src/engine/Entity.o: src/engine/Entity.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/engine
@@ -125,10 +126,15 @@ ${OBJECTDIR}/src/main.o: src/main.cc
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cc
 
-${OBJECTDIR}/src/map/map.o: src/map/map.cc 
+${OBJECTDIR}/src/map/Map.o: src/map/Map.cc 
 	${MKDIR} -p ${OBJECTDIR}/src/map
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/map.o src/map/map.cc
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/Map.o src/map/Map.cc
+
+${OBJECTDIR}/src/map/PathFinder.o: src/map/PathFinder.cc 
+	${MKDIR} -p ${OBJECTDIR}/src/map
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/map/PathFinder.o src/map/PathFinder.cc
 
 ${OBJECTDIR}/src/misc.o: src/misc.cc 
 	${MKDIR} -p ${OBJECTDIR}/src

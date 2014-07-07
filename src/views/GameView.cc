@@ -7,8 +7,9 @@
 
 int player_speed = 2;
 uint64_t render_time;
+Vector<int> pathfind_to(150, 150);
 
-GameView::GameView() : player{Entity(320, 320)}, map{Map("data/simple.map")} {
+GameView::GameView() : player{Entity(320, 310)}, map{Map("data/simple.map")} {
     
 }
 
@@ -46,6 +47,18 @@ void GameView::render() {
     if(keys[GLFW_KEY_DOWN] || keys[GLFW_KEY_S]) {
         input.y += player_speed;
     }
+    if (keys[GLFW_KEY_I]) {
+        pathfind_to.y -= player_speed;
+    }
+    if (keys[GLFW_KEY_J]) {
+        pathfind_to.x -= player_speed;
+    }
+    if (keys[GLFW_KEY_K]) {
+        pathfind_to.y += player_speed;
+    }
+    if (keys[GLFW_KEY_L]) {
+        pathfind_to.x += player_speed;
+    }
     if (keys[GLFW_KEY_1]) {
         printf("DEBUG ");
         delay_ms(10);
@@ -81,18 +94,39 @@ void GameView::render() {
     // this->map.shadow(this->player.pos);
     
     Batch visibility_lines(GL_LINES, RGBA(255, 255, 0, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER], 10248);
-    for (MapNode<PathConnection> start : this->map.path_nodes) {
-        for(PathConnection connected : start.connected) {
+    int size = this->map.pathfinder.path_nodes.size();
+    for (int i = 0; i < size; i++) {
+        Vector<int> start = this->map.pathfinder.path_nodes[i];
+        for (std::pair<int, int> connection : this->map.pathfinder.path_connections[i]) {
+            Vector<int> end = this->map.pathfinder.path_nodes[connection.first];
             const GLfloat points[] = {
                 game_to_gl_x(start.x),
                 game_to_gl_y(start.y),
-                game_to_gl_x(connected.node->x),
-                game_to_gl_y(connected.node->y)
+                game_to_gl_x(end.x),
+                game_to_gl_y(end.y)
             };
             visibility_lines.add(2, points);
         }
     }
     g.draw(visibility_lines);
+    
+    Batch path(GL_LINES, RGBA(255, 255, 255, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
+    std::list<Vector<int>> nodes = this->map.pathfinder.Dijkstra(this->player.pos, pathfind_to);
+    Vector<int> prev = nodes.front();
+    std::list<Vector<int>>::iterator it = nodes.begin()++;
+    while(it != nodes.end()) {
+        Vector<int> next = *it;
+        const GLfloat points[] = {
+            game_to_gl_x(prev.x),
+            game_to_gl_y(prev.y),
+            game_to_gl_x(next.x),
+            game_to_gl_y(next.y)
+        };
+        path.add(2, points);
+        prev = next;
+        it++;
+    }
+    g.draw(path);
     
     // draw player
     g.fill_rectangle(
