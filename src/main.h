@@ -19,8 +19,6 @@ extern char mouse_buttons[GLFW_MOUSE_BUTTON_LAST + 1];
 extern uint8_t keys[];
 extern int keymod;
 
-extern int width, height;
-
 extern MenuView *menu_view;
 extern GameView *game_view;
 

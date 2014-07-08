@@ -10,11 +10,11 @@
 
 #include "graphics/Graphics.h"
 #include "graphics/BitmapFont.h"
+#include "graphics/Layout.h"
 #include <string>
 
 class Button {
-    int x, y;
-    int w, h;
+    Layout layout;
     std::string text;
     int text_x, text_y;
     RGBA foreground_color;
@@ -24,11 +24,11 @@ class Button {
     BitmapFont *font;
     void (*onclick)();
 
-    void layout();
+    void update();
 
 public:
-    Button(const std::string &text, int x, int y, void (*onclick)());
-    Button(const std::string &text, int x, int y, void (*onclick)(), int width, int height);
+    Button(const std::string &text, float x, float y, void (*onclick)());
+    Button(const std::string &text, Layout layout, void (*onclick)());
 
     void setPosition(int x, int y);
     void setSize(int w, int h);
@@ -38,22 +38,6 @@ public:
     int hover(int x, int y);
     void draw();
     void click();
-
-    int getX() {
-        return this->x;
-    }
-
-    int getY() {
-        return this->y;
-    }
-
-    int getW() {
-        return this->w;
-    }
-
-    int getH() {
-        return this->h;
-    }
 };
 
 

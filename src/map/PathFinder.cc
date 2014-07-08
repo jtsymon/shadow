@@ -13,7 +13,7 @@
 #include <list>
 #include <queue>
 
-#define path_node_dist 5
+#define path_node_dist MAP_SCALE
 
 static bool node_sorter(std::pair<WallConnection*, double> first, std::pair<WallConnection*, double> second) {
     return first.second < second.second;
@@ -86,7 +86,7 @@ PathFinder::PathFinder(Map *map) : map(map) {
             if (point.x == endpoint.x && point.y == endpoint.y) continue;
             if (map->can_see(point, endpoint)) {
                 std::cout << "(" << point.x << "," << point.y << ") can see (" << endpoint.x << "," << endpoint.y << ")" << std::endl;
-                int dist = point.dist_sq(endpoint);
+                int dist = (int)point.dist(endpoint);
                 this->path_connections[i].push_back(std::pair<int, int>(j, dist));
                 this->path_connections[j].push_back(std::pair<int, int>(i, dist));
                 connections += 2;
@@ -106,7 +106,7 @@ std::vector<std::pair<int, int>> PathFinder::connections(Vector<int> pos) {
         Vector<int> endpoint = this->path_nodes[i];
         if (pos.x == endpoint.x && pos.y == endpoint.y) continue;
         if (this->map->can_see(pos, endpoint)) {
-            int dist = pos.dist_sq(endpoint);
+            int dist = (int)pos.dist(endpoint);
             connected.push_back(std::pair<int, int>(i, dist));
         }
     }
@@ -133,13 +133,13 @@ std::list<Vector<int>> PathFinder::Dijkstra(Vector<int> from, Vector<int> to) {
     int target = this->path_nodes.size();
     int size = target + 1;
     std::vector<std::pair<int, std::vector<std::pair<int, int>>>> backups;
-    std::cout << "Valid ending positions:";
+    // std::cout << "Valid ending positions:";
     for(std::pair<int, int> connection : this->connections(to)) {
-        std::cout << " (" << this->path_nodes[connection.first].x << "," << this->path_nodes[connection.first].y << ":" << connection.second << ")";
+        // std::cout << " (" << this->path_nodes[connection.first].x << "," << this->path_nodes[connection.first].y << ":" << connection.second << ")";
         backups.push_back(std::pair<int, std::vector<std::pair<int, int>>>(connection.first, this->path_connections[connection.first]));
         this->path_connections[connection.first].push_back(std::pair<int, int>(target, connection.second));
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
     
     std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, comp> Q;
     
@@ -153,13 +153,13 @@ std::list<Vector<int>> PathFinder::Dijkstra(Vector<int> from, Vector<int> to) {
     }
     distance[size] = 0;
     previous[size] = size;
-    std::cout << "Valid starting positions:";
+    // std::cout << "Valid starting positions:";
     for(std::pair<int, int> initial : start) {
-        std::cout << " (" << this->path_nodes[initial.first].x << "," << this->path_nodes[initial.first].y << ":" << initial.second << ")";
+        // std::cout << " (" << this->path_nodes[initial.first].x << "," << this->path_nodes[initial.first].y << ":" << initial.second << ")";
         distance[initial.first] = initial.second;
         Q.push(initial);
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
     
     while (!Q.empty()) {
         int current_node = Q.top().first;
@@ -167,24 +167,24 @@ std::list<Vector<int>> PathFinder::Dijkstra(Vector<int> from, Vector<int> to) {
         if (current_node == target) break;
         if (finished_with[current_node]) continue;
         int connections = this->path_connections[current_node].size();
-        std::cout << "visiting from " << current_node << ":";
+        // std::cout << "visiting from " << current_node << ":";
         for (int i = 0; i < connections; i++) {
             int connected_node = this->path_connections[current_node][i].first;
             int connected_dist = this->path_connections[current_node][i].second;
             int new_distance = distance[current_node] + connected_dist;
             if (!finished_with[connected_node] && new_distance < distance[connected_node]) {
-                std::cout << " " << connected_node;
+                // std::cout << " " << connected_node;
                 distance[connected_node] = new_distance;
                 previous[connected_node] = current_node;
                 Q.push(std::pair<int, int>(connected_node, distance[connected_node]));
             }
         }
-        std::cout << std::endl;
+        // std::cout << std::endl;
         finished_with[current_node] = true;
     }
     
     for (int i = 0; i < size; i++) {
-        std::cout << "previous[" << i << "] = " << previous[i] << std::endl;
+        // std::cout << "previous[" << i << "] = " << previous[i] << std::endl;
     }
     
     std::list<Vector<int>> path;
@@ -195,12 +195,12 @@ std::list<Vector<int>> PathFinder::Dijkstra(Vector<int> from, Vector<int> to) {
     }
     path.push_front(from);
     
-    std::cout << "Path:";
-    std::cout << " (" << from.x << "," << from.y << ")";
-    for (Vector<int> node : path) {
-        std::cout << " (" << node.x << "," << node.y << ")";
-    }
-    std::cout << std::endl << std::endl;
+//    std::cout << "Path:";
+//    std::cout << " (" << from.x << "," << from.y << ")";
+//    for (Vector<int> node : path) {
+//        std::cout << " (" << node.x << "," << node.y << ")";
+//    }
+//    std::cout << std::endl << std::endl;
     
     for (std::pair<int, std::vector<std::pair<int, int>>> backup : backups) {
         this->path_connections[backup.first] = backup.second;

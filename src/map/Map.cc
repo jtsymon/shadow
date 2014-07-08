@@ -78,7 +78,7 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     return polygon;
 }
 
-Map::Map(const std::string &filename) : mask(width, height), blur(width, height) {
+Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height), blur(Graphics::width, Graphics::height) {
     std::ifstream file(filename.c_str(), std::ios::in);
     if (!file.is_open()) {
         throw Exception("Failed to open " + filename);
@@ -369,25 +369,25 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
         // check edges of the map
         // top
         RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
-                Vector<int>(0, 0), Vector<int>(width, 0));
+                Vector<int>(0, 0), Vector<int>(Graphics::width * MAP_SCALE, 0));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
         // right
         new_collision = __ray_intersect(p, m, c, cosa, sina,
-                Vector<int>(width, 0), Vector<int>(width, height));
+                Vector<int>(Graphics::width * MAP_SCALE, 0), Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
         // bottom
         new_collision = __ray_intersect(p, m, c, cosa, sina,
-                Vector<int>(width, height), Vector<int>(0, height));
+                Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE), Vector<int>(0, Graphics::height * MAP_SCALE));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
         // left
         new_collision = __ray_intersect(p, m, c, cosa, sina,
-                Vector<int>(0, height), Vector<int>(0, 0));
+                Vector<int>(0, Graphics::height * MAP_SCALE), Vector<int>(0, 0));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
@@ -399,25 +399,25 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
         // check edges of the map
         // top
         RayCollision new_collision = __ray_intersect_v(p, sina,
-                Vector<int>(0, 0), Vector<int>(width, 0));
+                Vector<int>(0, 0), Vector<int>(Graphics::width * MAP_SCALE, 0));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
         // right
         new_collision = __ray_intersect_v(p, sina,
-                Vector<int>(width, 0), Vector<int>(width, height));
+                Vector<int>(Graphics::width, 0), Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
         // bottom
         new_collision = __ray_intersect_v(p, sina,
-                Vector<int>(width, height), Vector<int>(0, height));
+                Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE), Vector<int>(0, Graphics::height * MAP_SCALE));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
         // left
         new_collision = __ray_intersect_v(p, sina,
-                Vector<int>(0, height), Vector<int>(0, 0));
+                Vector<int>(0, Graphics::height * MAP_SCALE), Vector<int>(0, 0));
         if (new_collision.dist < collision.dist) {
             collision = new_collision;
         }
@@ -439,9 +439,9 @@ void Map::shadow(Vector<int> p) {
     }
     // check edges of the screen
     angles.push_back(angle_sanify(atan2(p.y, -p.x)));
-    angles.push_back(angle_sanify(atan2(p.y, width - p.x)));
-    angles.push_back(angle_sanify(atan2(p.y - height, width - p.x)));
-    angles.push_back(angle_sanify(atan2(p.y - height, -p.x)));
+    angles.push_back(angle_sanify(atan2(p.y, Graphics::width * MAP_SCALE - p.x)));
+    angles.push_back(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, Graphics::width * MAP_SCALE - p.x)));
+    angles.push_back(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, -p.x)));
 
     // sort the list clockwise
     angles.sort();
@@ -452,23 +452,23 @@ void Map::shadow(Vector<int> p) {
     GLfloat data[size * 2];
     int i = 0;
 
-    data[i++] = game_to_gl_x(p.x);
-    data[i++] = game_to_gl_y(p.y);
+    data[i++] = Graphics::game_to_gl_x(p.x);
+    data[i++] = Graphics::game_to_gl_y(p.y);
 
     RayCollision first = this->shadow_raycast(p, angles.front());
-    data[i++] = game_to_gl_x(first.x);
-    data[i++] = game_to_gl_y(first.y);
+    data[i++] = Graphics::game_to_gl_x(first.x);
+    data[i++] = Graphics::game_to_gl_y(first.y);
     angles.pop_front();
     for (double angle : angles) {
         RayCollision collision = this->shadow_raycast(p, angle);
-        data[i++] = game_to_gl_x(collision.x);
-        data[i++] = game_to_gl_y(collision.y);
+        data[i++] = Graphics::game_to_gl_x(collision.x);
+        data[i++] = Graphics::game_to_gl_y(collision.y);
     }
 
-    data[i++] = game_to_gl_x(first.x);
-    data[i++] = game_to_gl_y(first.y);
-    data[i++] = game_to_gl_x(p.x);
-    data[i++] = game_to_gl_y(p.y);
+    data[i++] = Graphics::game_to_gl_x(first.x);
+    data[i++] = Graphics::game_to_gl_y(first.y);
+    data[i++] = Graphics::game_to_gl_x(p.x);
+    data[i++] = Graphics::game_to_gl_y(p.y);
 
     // Draw shadow mask
     mask.begin();
@@ -519,7 +519,7 @@ void Map::shadow(Vector<int> p) {
     // Set our "renderedTexture" sampler to user Texture Unit 0
     glUniform1i(glGetUniformLocation(shader, "texture"), 0);
 
-    glUniform2f(glGetUniformLocation(shader, "pixel_size"), 1.f / width, 1.f / height);
+    glUniform2f(glGetUniformLocation(shader, "pixel_size"), 1.f / Graphics::width, 1.f / Graphics::height);
 
     glBindVertexArray(Graphics::vertex_array[0]);
 
@@ -552,7 +552,7 @@ void Map::shadow(Vector<int> p) {
 
     glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
-    blur.draw(RGBA(128, 128, 128, 255), 0, 0, width, height);
+    blur.draw(RGBA(128, 128, 128, 255), 0, 0, Graphics::width, Graphics::height);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -570,4 +570,17 @@ bool Map::can_see(Vector<int> start, Vector<int> end) {
         __raycast_v(start, sina);
     
     return (dist <= collision.dist);
+}
+
+void Map::draw(Graphics g) {
+    Batch map_batch(GL_LINES, RGBA(255, 0, 0, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER], this->segments.size() * 2);
+    for(MapSegment segment : this->segments) {
+        const GLfloat points[] = {
+            Graphics::game_to_gl_x(this->points[segment.a].x), Graphics::game_to_gl_y(this->points[segment.a].y),
+            Graphics::game_to_gl_x(this->points[segment.b].x), Graphics::game_to_gl_y(this->points[segment.b].y)
+        };
+        map_batch.add(2, points);
+    }
+    // glLineWidth(5.0);
+    g.draw(map_batch);
 }

@@ -3,6 +3,9 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="include" displayName="include" projectFiles="true">
       <logicalFolder name="engine" displayName="engine" projectFiles="true">
+        <logicalFolder name="f1" displayName="mobs" projectFiles="true">
+          <itemPath>include/engine/mobs/Mob.h</itemPath>
+        </logicalFolder>
         <itemPath>src/engine/Entity.h</itemPath>
         <itemPath>src/engine/Resources.h</itemPath>
         <itemPath>include/engine/Timing.h</itemPath>
@@ -43,6 +46,9 @@
     </logicalFolder>
     <logicalFolder name="src" displayName="src" projectFiles="true">
       <logicalFolder name="engine" displayName="engine" projectFiles="true">
+        <logicalFolder name="f1" displayName="mobs" projectFiles="true">
+          <itemPath>src/engine/mobs/Mob.cc</itemPath>
+        </logicalFolder>
         <itemPath>src/engine/Entity.cc</itemPath>
         <itemPath>src/engine/Timing.cc</itemPath>
       </logicalFolder>
@@ -51,6 +57,8 @@
         <itemPath>src/graphics/Buffer.cc</itemPath>
         <itemPath>src/graphics/Colours.cc</itemPath>
         <itemPath>src/graphics/Graphics.cc</itemPath>
+        <itemPath>src/graphics/Layout.cc</itemPath>
+        <itemPath>src/graphics/Layout.h</itemPath>
         <itemPath>src/graphics/Shaders.cc</itemPath>
         <itemPath>src/graphics/Texture.cc</itemPath>
       </logicalFolder>
@@ -115,6 +123,7 @@
         <ccTool>
           <standard>8</standard>
           <commandLine>${varCOMPILE}</commandLine>
+          <warningLevel>3</warningLevel>
         </ccTool>
         <linkerTool>
           <commandLine>-lGL -lglfw -lGLEW -lm -lpng -lpthread</commandLine>
@@ -125,6 +134,8 @@
       <item path="include/View.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/engine/Timing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/engine/mobs/Mob.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/graphics/BitmapFont.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -168,6 +179,8 @@
       </item>
       <item path="src/engine/Timing.cc" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/engine/mobs/Mob.cc" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="src/graphics/BitmapFont.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/graphics/Buffer.cc" ex="false" tool="1" flavor2="0">
@@ -177,6 +190,10 @@
       <item path="src/graphics/Colours.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/graphics/Graphics.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/graphics/Layout.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/graphics/Layout.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/graphics/Shaders.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -217,6 +234,7 @@
           <developmentMode>5</developmentMode>
           <standard>8</standard>
           <commandLine>${varCOMPILE}</commandLine>
+          <warningLevel>3</warningLevel>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -233,6 +251,8 @@
       <item path="include/View.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/engine/Timing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/engine/mobs/Mob.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/graphics/BitmapFont.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -276,6 +296,8 @@
       </item>
       <item path="src/engine/Timing.cc" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/engine/mobs/Mob.cc" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="src/graphics/BitmapFont.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/graphics/Buffer.cc" ex="false" tool="1" flavor2="0">
@@ -285,6 +307,10 @@
       <item path="src/graphics/Colours.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/graphics/Graphics.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/graphics/Layout.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/graphics/Layout.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/graphics/Shaders.cc" ex="false" tool="1" flavor2="0">
       </item>

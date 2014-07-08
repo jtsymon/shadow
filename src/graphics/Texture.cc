@@ -177,10 +177,10 @@ static void _draw_texture(GLuint texture, RGBA colour, const GLfloat data[]) {
 void Texture::draw(RGBA colour, int x, int y, int w, int h) {
 
     const GLfloat points[] = {
-        game_to_gl_x(x), game_to_gl_y(y), 0, 0,
-        game_to_gl_x(x + w), game_to_gl_y(y), 1, 0,
-        game_to_gl_x(x + w), game_to_gl_y(y + h), 1, 1,
-        game_to_gl_x(x), game_to_gl_y(y + h), 0, 1
+        Graphics::window_to_gl_x(x),      Graphics::window_to_gl_y(y),      0, 0,
+        Graphics::window_to_gl_x(x + w),  Graphics::window_to_gl_y(y),      1, 0,
+        Graphics::window_to_gl_x(x + w),  Graphics::window_to_gl_y(y + h),  1, 1,
+        Graphics::window_to_gl_x(x),      Graphics::window_to_gl_y(y + h),  0, 1
     };
 
     _draw_texture(this->texture, colour, points);
@@ -189,10 +189,10 @@ void Texture::draw(RGBA colour, int x, int y, int w, int h) {
 void Texture::drawRegion(RGBA colour, int x, int y, int w, int h, int tx, int ty, int tw, int th) {
 
     const GLfloat points[] = {
-        game_to_gl_x(x), game_to_gl_y(y), (float) (tx) / this->width, (float) (ty) / this->height,
-        game_to_gl_x(x + w), game_to_gl_y(y), (float) (tx + tw) / this->width, (float) (ty) / this->height,
-        game_to_gl_x(x + w), game_to_gl_y(y + h), (float) (tx + tw) / this->width, (float) (ty + th) / this->height,
-        game_to_gl_x(x), game_to_gl_y(y + h), (float) (tx) / this->width, (float) (ty + th) / this->height
+        Graphics::window_to_gl_x(x),      Graphics::window_to_gl_y(y),      (float) (tx) / this->width,         (float) (ty) / this->height,
+        Graphics::window_to_gl_x(x + w),  Graphics::window_to_gl_y(y),      (float) (tx + tw) / this->width,    (float) (ty) / this->height,
+        Graphics::window_to_gl_x(x + w),  Graphics::window_to_gl_y(y + h),  (float) (tx + tw) / this->width,    (float) (ty + th) / this->height,
+        Graphics::window_to_gl_x(x),      Graphics::window_to_gl_y(y + h),  (float) (tx) / this->width,         (float) (ty + th) / this->height
     };
 
     _draw_texture(this->texture, colour, points);

@@ -7,7 +7,6 @@ Vector<double> mouse_click(-1, -1);
 char mouse_buttons[GLFW_MOUSE_BUTTON_LAST + 1];
 uint8_t keys[GLFW_KEY_LAST + 1];
 int keymod;
-int width, height;
 MenuView *menu_view;
 GameView *game_view;
 int running = 1;
@@ -55,8 +54,7 @@ int main(int argc, char* argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    width = 640;
-    height = 640;
+    int width = 640, height = 640;
 
     GLFWwindow *context = glfwCreateWindow(width, height, "Shadow", NULL, NULL);
     if (!context) {
@@ -86,14 +84,12 @@ int main(int argc, char* argv[]) {
     glfwSwapInterval(1);
     glXSwapIntervalSGI(1);
 
-    int ret = initGL();
+    Graphics::get(width, height);
     
-    if (ret == 0) {
-        
-        menu_view = new MenuView;
-        game_view = new GameView;
-        view = menu_view;
-        
+    menu_view = new MenuView;
+    game_view = new GameView;
+    view = menu_view;
+
 //        while(true) {
 //            glClearColor(1.f, 0.f, 0.f, 1.f);
 //            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -102,24 +98,21 @@ int main(int argc, char* argv[]) {
 //            glfwPollEvents();
 //        }
 
-        while (running) {
-            glfwGetCursorPos(context, &mouse_pos.x, &mouse_pos.y);
-            view->render();
+    while (running) {
+        glfwGetCursorPos(context, &mouse_pos.x, &mouse_pos.y);
+        view->render();
 
-            // make sure to render buffered data
-            glfwSwapBuffers(context);
-            glfwPollEvents();
-        }
-
-        printf("Cleaning up...\n");
-        // Close OpenGL window and terminate GLFW
-        glfwDestroyWindow(context);
-    } else {
-        fputs("Failed to set up GL\n", stderr);
+        // make sure to render buffered data
+        glfwSwapBuffers(context);
+        glfwPollEvents();
     }
+
+    printf("Cleaning up...\n");
+    // Close OpenGL window and terminate GLFW
+    glfwDestroyWindow(context);
     
     glfwTerminate();
     printf("Bye\n");
 
-    return ret;
+    return 0;
 }

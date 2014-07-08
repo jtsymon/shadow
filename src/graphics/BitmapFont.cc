@@ -65,14 +65,12 @@ int BitmapFont::textWidth(const std::string &text) {
 
 void BitmapFont::drawText(int x, int y, const std::string &text, RGBA colour) {
 
-    Graphics g = Graphics::get();
-
     int i;
     int len = text.length();
 
-    double cx1 = game_to_gl_x(x);
-    double cy1 = game_to_gl_y(y);
-    double cy2 = game_to_gl_y(y + this->h);
+    double cx1 = Graphics::window_to_gl_x(x);
+    double cy1 = Graphics::window_to_gl_y(y);
+    double cy2 = Graphics::window_to_gl_y(y + this->h);
 
     GLfloat coords[len * 4 * 6];
     
@@ -87,7 +85,7 @@ void BitmapFont::drawText(int x, int y, const std::string &text, RGBA colour) {
 
         // right edge of character
         x += this->w[c];
-        double cx2 = game_to_gl_x(x);
+        double cx2 = Graphics::window_to_gl_x(x);
 
         int tc = 4 * c;
         GLfloat tx1 = this->chars[tc++];
@@ -146,9 +144,9 @@ void BitmapFont::drawText(int x, int y, const std::string &text, RGBA colour) {
             (float) colour.r / 255, (float) colour.g / 255,
             (float) colour.b / 255, (float) colour.a / 255);
 
-    glBindVertexArray(g.vertex_array[0]);
+    glBindVertexArray(Graphics::vertex_array[0]);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, g.vertex_buffer[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, Graphics::vertex_buffer[0]);
     glBufferData(GL_ARRAY_BUFFER, len * 4 * 6 * sizeof (GLfloat), coords, GL_STATIC_DRAW);
     glVertexAttribPointer(
             0, // attribute 0. No particular reason for 0, but must match the layout in the shader.

@@ -14,12 +14,14 @@
 #include "../View.h"
 #include "../map/Map.h"
 #include "../engine/Entity.h"
+#include "../engine/mobs/Mob.h"
 
 class GameView : public View {
     pthread_t* execution;
     pthread_t* shading;
-    Map map;
+    Map *map;
     Entity player;
+    std::vector<Mob> mobs;
 public:
     GameView();
     ~GameView();

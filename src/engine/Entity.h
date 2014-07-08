@@ -17,9 +17,11 @@ class Entity {
 public:
     Vector<int> pos;
     int radius;
+    Map *map;
 
-    Entity(int x, int y);
-    void move(Vector<int> motion, Map map);
+    Entity(Vector<int> pos, Map *map) : pos(pos), map(map), radius(1000) {
+    }
+    void move(Vector<int> motion);
 };
 
 

@@ -9,6 +9,7 @@
 #define	MAP_H
 
 #include "../misc.h"
+#include "../graphics/Graphics.h"
 #include "../graphics/Shaders.h"
 #include "../graphics/Buffer.h"
 #include "../math/vector.h"
@@ -16,6 +17,8 @@
 #include "PathFinder.h"
 #include <vector>
 #include <string>
+
+#define MAP_SCALE 100.f
 
 /*
  * Map Format:
@@ -64,6 +67,7 @@ class Map {
     RayCollision __raycast_v(Vector<int> p, double sina);
     RayCollision shadow_raycast(Vector<int> p, double angle);
     bool can_see(Vector<int> start, Vector<int> end);
+    float scale;
     
     Buffer mask;
     Buffer blur;
@@ -81,6 +85,7 @@ public:
     Map(const std::string &name);
     RayCollision raycast(Vector<int> p, double angle);
     void shadow(Vector<int> p);
+    void draw(Graphics g);
 
     // static ShadowMask shadow_mask;
 };

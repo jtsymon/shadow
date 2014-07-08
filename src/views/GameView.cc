@@ -5,12 +5,12 @@
 #include <string>
 #include <iostream>
 
-int player_speed = 2;
+int player_speed = 2 * MAP_SCALE;
 uint64_t render_time;
 Vector<int> pathfind_to(150, 150);
 
-GameView::GameView() : player{Entity(320, 310)}, map{Map("data/simple.map")} {
-    
+GameView::GameView() : map{new Map("data/test.map")}, player{Entity(Vector<int>(10000, 10000), this->map)} {
+    mobs.push_back(Mob(Vector<int>(50, 50), this->map));
 }
 
 GameView::~GameView() {
@@ -73,66 +73,74 @@ void GameView::render() {
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    this->player.move(input, this->map);
+    this->player.move(input);
+    
+    for (std::vector<Mob>::iterator it = this->mobs.begin(), end = this->mobs.end();
+            it != end; it++) {
+        (*it).tick(this->player.pos);
+    }
     
     // draw the map
-    Batch map_batch(GL_LINES, RGBA(255, 0, 0, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER], map.segments.size() * 2);
-    for(MapSegment segment : map.segments) {
-        const GLfloat points[] = {
-            game_to_gl_x(map.points[segment.a].x),
-            game_to_gl_y(map.points[segment.a].y),
-            game_to_gl_x(map.points[segment.b].x),
-            game_to_gl_y(map.points[segment.b].y)
-        };
-        map_batch.add(2, points);
-    }
-    // glLineWidth(5.0);
-    g.draw(map_batch);
+    this->map->draw(g);
     
     // g.fill_rectangle(RGBA(0, 255, 0, 255), 100, 300, 200, 400);
     
-    // this->map.shadow(this->player.pos);
+//    Batch visibility_lines(GL_LINES, RGBA(255, 255, 0, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER], 10248);
+//    for (int i = 0, size = this->map->pathfinder.path_nodes.size(); i < size; i++) {
+//        Vector<int> start = this->map->pathfinder.path_nodes[i];
+//        for (std::pair<int, int> connection : this->map->pathfinder.path_connections[i]) {
+//            Vector<int> end = this->map->pathfinder.path_nodes[connection.first];
+//            const GLfloat points[] = {
+//                Graphics::game_to_gl_x(start.x),    Graphics::game_to_gl_y(start.y),
+//                Graphics::game_to_gl_x(end.x),      Graphics::game_to_gl_y(end.y)
+//            };
+//            visibility_lines.add(2, points);
+//        }
+//    }
+//    g.draw(visibility_lines);
+//    
+//    Batch path(GL_LINES, RGBA(255, 255, 255, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
+//    std::list<Vector<int>> nodes = this->map->pathfinder.Dijkstra(this->player.pos, pathfind_to);
+//    
+//    Vector<int> prev = nodes.front();
+//    for(std::list<Vector<int>>::iterator it = nodes.begin()++, end = nodes.end();
+//            it != end; it++) {
+//        Vector<int> next = *it;
+//        const GLfloat points[] = {
+//            Graphics::game_to_gl_x(prev.x), Graphics::game_to_gl_y(prev.y),
+//            Graphics::game_to_gl_x(next.x), Graphics::game_to_gl_y(next.y)
+//        };
+//        path.add(2, points);
+//        prev = next;
+//    }
+//    g.draw(path);
     
-    Batch visibility_lines(GL_LINES, RGBA(255, 255, 0, 64), Graphics::shaders[GRAPHICS_COLOUR_SHADER], 10248);
-    int size = this->map.pathfinder.path_nodes.size();
-    for (int i = 0; i < size; i++) {
-        Vector<int> start = this->map.pathfinder.path_nodes[i];
-        for (std::pair<int, int> connection : this->map.pathfinder.path_connections[i]) {
-            Vector<int> end = this->map.pathfinder.path_nodes[connection.first];
-            const GLfloat points[] = {
-                game_to_gl_x(start.x),
-                game_to_gl_y(start.y),
-                game_to_gl_x(end.x),
-                game_to_gl_y(end.y)
-            };
-            visibility_lines.add(2, points);
-        }
-    }
-    g.draw(visibility_lines);
-    
-    Batch path(GL_LINES, RGBA(255, 255, 255, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
-    std::list<Vector<int>> nodes = this->map.pathfinder.Dijkstra(this->player.pos, pathfind_to);
-    Vector<int> prev = nodes.front();
-    std::list<Vector<int>>::iterator it = nodes.begin()++;
-    while(it != nodes.end()) {
-        Vector<int> next = *it;
+    // draw mobs
+    Batch mob_batch(GL_TRIANGLES, RGBA(0, 255, 0, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
+    for (Mob mob : this->mobs) {
+        float xa = Graphics::game_to_gl_x(mob.pos.x - 500), ya = Graphics::game_to_gl_y(mob.pos.y - 500),
+              xb = Graphics::game_to_gl_x(mob.pos.x + 500), yb = Graphics::game_to_gl_y(mob.pos.y + 500);
+
         const GLfloat points[] = {
-            game_to_gl_x(prev.x),
-            game_to_gl_y(prev.y),
-            game_to_gl_x(next.x),
-            game_to_gl_y(next.y)
+            xa, ya,
+            xb, ya,
+            xb, yb,
+            xa, ya,
+            xa, yb,
+            xb, yb
         };
-        path.add(2, points);
-        prev = next;
-        it++;
+        
+        mob_batch.add(6, points);
     }
-    g.draw(path);
+    g.draw(mob_batch);
+    
+    this->map->shadow(this->player.pos);
     
     // draw player
     g.fill_rectangle(
             RGBA(128, 128, 128, 255),
-            this->player.pos.x - 5, this->player.pos.y - 5,
-            this->player.pos.x + 5, this->player.pos.y + 5
+            Graphics::game_to_gl_x(this->player.pos.x - 500), Graphics::game_to_gl_y(this->player.pos.y - 500),
+            Graphics::game_to_gl_x(this->player.pos.x + 500), Graphics::game_to_gl_y(this->player.pos.y + 500)
     );
     
     std::string message = "Player: " + std::to_string(this->player.pos.x) + "," + std::to_string(this->player.pos.y);

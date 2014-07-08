@@ -9,54 +9,13 @@
 GLuint Graphics::vertex_buffer[n_buffers];
 GLuint Graphics::vertex_array[n_buffers];
 GLuint Graphics::shaders[n_shaders];
+float Graphics::two_over_width;
+float Graphics::two_over_height;
+int Graphics::width;
+int Graphics::height;
 
-Graphics::Graphics() {
-    // init shaders
-    Graphics::shaders[GRAPHICS_COLOUR_SHADER] = compile_program("shaders/pass_through.vert", "shaders/colour.frag");
-    Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through.vert", "shaders/shadow_mask.frag");
-    Graphics::shaders[GRAPHICS_TEXTURE_SHADER] = compile_program("shaders/texture.vert", "shaders/texture.frag");
-    Graphics::shaders[GRAPHICS_BLUR_SHADER] = compile_program("shaders/texture.vert", "shaders/blur.frag");
-}
-
-Graphics& Graphics::get() {
-    static Graphics instance;
-    return instance;
-}
-
-static float two_over_width, two_over_height;
-
-void update_dimensions() {
-    two_over_width = 2.f / width;
-    two_over_height = 2.f / height;
-
-    printf("2/w=%f, 2/h=%f\n", two_over_width, two_over_height);
-}
-
-float game_to_gl_x(int x) {
-    return (float) x * two_over_width - 1;
-}
-
-float game_to_gl_y(int y) {
-    return 1 - (float) y * two_over_height;
-}
-
-int init_vertex_buffers() {
-    int i;
-    for (i = 0; i < n_buffers; i++) {
-        glGenVertexArrays(1, &Graphics::vertex_array[i]);
-        glBindVertexArray(Graphics::vertex_array[i]);
-
-        glGenBuffers(1, &Graphics::vertex_buffer[i]);
-    }
-
-    return 0;
-}
-
-/**
- *  General OpenGL initialization function
- */
-int initGL() {
-
+Graphics::Graphics(int width, int height) {
+    // setup GL
     glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);
@@ -80,9 +39,48 @@ int initGL() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    update_dimensions();
+    this->update_dimensions(width, height);
+    
+    for (int i = 0; i < n_buffers; i++) {
+        glGenVertexArrays(1, &Graphics::vertex_array[i]);
+        glBindVertexArray(Graphics::vertex_array[i]);
 
-    return init_vertex_buffers();
+        glGenBuffers(1, &Graphics::vertex_buffer[i]);
+    }
+
+    // init shaders
+    Graphics::shaders[GRAPHICS_COLOUR_SHADER] = compile_program("shaders/pass_through.vert", "shaders/colour.frag");
+    Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through.vert", "shaders/shadow_mask.frag");
+    Graphics::shaders[GRAPHICS_TEXTURE_SHADER] = compile_program("shaders/texture.vert", "shaders/texture.frag");
+    Graphics::shaders[GRAPHICS_BLUR_SHADER] = compile_program("shaders/texture.vert", "shaders/blur.frag");
+}
+
+Graphics& Graphics::get(int width, int height) {
+    static Graphics instance(width, height);
+    return instance;
+}
+
+void Graphics::update_dimensions(int width, int height) {
+    Graphics::two_over_width = 2.f / width;
+    Graphics::two_over_height = 2.f / height;
+    Graphics::width = width;
+    Graphics::height = height;
+}
+
+float Graphics::window_to_gl_x(int x) {
+    return (float) x * Graphics::two_over_width - 1;
+}
+
+float Graphics::window_to_gl_y(int y) {
+    return 1 - (float) y * Graphics::two_over_height;
+}
+
+float Graphics::game_to_gl_x(int x) {
+    return (float) x / MAP_SCALE * Graphics::two_over_width - 1;
+}
+
+float Graphics::game_to_gl_y(int y) {
+    return 1 - (float) y / MAP_SCALE * Graphics::two_over_height;
 }
 
 /**
@@ -127,31 +125,34 @@ void Graphics::draw(Batch &batch) {
     batch.clear();
 }
 
-void Graphics::fill_triangle(RGBA colour, int x1, int y1, int x2, int y2, int x3, int y3) {
+void Graphics::fill_triangle(RGBA colour, float x1, float y1, float x2, float y2, float x3, float y3) {
     
     GLfloat points[] = {
-        game_to_gl_x(x1), game_to_gl_y(y1),
-        game_to_gl_x(x2), game_to_gl_y(y2),
-        game_to_gl_x(x3), game_to_gl_y(y3)
+        x1, y1,
+        x2, y2,
+        x3, y3
     };
     
     this->draw(colour, GL_TRIANGLES, this->shaders[GRAPHICS_COLOUR_SHADER], 3, points);
 }
 
-void Graphics::fill_rectangle(RGBA colour, int x1, int y1, int x2, int y2) {
-    float xa = game_to_gl_x(x1), ya = game_to_gl_y(y1),
-            xb = game_to_gl_x(x2), yb = game_to_gl_y(y2);
+void Graphics::fill_rectangle(RGBA colour, float x1, float y1, float x2, float y2) {
 
     GLfloat points[] = {
-        xa, ya,
-        xb, ya,
-        xb, yb,
-        xa, ya,
-        xa, yb,
-        xb, yb
+        x1, y1,
+        x2, y1,
+        x2, y2,
+        x1, y1,
+        x1, y2,
+        x2, y2
     };
     
     this->draw(colour, GL_TRIANGLES, this->shaders[GRAPHICS_COLOUR_SHADER], 6, points);
+}
+
+void Graphics::fill_rectangle(RGBA colour, Layout layout) {
+    this->fill_rectangle(colour, Graphics::window_to_gl_x(layout.getLeft()), Graphics::window_to_gl_y(layout.getTop()),
+            Graphics::window_to_gl_x(layout.getRight()), Graphics::window_to_gl_y(layout.getBottom()));
 }
 
 int Batch::check_space() {

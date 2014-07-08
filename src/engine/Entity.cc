@@ -1,22 +1,22 @@
 
 #include "Entity.h"
 #include <cmath>
+#include <iostream>
 
-Entity::Entity(int x, int y) : pos(x, y), radius(10) {
-}
-
-void Entity::move(Vector<int> input, Map map) {
-
+void Entity::move(Vector<int> input) {
+    
+    std::cout << "Moved by (" << input.x << "," << input.y << ")" << std::endl;
+    
     if (input.x == 0 && input.y == 0) return;
 
     Vector<int> pos = this->pos.add(input);
 
     // printf("\nmotion: %d, %d\n", input.x, input.y);
+    
+    int rad = this->radius ? this->radius : MAP_SCALE * 10;
 
-    int rad = this->radius ? this->radius : 1;
-
-    for (MapSegment wall : map.segments) {
-        LineSegment<int> segment(map.points[wall.a], map.points[wall.b]);
+    for (MapSegment wall : this->map->segments) {
+        LineSegment<int> segment(this->map->points[wall.a], this->map->points[wall.b]);
         bool endpoint;
         double dist = segment.dist(pos, endpoint);
         if (dist < rad) {
