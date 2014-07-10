@@ -9,15 +9,16 @@
 GLuint Graphics::vertex_buffer[n_buffers];
 GLuint Graphics::vertex_array[n_buffers];
 GLuint Graphics::shaders[n_shaders];
-float Graphics::two_over_width;
-float Graphics::two_over_height;
 int Graphics::width;
 int Graphics::height;
+float Graphics::two_over_width;
+float Graphics::two_over_height;
 
 Graphics::Graphics(int width, int height) {
     // setup GL
-    glViewport(0, 0, width, height);
-
+    
+    Graphics::update_dimensions(width, height);
+    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -38,8 +39,6 @@ Graphics::Graphics(int width, int height) {
     // Enable blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    this->update_dimensions(width, height);
     
     for (int i = 0; i < n_buffers; i++) {
         glGenVertexArrays(1, &Graphics::vertex_array[i]);
@@ -61,26 +60,28 @@ Graphics& Graphics::get(int width, int height) {
 }
 
 void Graphics::update_dimensions(int width, int height) {
-    Graphics::two_over_width = 2.f / width;
-    Graphics::two_over_height = 2.f / height;
     Graphics::width = width;
     Graphics::height = height;
+    Graphics::two_over_width = 2.f / Graphics::width;
+    Graphics::two_over_height = 2.f / Graphics::height;
+    
+    glViewport(0, 0, Graphics::width, Graphics::height);
 }
 
 float Graphics::window_to_gl_x(int x) {
-    return (float) x * Graphics::two_over_width - 1;
+    return (float) x * Graphics::two_over_width - 1.f;
 }
 
 float Graphics::window_to_gl_y(int y) {
-    return 1 - (float) y * Graphics::two_over_height;
+    return 1.f - (float) y * Graphics::two_over_height;
 }
 
 float Graphics::game_to_gl_x(int x) {
-    return (float) x / MAP_SCALE * Graphics::two_over_width - 1;
+    return (float) x / MAP_SCALE * Graphics::two_over_width - 1.f;
 }
 
 float Graphics::game_to_gl_y(int y) {
-    return 1 - (float) y / MAP_SCALE * Graphics::two_over_height;
+    return 1.f - (float) y / MAP_SCALE * Graphics::two_over_height;
 }
 
 /**

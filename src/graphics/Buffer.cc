@@ -30,18 +30,20 @@ Buffer::Buffer(int width, int height) : Texture::Texture(width, height) {
         throw Exception("Failed to create framebuffer!");
     }
 
-    this->end();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-Buffer::Buffer() : Buffer(width, height) {
+Buffer::Buffer() : Buffer(Graphics::width, Graphics::height) {
 }
 
 void Buffer::begin() {
     glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
-    glViewport(0, 0, this->width, this->height);
+    this->prev_width = Graphics::width;
+    this->prev_height = Graphics::height;
+    Graphics::update_dimensions(this->width, this->height);
 }
 
 void Buffer::end() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, width, height);
+    Graphics::update_dimensions(this->prev_width, this->prev_height);
 }

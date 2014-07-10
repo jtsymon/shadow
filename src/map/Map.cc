@@ -447,8 +447,10 @@ void Map::shadow(Vector<int> p) {
     angles.sort();
 
     int size = angles.size() + 3;
-    // TODO: Maybe use a Batch once I implement parameter handling -- not practical yet
-    // Batch shadow_batch(GL_TRIANGLE_FAN, RGBA colour, GLuint shader, int size=1024)
+    
+    // Draw shadow mask
+    mask.begin();
+    
     GLfloat data[size * 2];
     int i = 0;
 
@@ -469,9 +471,6 @@ void Map::shadow(Vector<int> p) {
     data[i++] = Graphics::game_to_gl_y(first.y);
     data[i++] = Graphics::game_to_gl_x(p.x);
     data[i++] = Graphics::game_to_gl_y(p.y);
-
-    // Draw shadow mask
-    mask.begin();
 
     // background color
     glClearColor(0.0f, 0.0f, 0.0f, 0.1f);

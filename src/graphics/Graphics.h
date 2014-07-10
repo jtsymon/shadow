@@ -47,9 +47,8 @@ public:
 class Graphics {
     friend class Layout;
 public:
-    static float two_over_width, two_over_height;
     static int width, height;
-    
+    static float two_over_width, two_over_height;
     static GLuint vertex_buffer[n_buffers];
     static GLuint vertex_array[n_buffers];
     static GLuint shaders[n_shaders];

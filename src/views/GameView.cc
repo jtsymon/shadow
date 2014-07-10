@@ -9,7 +9,7 @@ int player_speed = 2 * MAP_SCALE;
 uint64_t render_time;
 Vector<int> pathfind_to(150, 150);
 
-GameView::GameView() : map{new Map("data/test.map")}, player{Entity(Vector<int>(10000, 10000), this->map)} {
+GameView::GameView() : map{new Map("data/test.map")}, player{Entity(Vector<int>(20000, 40000), this->map)} {
     mobs.push_back(Mob(Vector<int>(50, 50), this->map));
 }
 

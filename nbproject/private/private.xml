@@ -10,10 +10,14 @@
             <file>file:/home/jts/git/shadow/src/graphics/Graphics.cc</file>
             <file>file:/home/jts/git/shadow/include/map/Map.h</file>
             <file>file:/home/jts/git/shadow/src/map/PathFinder.cc</file>
+            <file>file:/home/jts/git/shadow/src/View.h</file>
+            <file>file:/home/jts/git/shadow/include/graphics/Graphics.h</file>
             <file>file:/home/jts/git/shadow/src/Button.cc</file>
             <file>file:/home/jts/git/shadow/src/map/Map.cc</file>
             <file>file:/home/jts/git/shadow/src/views/GameView.cc</file>
             <file>file:/home/jts/git/shadow/data/test.map</file>
+            <file>file:/home/jts/git/shadow/src/graphics/Buffer.h</file>
+            <file>file:/home/jts/git/shadow/src/main.cc</file>
         </group>
     </open-files>
 </project-private>
