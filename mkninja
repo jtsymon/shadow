@@ -1,0 +1,30 @@
+#!/bin/bash
+
+NAME="shadow"
+
+case $* in
+    *--debug*)
+        LDFLAGS="$LDFLAGS -ggdb"
+        CFLAGS="$CFLAGS -ggdb"
+        ;;
+esac
+
+echo "\
+rule compile
+    depfile = \$out.d
+    command = g++ -Wall -MMD -MF \$out.d -std=c++11 $CFLAGS -c \$in -o \$out
+
+rule link
+    command = g++ -o \$out \$in -lGL -lglfw -lGLEW -lm -lpng -lpthread $LDFLAGS
+"
+
+OBJECTS=""
+
+while read -r -d '' source; do
+    object="${source%.*}.o"
+    object="build/${object#*/}"
+    OBJECTS="$OBJECTS $object"
+    echo "build $object: compile $source"
+done < <(find src/ -iname '*.cc' -print0)
+echo
+echo "build $NAME: link $OBJECTS"

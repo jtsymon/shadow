@@ -1,6 +1,5 @@
 *~
 *.swp
 build
-build/*
-dist
-dist/*
+shadow
+.ninja*
