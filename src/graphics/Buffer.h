@@ -1,10 +1,3 @@
-/* 
- * File:   Buffer.h
- * Author: jts
- *
- * Created on 26 June 2014, 4:33 PM
- */
-
 #ifndef BUFFER_H
 #define	BUFFER_H
 
@@ -12,15 +5,14 @@
 #include "Texture.h"
 
 class Buffer : public Texture {
-    friend class Graphics;
-    GLuint framebuffer;
-    int prev_width, prev_height;
-public:
-    Buffer(int width, int height);
-    Buffer();
-    void begin();
-    void end();
+  friend class Graphics;
+  GLuint framebuffer;
+  int prev_width, prev_height;
+ public:
+  Buffer(int width, int height);
+  Buffer();
+  void begin();
+  void end();
 };
 
 #endif	/* BUFFER_H */
-

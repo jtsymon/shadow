@@ -1,10 +1,3 @@
-/* 
- * File:   main.h
- * Author: jts
- *
- * Created on 10 Nov 2013
- */
-
 #ifndef MAIN_H
 #define MAIN_H
 

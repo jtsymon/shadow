@@ -1,10 +1,3 @@
-/* 
- * File:   shaders.h
- * Author: jts
- *
- * Created on 13 April 2014, 4:38 PM
- */
-
 #ifndef SHADERS_H
 #define	SHADERS_H
 
@@ -23,4 +16,3 @@ extern GLuint compile_program(const std::string &vertex, const std::string &frag
 
 
 #endif	/* SHADERS_H */
-

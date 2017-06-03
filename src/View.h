@@ -1,20 +1,13 @@
-/* 
- * File:   screen.h
- * Author: jts
- *
- * Created on 10 Nov 2013
- */
-
 #ifndef SCREEN_H
 #define SCREEN_H
 
 class View {
-public:
-    virtual void show() = 0;
-    virtual void hide() = 0;
-    virtual void render() = 0;
-    virtual void key_callback(int key, int scancode, int action, int mods) = 0;
-    virtual void mouse_callback(int button, int action, int mods) = 0;
+ public:
+  virtual void show() = 0;
+  virtual void hide() = 0;
+  virtual void render() = 0;
+  virtual void key_callback(int key, int scancode, int action, int mods) = 0;
+  virtual void mouse_callback(int button, int action, int mods) = 0;
 };
 
 

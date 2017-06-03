@@ -1,10 +1,3 @@
-/* 
- * File:   time.h
- * Author: jts
- *
- * Created on 13 April 2014, 3:09 PM
- */
-
 #ifndef TIME_H
 #define	TIME_H
 
