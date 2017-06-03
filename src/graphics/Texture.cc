@@ -99,7 +99,7 @@ static GLubyte *load_png(const char *name, unsigned int *width, unsigned int *he
 
   png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
-  for (int i = 0; i < *width; i++) {
+  for (uint i = 0; i < *width; i++) {
     // note that png is ordered top to
     // bottom, but OpenGL expect it bottom to top
     // so the order or swapped

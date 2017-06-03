@@ -13,12 +13,12 @@ class Layout {
   };
 
  private:
-  int left, top;
-  int right = -1, bottom = -1;
+  int left, top,
+      right = -1, bottom = -1;
+  Edge left_from = Edge::LEFT, top_from = Edge::TOP,
+    right_from = Edge::LEFT, bottom_from = Edge::TOP;
   float width = -1, height = -1;
   bool width_percent = false, height_percent = false;
-  Edge left_from = Edge::LEFT, top_from = Edge::TOP;
-  Edge right_from = Edge::LEFT, bottom_from = Edge::TOP;
 
  public:
   void validate();
@@ -38,8 +38,8 @@ class Layout {
 
  Layout(int left, Edge left_from, int top, Edge top_from,
         int right, Edge right_from, int bottom, Edge bottom_from) :
-  left(left), left_from(left_from), top(top), top_from(top_from),
-    right(right), right_from(right_from), bottom(bottom), bottom_from(bottom_from) {
+  left(left), top(top), right(right), bottom(bottom),
+    left_from(left_from), top_from(top_from), right_from(right_from), bottom_from(bottom_from) {
     this->validate();
   }
 

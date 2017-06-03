@@ -12,7 +12,7 @@ class Entity {
   int radius;
   Map *map;
 
- Entity(Vector<int> pos, Map *map) : pos(pos), map(map), radius(1000) {
+ Entity(Vector<int> pos, Map *map) : pos(pos), radius(1000), map(map) {
   }
   void move(Vector<int> motion);
 };

@@ -73,7 +73,7 @@ std::vector<int> Map::polygon_read(const std::string &line) {
     polygon.push_back(atoi(id));
   }
 
-  printf("Polygon with %d line segments\n", polygon.size());
+  printf("Polygon with %ld line segments\n", polygon.size());
 
   return polygon;
 }
@@ -154,7 +154,7 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
 
   // vertical line segment case
   if (s1.x == s2.x) {
-    if (p.x <= s1.x && cosa <= 0 || p.x > s1.x && cosa > 0) return NoCollision;
+    if ((p.x <= s1.x && cosa <= 0) || (p.x > s1.x && cosa > 0)) return NoCollision;
     double ey = c + s1.x * m;
     if (ey >= min_y && ey <= max_y) {
       double dy = ey - p.y;
@@ -225,12 +225,12 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
   // standard case
   double ex = (sc - c) / (m - sm);
   if (ex < min_x - M_DELTA || ex > max_x + M_DELTA ||
-      ex < p.x && cosa > 0 || ex > p.x && cosa < 0) {
+      (ex < p.x && cosa > 0) || (ex > p.x && cosa < 0)) {
     return NoCollision;
   }
   double ey = c + ex * m;
   if (ey < min_y - M_DELTA || ey > max_y + M_DELTA ||
-      ey < p.y && sina > 0 || ey > p.y && sina < 0) {
+      (ey < p.y && sina > 0) || (ey > p.y && sina < 0)) {
     return NoCollision;
   }
   double dx = ex - p.x;
@@ -276,7 +276,7 @@ RayCollision __ray_intersect_v(Vector<int> p, double sina, Vector<int> s1, Vecto
   // standard case
   if (p.x >= min_x && p.x <= max_x) {
     double ey = sc + p.x * sm;
-    if (p.y >= ey && sina < 0 || p.y <= ey && sina > 0) {
+    if ((p.y >= ey && sina < 0) || (p.y <= ey && sina > 0)) {
 
       return RayCollision(p.x, ey, std::abs(p.y - ey));
     }

@@ -7,15 +7,15 @@
 #include <string>
 
 class Button {
-  Layout layout;
   std::string text;
+  Layout layout;
+  void (*onclick)();
   int text_x, text_y;
   RGBA foreground_color;
   RGBA background_color;
   RGBA hover_background_color;
   RGBA click_background_color;
   BitmapFont *font;
-  void (*onclick)();
 
   void update();
 

@@ -80,7 +80,7 @@ void BitmapFont::drawText(int x, int y, const std::string &text, RGBA colour) {
   for (i = 0; i < len; i++) {
     int c = str[i] - this->min_char;
     if (c < 0 || str[i] > this->max_char) {
-      fprintf(stderr, "Cannot print character '%s'\n", str[i]);
+      fprintf(stderr, "Cannot print character '%c'\n", str[i]);
     }
 
     // right edge of character
