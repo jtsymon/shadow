@@ -572,14 +572,4 @@ bool Map::can_see(Vector<int> start, Vector<int> end) {
 }
 
 void Map::draw(Graphics g) {
-  Batch map_batch(GL_LINES, RGBA(255, 0, 0, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER], this->segments.size() * 2);
-  for(MapSegment segment : this->segments) {
-    const GLfloat points[] = {
-      Graphics::game_to_gl_x(this->points[segment.a].x), Graphics::game_to_gl_y(this->points[segment.a].y),
-      Graphics::game_to_gl_x(this->points[segment.b].x), Graphics::game_to_gl_y(this->points[segment.b].y)
-    };
-    map_batch.add(2, points);
-  }
-  // glLineWidth(5.0);
-  g.draw(map_batch);
 }
