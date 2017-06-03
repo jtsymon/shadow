@@ -1,26 +1,26 @@
 rule compile
     depfile = $out.d
-    command = g++ -Wall -MMD -MF $out.d -std=c++11  -ggdb -c $in -o $out
+    command = g++ -Wall -Werror -MMD -MF $out.d -std=c++11  -c $in -o $out
 
 rule link
-    command = g++ -o $out $in -lGL -lglfw -lGLEW -lm -lpng -lpthread  -ggdb
+    command = g++ -o $out $in -lGL -lglfw -lGLEW -lm -lpng -lpthread 
 
-build build/views/GameView.o: compile src/views/GameView.cc
-build build/views/MenuView.o: compile src/views/MenuView.cc
-build build/map/Map.o: compile src/map/Map.cc
-build build/map/PathFinder.o: compile src/map/PathFinder.cc
 build build/Button.o: compile src/Button.cc
-build build/main.o: compile src/main.cc
-build build/engine/mobs/Mob.o: compile src/engine/mobs/Mob.cc
 build build/engine/Entity.o: compile src/engine/Entity.cc
 build build/engine/Timing.o: compile src/engine/Timing.cc
+build build/engine/mobs/Mob.o: compile src/engine/mobs/Mob.cc
 build build/graphics/BitmapFont.o: compile src/graphics/BitmapFont.cc
 build build/graphics/Buffer.o: compile src/graphics/Buffer.cc
-build build/graphics/Graphics.o: compile src/graphics/Graphics.cc
 build build/graphics/Colours.o: compile src/graphics/Colours.cc
+build build/graphics/Graphics.o: compile src/graphics/Graphics.cc
 build build/graphics/Layout.o: compile src/graphics/Layout.cc
 build build/graphics/Shaders.o: compile src/graphics/Shaders.cc
 build build/graphics/Texture.o: compile src/graphics/Texture.cc
+build build/main.o: compile src/main.cc
+build build/map/PathFinder.o: compile src/map/PathFinder.cc
+build build/map/Map.o: compile src/map/Map.cc
 build build/misc.o: compile src/misc.cc
+build build/views/MenuView.o: compile src/views/MenuView.cc
+build build/views/GameView.o: compile src/views/GameView.cc
 
-build shadow: link  build/views/GameView.o build/views/MenuView.o build/map/Map.o build/map/PathFinder.o build/Button.o build/main.o build/engine/mobs/Mob.o build/engine/Entity.o build/engine/Timing.o build/graphics/BitmapFont.o build/graphics/Buffer.o build/graphics/Graphics.o build/graphics/Colours.o build/graphics/Layout.o build/graphics/Shaders.o build/graphics/Texture.o build/misc.o
+build shadow: link  build/Button.o build/engine/Entity.o build/engine/Timing.o build/engine/mobs/Mob.o build/graphics/BitmapFont.o build/graphics/Buffer.o build/graphics/Colours.o build/graphics/Graphics.o build/graphics/Layout.o build/graphics/Shaders.o build/graphics/Texture.o build/main.o build/map/PathFinder.o build/map/Map.o build/misc.o build/views/MenuView.o build/views/GameView.o

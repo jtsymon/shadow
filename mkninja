@@ -12,7 +12,7 @@ esac
 echo "\
 rule compile
     depfile = \$out.d
-    command = g++ -Wall -MMD -MF \$out.d -std=c++11 $CFLAGS -c \$in -o \$out
+    command = g++ -Wall -Werror -MMD -MF \$out.d -std=c++11 $CFLAGS -c \$in -o \$out
 
 rule link
     command = g++ -o \$out \$in -lGL -lglfw -lGLEW -lm -lpng -lpthread $LDFLAGS
