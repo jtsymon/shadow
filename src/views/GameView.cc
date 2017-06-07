@@ -9,9 +9,12 @@ int player_speed = 2 * MAP_SCALE;
 uint64_t render_time;
 Vector<int> pathfind_to(150, 150);
 
-GameView::GameView() : map{new Map("data/test.map")}, player{Entity(Vector<int>(20000, 40000), this->map)} {
-  mobs.push_back(Mob(Vector<int>(50, 50), this->map));
-                                                      }
+GameView::GameView() :
+  map(new Map("data/test.map")),
+  player(Entity(Vector<int>(20000, 40000), this->map))
+{
+  //mobs.push_back(Mob(Vector<int>(50, 50), this->map));
+}
 
 GameView::~GameView() {
   printf("Cleaning up game screen...\n");
@@ -65,7 +68,7 @@ void GameView::render() {
   }
   if (keys[GLFW_KEY_2]) {
     printf("DEBUG ");
-    delay_ms(5);
+    delay_ms(100);
   }
 
   // background color

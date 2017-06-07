@@ -18,12 +18,12 @@ PathFinder::PathFinder(Map *map) : map(map) {
     int size = point.connected.size();
     if (size == 1) {
       // single line case
-      this->path_nodes.push_back(point.add(point.sub(*point.connected[0]).toDouble().normalise().scale(path_node_dist).toInt()));
+      this->path_nodes.push_back(point + (point - *point.connected[0]).toDouble().normalise(path_node_dist).toInt());
     } else if (size > 1) {
       // meeting of multiple lines case
       std::list<std::pair < WallConnection*, double>> sorted;
       for (WallConnection *end : point.connected) {
-        sorted.push_back(std::pair<WallConnection*, double>(end, point.sub(*end).angle()));
+        sorted.push_back(std::pair<WallConnection*, double>(end, (point - *end).angle()));
       }
       // sort the connected nodes in order of angle
       sorted.sort(node_sorter);
@@ -34,9 +34,9 @@ PathFinder::PathFinder(Map *map) : map(map) {
         // get the normal of that vector
         // add that to the central point as with the single line case
         LineSegment<int> line(*next.first, *prev.first);
-        Vector<int> normal = line.normal(line.side(point)).normalise().scale(path_node_dist).toInt();
+        Vector<int> normal = line.normal(line.side(point)).normalise(path_node_dist).toInt();
 
-        Vector<int> node = point.add(normal);
+        Vector<int> node = point + normal;
         bool do_add = true;
 
         for (Vector<int> existing : this->path_nodes) {

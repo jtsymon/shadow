@@ -56,15 +56,10 @@ inline bool float_equal(T a, T b) {
 inline int sign(double a) {
   return a > 0 ? 1 : a < 0 ? -1 : 0;
 }
-inline double angle_sanify(double a) {
+template <class T>
+inline T angle_sanify(T a) {
   if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
   return a;
 }
-
-inline float angle_sanifyf(float a) {
-  if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
-  return a;
-}
-
 
 #endif	/* MATH_H */
