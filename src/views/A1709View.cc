@@ -1,4 +1,6 @@
 #include "A1709View.h"
+#include "../keyboard.h"
+#include <iostream>
 
 A1709View::A1709View() {
   printf("initialized A1709\n");
@@ -31,6 +33,7 @@ void A1709View::render() {
 
 }
 void A1709View::key_callback(int key, int scancode, int action, int mods) {
+  std::cout << "name=" << key_name(key, scancode) << " key=" << key << " scancode=" << scancode << " action=" << action << " mods=" << mods << std::endl;
   GameView::key_callback(key, scancode, action, mods);
 }
 void A1709View::mouse_callback(int button, int action, int mods) {}
