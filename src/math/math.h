@@ -1,5 +1,4 @@
-#ifndef MATH_H
-#define	MATH_H
+#pragma once
 
 #include <cmath>
 
@@ -61,5 +60,3 @@ inline T angle_sanify(T a) {
   if(a < 0) a += (1 + (int)(a / (M_PI * 2))) * M_PI * 2;
   return a;
 }
-
-#endif	/* MATH_H */

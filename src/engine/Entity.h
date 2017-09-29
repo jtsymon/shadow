@@ -1,5 +1,4 @@
-#ifndef ENTITY_H
-#define	ENTITY_H
+#pragma once
 
 #include <stdio.h>
 #include "../math/math.h"
@@ -16,8 +15,3 @@ class Entity {
   }
   void move(Vector<int> motion);
 };
-
-
-
-#endif	/* ENTITY_H */
-

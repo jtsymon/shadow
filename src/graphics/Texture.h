@@ -1,5 +1,4 @@
-#ifndef IMAGE_H
-#define	IMAGE_H
+#pragma once
 
 #include "Colours.h"
 #include <string>
@@ -20,6 +19,3 @@ class Texture {
     return this->texture;
   }
 };
-
-
-#endif	/* IMAGE_H */

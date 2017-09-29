@@ -1,5 +1,4 @@
-#ifndef BUFFER_H
-#define	BUFFER_H
+#pragma once
 
 #include <GL/glew.h>
 #include "Texture.h"
@@ -14,5 +13,3 @@ class Buffer : public Texture {
   void begin();
   void end();
 };
-
-#endif	/* BUFFER_H */

@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_H
-#define	GRAPHICS_H
+#pragma once
 
 #include <GL/glew.h>
 #include "Colours.h"
@@ -69,4 +68,3 @@ int initGL();
 
 void fill_triangle(int x1, int y1, int x2, int y2, int x3, int y3);
 void fill_rectangle(int x1, int y1, int x2, int y2);
-#endif	/* GRAPHICS_H */

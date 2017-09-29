@@ -1,5 +1,4 @@
-#ifndef MAIN_H
-#define MAIN_H
+#pragma once
 
 #include "graphics/Graphics.h"
 #include "views/MenuView.h"
@@ -16,4 +15,3 @@ extern int running;
 
 extern void push_view(View *view);
 extern void pop_view();
-#endif /* MAIN_H */

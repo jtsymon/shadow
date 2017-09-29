@@ -1,5 +1,4 @@
-#ifndef VECTOR_H
-#define	VECTOR_H
+#pragma once
 
 #include <stdint.h>
 #include "math.h"
@@ -148,5 +147,3 @@ class LineSegment {
     }
   }
 };
-
-#endif	/* VECTOR_H */

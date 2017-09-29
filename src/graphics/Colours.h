@@ -1,5 +1,4 @@
-#ifndef COLOUR_H
-#define	COLOUR_H
+#pragma once
 
 #include "../misc.h"
 
@@ -33,5 +32,3 @@ HSV(unsigned char h, unsigned char s, unsigned char v) : h(h), s(s), v(v) { }
 
   RGB toRGB();
 };
-
-#endif	/* COLOUR_H */

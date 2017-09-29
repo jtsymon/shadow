@@ -1,5 +1,4 @@
-#ifndef MISC_H
-#define	MISC_H
+#pragma once
 
 #include <GL/glew.h>
 #include <GL/glxew.h>
@@ -15,6 +14,3 @@ struct Exception : public std::runtime_error {
  Exception(std::string const& message) : std::runtime_error("Error: " + message) {
   }
 };
-
-
-#endif	/* MISC_H */

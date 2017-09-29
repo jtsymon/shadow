@@ -1,5 +1,4 @@
-#ifndef SHADERS_H
-#define	SHADERS_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +12,3 @@
 extern GLuint compile_shader(const std::string &filename, GLenum type);
 extern GLuint compile_program(GLuint vertex, GLuint fragment);
 extern GLuint compile_program(const std::string &vertex, const std::string &fragment);
-
-
-#endif	/* SHADERS_H */

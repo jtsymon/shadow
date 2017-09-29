@@ -1,5 +1,4 @@
-#ifndef LAYOUT_H
-#define	LAYOUT_H
+#pragma once
 
 class Layout {
  public:
@@ -53,5 +52,3 @@ class Layout {
   void move(int x, int y);
   void resize(float w, float h, bool width_percent=false, bool height_percent=false);
 };
-
-#endif	/* LAYOUT_H */

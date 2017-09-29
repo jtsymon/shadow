@@ -1,5 +1,4 @@
-#ifndef SCREEN_GAME_H
-#define SCREEN_GAME_H
+#pragma once
 
 #include <pthread.h>
 #include <semaphore.h>
@@ -24,6 +23,3 @@ class GameView : public View {
   void key_callback(int key, int scancode, int action, int mods);
   void mouse_callback(int button, int action, int mods);
 };
-
-
-#endif /* SCREEN_GAME_H */

@@ -1,5 +1,4 @@
-#ifndef FONT_H
-#define	FONT_H
+#pragma once
 
 #include "Texture.h"
 #include "Graphics.h"
@@ -31,6 +30,3 @@ class BitmapFont {
     return this->h;
   }
 };
-
-
-#endif	/* FONT_H */

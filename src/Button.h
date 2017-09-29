@@ -1,5 +1,4 @@
-#ifndef BUTTON_H
-#define	BUTTON_H
+#pragma once
 
 #include "graphics/Graphics.h"
 #include "graphics/BitmapFont.h"
@@ -32,6 +31,3 @@ class Button {
   void draw();
   void click();
 };
-
-
-#endif	/* BUTTON_H */

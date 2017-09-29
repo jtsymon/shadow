@@ -1,5 +1,4 @@
-#ifndef SCREEN_H
-#define SCREEN_H
+#pragma once
 
 class View {
  public:
@@ -10,6 +9,3 @@ class View {
   virtual void mouse_callback(int button, int action, int mods) = 0;
   virtual ~View() {}
 };
-
-
-#endif /* SCREEN_H */

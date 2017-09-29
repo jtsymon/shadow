@@ -1,5 +1,4 @@
-#ifndef MAP_H
-#define	MAP_H
+#pragma once
 
 #include "../misc.h"
 #include "../graphics/Graphics.h"
@@ -82,6 +81,3 @@ class Map {
 
   // static ShadowMask shadow_mask;
 };
-
-
-#endif	/* MAP_H */

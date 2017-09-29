@@ -1,5 +1,4 @@
-#ifndef PATHFINDING_H
-#define	PATHFINDING_H
+#pragma once
 
 #include "../math/vector.h"
 #include "types.h"
@@ -21,5 +20,3 @@ class PathFinder {
   std::list<Vector<int>> Dijkstra(Vector<int> from, Vector<int> to);
   void update_dynamic(); // generates temporary path nodes from dynamic map elements
 };
-
-#endif	/* PATHFINDING_H */

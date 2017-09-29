@@ -1,5 +1,4 @@
-#ifndef MOB_H
-#define	MOB_H
+#pragma once
 
 #include "../Entity.h"
 
@@ -11,5 +10,3 @@ class Mob : public Entity {
   void tick(Vector<int> target);
 
 };
-
-#endif	/* MOB_H */

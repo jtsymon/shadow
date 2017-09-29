@@ -1,6 +1,4 @@
-#ifndef SCREEN_MENU_H
-#define SCREEN_MENU_H
-
+#pragma once
 
 #include "../View.h"
 #include "../Button.h"
@@ -18,7 +16,3 @@ class MenuView : public View {
   void key_callback(int key, int scancode, int action, int mods);
   void mouse_callback(int button, int action, int mods);
 };
-
-
-
-#endif /* MENU_H */

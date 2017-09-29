@@ -1,5 +1,4 @@
-#ifndef RESOURCES_H
-#define	RESOURCES_H
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -46,5 +45,3 @@ template <class T>
 const T& Resources<T>::operator[](const std::string &key) const {
   return this->internal_map[key];
 }
-
-#endif	/* RESOURCES_H */

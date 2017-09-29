@@ -1,5 +1,4 @@
-#ifndef TYPES_H
-#define	TYPES_H
+#pragma once
 
 #include <vector>
 #include "../math/vector.h"
@@ -15,5 +14,3 @@ struct MapNode : public Vector<int> {
 struct WallConnection : public MapNode<WallConnection*> {
   using MapNode<WallConnection*>::MapNode;
 };
-
-#endif	/* TYPES_H */
