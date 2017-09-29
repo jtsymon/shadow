@@ -10,8 +10,6 @@
 #include <vector>
 #include <string>
 
-#define MAP_SCALE 100.f
-
 /*
  * Map Format:
  *

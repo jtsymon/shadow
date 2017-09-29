@@ -11,6 +11,8 @@
 #define GRAPHICS_TEXTURE_SHADER 2
 #define GRAPHICS_BLUR_SHADER 3
 #define n_shaders 4
+#define MAP_SCALE 100.f
+
 
 class Batch {
   friend class Graphics;
