@@ -27,7 +27,7 @@ class Batch {
     buffer(new GLfloat[size * 2]) { }
   ~Batch() {
     if (this->buffer) {
-      delete this->buffer;
+      delete[] this->buffer;
       this->buffer = NULL;
     }
   }

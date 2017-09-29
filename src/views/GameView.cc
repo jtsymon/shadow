@@ -10,8 +10,8 @@ uint64_t render_time;
 Vector<int> pathfind_to(150, 150);
 
 GameView::GameView() :
-  map(new Map("data/test.map")),
-  player(Entity(Vector<int>(20000, 40000), this->map))
+  map(Map("data/test.map")),
+  player(Entity(Vector<int>(20000, 40000), &map))
 {
   //mobs.push_back(Mob(Vector<int>(50, 50), this->map));
 }
@@ -84,7 +84,7 @@ void GameView::render() {
   }
 
   // draw the map
-  this->map->draw(g);
+  this->map.draw(g);
 
   // g.fill_rectangle(RGBA(0, 255, 0, 255), 100, 300, 200, 400);
 
@@ -137,7 +137,7 @@ void GameView::render() {
   }
   g.draw(mob_batch);
 
-  this->map->shadow(this->player.pos);
+  this->map.shadow(this->player.pos);
 
   // draw player
   g.fill_rectangle(

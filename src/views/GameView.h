@@ -12,7 +12,7 @@
 class GameView : public View {
   pthread_t* execution;
   pthread_t* shading;
-  Map *map;
+  Map map;
   Entity player;
   std::vector<Mob> mobs;
  public:
