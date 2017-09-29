@@ -89,20 +89,13 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  // Enable VSync
   glfwSwapInterval(1);
   glXSwapIntervalSGI(1);
 
   Graphics::get(width, height);
 
   push_view(new MenuView);
-
-  //        while(true) {
-  //            glClearColor(1.f, 0.f, 0.f, 1.f);
-  //            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  //            BitmapFont::bold_oblique.texture->draw(RGBA(0, 0, 255, 255), 100, 400, 256, 256);
-  //            glfwSwapBuffers(context);
-  //            glfwPollEvents();
-  //        }
 
   while (running) {
     glfwGetCursorPos(context, &mouse_pos.x, &mouse_pos.y);
