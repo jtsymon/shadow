@@ -21,6 +21,7 @@ build build/map/PathFinder.o: compile src/map/PathFinder.cc
 build build/map/Map.o: compile src/map/Map.cc
 build build/misc.o: compile src/misc.cc
 build build/views/MenuView.o: compile src/views/MenuView.cc
-build build/views/GameView.o: compile src/views/GameView.cc
+build build/views/A1709View.o: compile src/views/A1709View.cc
+build build/views/ShadowView.o: compile src/views/ShadowView.cc
 
-build shadow: link  build/Button.o build/engine/Entity.o build/engine/Timing.o build/engine/mobs/Mob.o build/graphics/BitmapFont.o build/graphics/Buffer.o build/graphics/Colours.o build/graphics/Graphics.o build/graphics/Layout.o build/graphics/Shaders.o build/graphics/Texture.o build/main.o build/map/PathFinder.o build/map/Map.o build/misc.o build/views/MenuView.o build/views/GameView.o
+build shadow: link  build/Button.o build/engine/Entity.o build/engine/Timing.o build/engine/mobs/Mob.o build/graphics/BitmapFont.o build/graphics/Buffer.o build/graphics/Colours.o build/graphics/Graphics.o build/graphics/Layout.o build/graphics/Shaders.o build/graphics/Texture.o build/main.o build/map/PathFinder.o build/map/Map.o build/misc.o build/views/MenuView.o build/views/A1709View.o build/views/ShadowView.o

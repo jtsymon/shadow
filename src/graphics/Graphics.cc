@@ -5,6 +5,7 @@
 #include "BitmapFont.h"
 #include "Shaders.h"
 #include "../main.h"
+#include "../map/Map.h"
 
 GLuint Graphics::vertex_buffer[n_buffers];
 GLuint Graphics::vertex_array[n_buffers];

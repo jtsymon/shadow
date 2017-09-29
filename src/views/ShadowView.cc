@@ -1,4 +1,4 @@
-#include "GameView.h"
+#include "ShadowView.h"
 #include "../main.h"
 #include "../graphics/BitmapFont.h"
 #include "../engine/Timing.h"
@@ -9,25 +9,25 @@ int player_speed = 2 * MAP_SCALE;
 uint64_t render_time;
 Vector<int> pathfind_to(150, 150);
 
-GameView::GameView() :
+ShadowView::ShadowView() :
   map(Map("data/test.map")),
   player(Entity(Vector<int>(20000, 40000), &map))
 {
   //mobs.push_back(Mob(Vector<int>(50, 50), this->map));
 }
 
-GameView::~GameView() {
+ShadowView::~ShadowView() {
   printf("Cleaning up game screen...\n");
 }
-void GameView::show() {
+void ShadowView::show() {
 
 }
-void GameView::hide() {
+void ShadowView::hide() {
 
 }
 
 static bool update = true;
-void GameView::render() {
+void ShadowView::render() {
 
   Graphics g = Graphics::get();
 
@@ -155,12 +155,10 @@ void GameView::render() {
   // std::cout << message << std::endl;
 }
 
-void GameView::key_callback(int key, int scancode, int action, int mods) {
+void ShadowView::key_callback(int key, int scancode, int action, int mods) {
+  GameView::key_callback(key, scancode, action, mods);
   if(action == GLFW_RELEASE) {
     switch(key) {
-    case GLFW_KEY_ESCAPE:
-      pop_view();
-      break;
     case GLFW_KEY_P:
       update = !update;
       break;
@@ -168,6 +166,6 @@ void GameView::key_callback(int key, int scancode, int action, int mods) {
   }
 }
 
-void GameView::mouse_callback(int button, int action, int mods) {
+void ShadowView::mouse_callback(int button, int action, int mods) {
 
 }

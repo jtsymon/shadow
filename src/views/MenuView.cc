@@ -1,18 +1,22 @@
-#include "menu.h"
-#include "GameView.h"
+#include "MenuView.h"
+#include "ShadowView.h"
+#include "A1709View.h"
 #include "../main.h"
 #include <iostream>
 
 void play_game() {
-  push_view(new GameView);
+  push_view(new ShadowView);
+}
+
+void play_a1709() {
+  push_view(new A1709View);
 }
 
 MenuView::MenuView() : background_color(HSV(0, 100, 100)) {
-  Button button("Play", 100, 100, play_game);
-  this->buttons.push_back(button);
-  button = Button("Create map", 100, 160, NULL);
-  button.setFont(BitmapFont::bold_oblique());
-  this->buttons.push_back(button);
+  this->buttons.push_back(Button("Play", 100, 100, play_game));
+  this->buttons.push_back(Button("Create map", 100, 160, NULL));
+  this->buttons.back().setFont(BitmapFont::bold_oblique());
+  this->buttons.push_back(Button("A1709", 100, 220, play_a1709));
   printf("created menu\n");
 }
 

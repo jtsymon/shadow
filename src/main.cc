@@ -1,5 +1,7 @@
 #include "main.h"
-#include "View.h"
+#include "views/MenuView.h"
+#include "views/GameView.h"
+#include "engine/Resources.h"
 #include <iostream>
 #include <stack>
 
