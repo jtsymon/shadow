@@ -12,10 +12,8 @@ extern char mouse_buttons[GLFW_MOUSE_BUTTON_LAST + 1];
 extern uint8_t keys[];
 extern int keymod;
 
-extern MenuView *menu_view;
-extern GameView *game_view;
-
 extern int running;
 
-extern void set_view(View *new_view);
+extern void push_view(View *view);
+extern void pop_view();
 #endif /* MAIN_H */

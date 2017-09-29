@@ -1,17 +1,15 @@
 #include "main.h"
 #include "View.h"
 #include <iostream>
+#include <stack>
 
 Vector<double> mouse_pos(-1, -1);
 Vector<double> mouse_click(-1, -1);
 char mouse_buttons[GLFW_MOUSE_BUTTON_LAST + 1];
 uint8_t keys[GLFW_KEY_LAST + 1];
 int keymod;
-MenuView *menu_view;
-GameView *game_view;
 int running = 1;
-
-static View *view;
+static std::stack<View*> views;
 
 static void error_callback(int error, const char* description) {
   fputs(description, stderr);
@@ -20,7 +18,7 @@ static void error_callback(int error, const char* description) {
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
   keymod = mods;
   keys[key] = action != GLFW_RELEASE;
-  view->key_callback(key, scancode, action, mods);
+  views.top()->key_callback(key, scancode, action, mods);
 }
 
 static void mouse_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -29,15 +27,23 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
     glfwGetCursorPos(window, &mouse_click.x, &mouse_click.y);
   }
-  view->mouse_callback(button, action, mods);
+  views.top()->mouse_callback(button, action, mods);
 }
 
-void set_view(View *new_view) {
-  if (view != new_view) {
-    view->hide();
-    view = new_view;
-    view->show();
-  }
+void push_view(View *view) {
+  if (!views.empty())
+    views.top()->hide();
+  views.push(view);
+  views.top()->show();
+}
+
+void pop_view() {
+  if (views.empty())
+    return;
+  delete views.top();
+  views.pop();
+  if (!views.empty())
+    views.top()->show();
 }
 
 int main(int argc, char* argv[]) {
@@ -86,9 +92,7 @@ int main(int argc, char* argv[]) {
 
   Graphics::get(width, height);
 
-  menu_view = new MenuView;
-  game_view = new GameView;
-  view = menu_view;
+  push_view(new MenuView);
 
   //        while(true) {
   //            glClearColor(1.f, 0.f, 0.f, 1.f);
@@ -100,7 +104,7 @@ int main(int argc, char* argv[]) {
 
   while (running) {
     glfwGetCursorPos(context, &mouse_pos.x, &mouse_pos.y);
-    view->render();
+    views.top()->render();
 
     // make sure to render buffered data
     glfwSwapBuffers(context);
@@ -108,6 +112,10 @@ int main(int argc, char* argv[]) {
   }
 
   printf("Cleaning up...\n");
+
+  while (!views.empty())
+    pop_view();
+
   // Close OpenGL window and terminate GLFW
   glfwDestroyWindow(context);
 

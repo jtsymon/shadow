@@ -159,7 +159,7 @@ void GameView::key_callback(int key, int scancode, int action, int mods) {
   if(action == GLFW_RELEASE) {
     switch(key) {
     case GLFW_KEY_ESCAPE:
-      set_view(menu_view);
+      pop_view();
       break;
     case GLFW_KEY_P:
       update = !update;

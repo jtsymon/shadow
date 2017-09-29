@@ -1,9 +1,10 @@
 #include "menu.h"
+#include "GameView.h"
 #include "../main.h"
 #include <iostream>
 
 void play_game() {
-  set_view(game_view);
+  push_view(new GameView);
 }
 
 MenuView::MenuView() : background_color(HSV(0, 100, 100)) {
