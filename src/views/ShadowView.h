@@ -22,4 +22,5 @@ class ShadowView : public GameView {
   void render();
   void key_callback(int key, int scancode, int action, int mods);
   void mouse_callback(int button, int action, int mods);
+  void window_size_callback(int width, int height);
 };

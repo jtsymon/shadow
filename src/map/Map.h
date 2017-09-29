@@ -63,6 +63,7 @@ class Map {
 
   Buffer mask;
   Buffer blur;
+  bool regen_buffers;
 
  public:
   // unique endpoints of line_segments
@@ -78,6 +79,7 @@ class Map {
   RayCollision raycast(Vector<int> p, double angle);
   void shadow(Vector<int> p);
   void draw(Graphics g);
+  void resize(int width, int height);
 
   // static ShadowMask shadow_mask;
 };

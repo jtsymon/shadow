@@ -32,6 +32,11 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
   views.top()->mouse_callback(button, action, mods);
 }
 
+static void window_size_callback(GLFWwindow* window, int width, int height) {
+  Graphics::get().update_dimensions(width, height);
+  views.top()->window_size_callback(width, height);
+}
+
 void push_view(View *view) {
   if (!views.empty())
     views.top()->hide();
@@ -62,9 +67,7 @@ int main(int argc, char* argv[]) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  int width = 640, height = 640;
-
-  GLFWwindow *context = glfwCreateWindow(width, height, "Shadow", NULL, NULL);
+  GLFWwindow *context = glfwCreateWindow(640, 480, "Shadow", NULL, NULL);
   if (!context) {
     glfwTerminate();
     fputs("Failed to create window\n", stderr);
@@ -76,6 +79,7 @@ int main(int argc, char* argv[]) {
 
   glfwSetKeyCallback(context, key_callback);
   glfwSetMouseButtonCallback(context, mouse_callback);
+  glfwSetWindowSizeCallback(context, window_size_callback);
 
   // Init GLEW
   glewExperimental = true;
@@ -92,8 +96,6 @@ int main(int argc, char* argv[]) {
   // Enable VSync
   glfwSwapInterval(1);
   glXSwapIntervalSGI(1);
-
-  Graphics::get(width, height);
 
   push_view(new MenuView);
 

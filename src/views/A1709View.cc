@@ -18,3 +18,7 @@ void A1709View::key_callback(int key, int scancode, int action, int mods) {
   GameView::key_callback(key, scancode, action, mods);
 }
 void A1709View::mouse_callback(int button, int action, int mods) {}
+
+void A1709View::window_size_callback(int width, int height) {
+
+}

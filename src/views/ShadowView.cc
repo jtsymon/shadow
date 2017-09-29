@@ -11,7 +11,7 @@ Vector<int> pathfind_to(150, 150);
 
 ShadowView::ShadowView() :
   map(Map("data/test.map")),
-  player(Entity(Vector<int>(20000, 40000), &map))
+  player(Vector<int>(20000, 40000), &map)
 {
   //mobs.push_back(Mob(Vector<int>(50, 50), this->map));
 }
@@ -168,4 +168,8 @@ void ShadowView::key_callback(int key, int scancode, int action, int mods) {
 
 void ShadowView::mouse_callback(int button, int action, int mods) {
 
+}
+
+void ShadowView::window_size_callback(int width, int height) {
+  this->map.resize(width, height);
 }

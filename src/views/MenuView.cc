@@ -66,3 +66,7 @@ void MenuView::mouse_callback(int button, int action, int mods) {
     }
   }
 }
+
+void MenuView::window_size_callback(int width, int height) {
+
+}

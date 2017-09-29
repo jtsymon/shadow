@@ -430,6 +430,12 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
 }
 
 void Map::shadow(Vector<int> p) {
+  if (this->regen_buffers) {
+    this->mask = Buffer(Graphics::width, Graphics::height);
+    this->blur = Buffer(Graphics::width, Graphics::height);
+    this->regen_buffers = false;
+  }
+
   std::list<double> angles;
   for (Vector<int> point : this->points) {
     double angle = atan2(p.y - point.y, point.x - p.x);
@@ -572,4 +578,10 @@ bool Map::can_see(Vector<int> start, Vector<int> end) {
 }
 
 void Map::draw(Graphics g) {
+}
+
+void Map::resize(int width, int height) {
+  // don't regenerate buffers until the next frame
+  // this avoids us regenerating the buffers too rapidly and overloading the memory allocator
+  this->regen_buffers = true;
 }
