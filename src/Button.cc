@@ -34,16 +34,6 @@ void Button::update() {
   this->text_y = this->layout.getTop() + (this->layout.getHeight() - (this->font->getH() / 2)) / 2;
 }
 
-void Button::setPosition(int x, int y) {
-  this->layout.move(x, y);
-  this->update();
-}
-
-void Button::setSize(int w, int h) {
-  this->layout.resize(w, h);
-  this->update();
-}
-
 void Button::setText(char *text) {
   this->text = text;
   this->update();

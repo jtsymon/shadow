@@ -22,8 +22,6 @@ class Button {
   Button(const std::string &text, float x, float y, void (*onclick)());
   Button(const std::string &text, Layout layout, void (*onclick)());
 
-  void setPosition(int x, int y);
-  void setSize(int w, int h);
   void setText(char *text);
   void setFont(BitmapFont *font);
 

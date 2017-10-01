@@ -2,108 +2,84 @@
 #include "Graphics.h"
 #include "../misc.h"
 
+int Constraint::absolutePosition() {
+  if (this->position_percent) {
+    switch (this->edge) {
+    case Edge::TOP:
+    case Edge::MIDDLE:
+    case Edge::BOTTOM:
+      return this->position * Graphics::height;
+    case Edge::LEFT:
+    case Edge::CENTRE:
+    case Edge::RIGHT:
+      return this->position * Graphics::width;
+    default:
+      throw new Exception("Invalid edge!");
+    }
+  } else {
+    return this->position;
+  }
+}
+
 void Layout::validate() {
-  if (this->width == -1 && this->right == -1)
-    throw Exception("Cannot determine dimensions (width or right-side must be defined)");
-  if (this->height == -1 && this->bottom == -1)
-    throw Exception("Cannot determine dimensions (height or bottom-side must be defined)");
 }
 
 int Layout::getLeft() {
-  switch (this->left_from) {
+  switch (this->left.edge) {
   case LEFT:
-    return this->left;
+    return this->left.absolutePosition();
   case CENTRE:
-    return Graphics::width / 2 + this->left;
+    return Graphics::width / 2 + this->left.absolutePosition();
   case RIGHT:
-    return Graphics::width - this->left;
+    return Graphics::width - this->left.absolutePosition();
   default:
     throw Exception("Invalid edge!");
   }
 }
 
 int Layout::getTop() {
-  switch (this->top_from) {
+  switch (this->top.edge) {
   case TOP:
-    return this->top;
+    return this->top.absolutePosition();
   case MIDDLE:
-    return Graphics::height / 2 + this->top;
+    return Graphics::height / 2 + this->top.absolutePosition();
   case BOTTOM:
-    return Graphics::height - this->top;
+    return Graphics::height - this->top.absolutePosition();
   default:
     throw Exception("Invalid edge!");
   }
 }
 
 int Layout::getRight() {
-  if (this->right == -1) {
-    return this->getLeft() + this->getWidth();
-  }
-  switch (this->right_from) {
+  switch (this->right.edge) {
   case LEFT:
-    return this->right;
+    return this->right.absolutePosition();
   case CENTRE:
-    return Graphics::width / 2 + this->right;
+    return Graphics::width / 2 + this->right.absolutePosition();
   case RIGHT:
-    return Graphics::width - this->right;
+    return Graphics::width - this->right.absolutePosition();
   default:
     throw Exception("Invalid edge!");
   }
 }
 
 int Layout::getBottom() {
-  if (this->bottom == -1) {
-    return this->getTop() + this->getHeight();
-  }
-  switch (this->bottom_from) {
+  switch (this->bottom.edge) {
   case TOP:
-    return this->bottom;
+    return this->bottom.absolutePosition();
   case MIDDLE:
-    return Graphics::height / 2 + this->bottom;
+    return Graphics::height / 2 + this->bottom.absolutePosition();
   case BOTTOM:
-    return Graphics::height - this->bottom;
+    return Graphics::height - this->bottom.absolutePosition();
   default:
     throw Exception("Invalid edge!");
   }
 }
 
 int Layout::getWidth() {
-  if (this->width == -1) {
-    return this->getRight() - this->getLeft();
-  }
-  if (this->width_percent) {
-    return this->width * Graphics::width;
-  }
-  return this->width;
+  return this->getRight() - this->getLeft();
 }
 
 int Layout::getHeight() {
-  if (this->height == -1) {
-    return this->getBottom() - this->getTop();
-  }
-  if (this->height_percent) {
-    return this->height * Graphics::height;
-  }
-  return this->height;
-}
-
-void Layout::move(int x, int y) {
-  int dx = this->left - x, dy = this->top - y;
-  this->left = x;
-  this->top = top;
-  if (this->right != -1 && this->left_from == this->right_from) {
-    this->right += dx;
-  }
-  if (this->bottom != -1 && this->top_from == this->bottom_from) {
-    this->bottom += dy;
-  }
-}
-
-void Layout::resize(float w, float h, bool width_percent, bool height_percent) {
-  this->right = -1;
-  this->bottom = -1;
-  this->width = w;
-  this->height = h;
-  this->width_percent = width_percent;
-  this->height_percent = height_percent;
+  return this->getBottom() - this->getTop();
 }

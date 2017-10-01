@@ -1,44 +1,42 @@
 #pragma once
 
-class Layout {
- public:
-  enum Edge {
-    TOP = 0,
-    MIDDLE = 1,
-    BOTTOM = 2,
-    LEFT = 0,
-    CENTRE = 1,
-    RIGHT = 2
-  };
+enum Edge {
+  TOP = 0,
+  MIDDLE = 1,
+  BOTTOM = 2,
+  LEFT = 4,
+  CENTRE = 8,
+  RIGHT = 16
+};
 
- private:
-  int left, top,
-      right = -1, bottom = -1;
-  Edge left_from = Edge::LEFT, top_from = Edge::TOP,
-    right_from = Edge::LEFT, bottom_from = Edge::TOP;
-  float width = -1, height = -1;
-  bool width_percent = false, height_percent = false;
+struct Constraint {
+Constraint(float position, Edge edge, bool position_percent=false) : edge(edge), position(position), position_percent(position_percent) {}
+  const Edge edge;
+  const float position;
+  const bool position_percent;
+  int absolutePosition();
+};
+
+struct Layout {
+private:
+  Constraint left, right, top, bottom;
 
  public:
   void validate();
 
- Layout(int x, int y, float w, float h) : left(x), top(y), width(w), height(h) {
+  Layout(Constraint left, Constraint right, Constraint top, Constraint bottom)
+  : left(left), right(right), top(top), bottom(bottom) {
     this->validate();
   }
 
- Layout(int x, int y, float w, float h, bool width_percent, bool height_percent) :
-  left(x), top(y), width(w), height(h), width_percent(width_percent), height_percent(height_percent) {
+  Layout(Constraint left, Constraint top, float width, float height)
+  : left(left), right(left.position + width, left.edge, left.position_percent),
+    top(top), bottom(top.position + height, top.edge, top.position_percent) {
     this->validate();
   }
 
- Layout(int left, int top, int right, int bottom) : left(left), top(top), right(right), bottom(bottom) {
-    this->validate();
-  }
-
- Layout(int left, Edge left_from, int top, Edge top_from,
-        int right, Edge right_from, int bottom, Edge bottom_from) :
-  left(left), top(top), right(right), bottom(bottom),
-    left_from(left_from), top_from(top_from), right_from(right_from), bottom_from(bottom_from) {
+  Layout(int left, int top, float width, float height)
+  : left(left, Edge::LEFT), right(left + width, Edge::LEFT), top(top, Edge::TOP), bottom(top + height, Edge::TOP) {
     this->validate();
   }
 
@@ -48,7 +46,4 @@ class Layout {
   int getBottom();
   int getWidth();
   int getHeight();
-
-  void move(int x, int y);
-  void resize(float w, float h, bool width_percent=false, bool height_percent=false);
 };
