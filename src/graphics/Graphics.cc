@@ -49,10 +49,14 @@ Graphics::Graphics(int width, int height) {
   }
 
   // init shaders
-  Graphics::shaders[GRAPHICS_COLOUR_SHADER] = compile_program("shaders/pass_through.vert", "shaders/colour.frag");
-  Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through.vert", "shaders/shadow_mask.frag");
-  Graphics::shaders[GRAPHICS_TEXTURE_SHADER] = compile_program("shaders/texture.vert", "shaders/texture.frag");
-  Graphics::shaders[GRAPHICS_BLUR_SHADER] = compile_program("shaders/texture.vert", "shaders/blur.frag");
+  Graphics::shaders[GRAPHICS_COLOUR_SHADER] = compile_program("shaders/pass_through.vert",
+                                                              "shaders/colour.frag");
+  Graphics::shaders[GRAPHICS_SHADOW_SHADER] = compile_program("shaders/pass_through.vert",
+                                                              "shaders/shadow_mask.frag");
+  Graphics::shaders[GRAPHICS_TEXTURE_SHADER] = compile_program("shaders/texture.vert",
+                                                               "shaders/texture.frag");
+  Graphics::shaders[GRAPHICS_BLUR_SHADER] = compile_program("shaders/texture.vert",
+                                                            "shaders/blur.frag");
 }
 
 Graphics& Graphics::get(int width, int height) {
@@ -153,8 +157,11 @@ void Graphics::fill_rectangle(RGBA colour, float x1, float y1, float x2, float y
 }
 
 void Graphics::fill_rectangle(RGBA colour, Layout layout) {
-  this->fill_rectangle(colour, Graphics::window_to_gl_x(layout.getLeft()), Graphics::window_to_gl_y(layout.getTop()),
-                       Graphics::window_to_gl_x(layout.getRight()), Graphics::window_to_gl_y(layout.getBottom()));
+  this->fill_rectangle(colour,
+                       Graphics::window_to_gl_x(layout.getLeft()),
+                       Graphics::window_to_gl_y(layout.getTop()),
+                       Graphics::window_to_gl_x(layout.getRight()),
+                       Graphics::window_to_gl_y(layout.getBottom()));
 }
 
 int Batch::check_space() {
