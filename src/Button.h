@@ -10,17 +10,17 @@ class Button {
   std::string text;
   Layout layout;
  public:
-  std::function<void()> onclick;
+  std::function<void()> onClick;
  private:
   int text_width, text_height;
 
   void update();
 
  public:
-  RGBA foreground_color;
-  RGBA background_color;
-  RGBA hover_background_color;
-  RGBA click_background_color;
+  RGBA foreground_colour;
+  RGBA background_colour;
+  RGBA hover_background_colour;
+  RGBA click_background_colour;
 
   BitmapFont *font;
 
@@ -30,7 +30,8 @@ class Button {
   void setText(const std::string& text);
   void setFont(BitmapFont *font);
 
-  int hover(int x, int y);
+  bool hovering(int x, int y);
   void draw();
-  void click();
+  bool click();
+  virtual RGBA backgroundColour();
 };

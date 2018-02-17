@@ -6,7 +6,7 @@
 
 class MenuView : public View {
   std::list<Button> buttons;
-  HSV background_color;
+  HSV background_colour;
  public:
   MenuView();
   ~MenuView();

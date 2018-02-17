@@ -12,7 +12,7 @@ void play_a1709() {
   push_view(new A1709View);
 }
 
-MenuView::MenuView() : background_color(HSV(0, 100, 100)) {
+MenuView::MenuView() : background_colour(HSV(0, 100, 100)) {
   this->buttons.push_back(Button("Play", 100, 100, play_game));
   this->buttons.push_back(Button("Create map", 100, 160, NULL));
   this->buttons.back().setFont(BitmapFont::bold_oblique());
@@ -35,9 +35,9 @@ void MenuView::hide() {
 
 void MenuView::render() {
 
-  // background color
-  background_color.h++;
-  RGB tmp = background_color.toRGB();
+  // background colour
+  background_colour.h++;
+  RGB tmp = background_colour.toRGB();
   glClearColor((float) tmp.r / 255, (float) tmp.g / 255, (float) tmp.b / 255, 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

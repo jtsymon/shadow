@@ -1,9 +1,9 @@
 rule compile
     depfile = $out.d
-    command = g++ -Wall -Werror -MMD -MF $out.d -std=c++11  -c $in -o $out
+    command = g++ -Wall -Werror -MMD -MF $out.d -std=c++11  -ggdb -c $in -o $out
 
 rule link
-    command = g++ -o $out $in -lGL -lglfw -lGLEW -lm -lpng -lpthread 
+    command = g++ -o $out $in -lGL -lglfw -lGLEW -lm -lpng -lpthread  -ggdb
 
 build build/Button.o: compile src/Button.cc
 build build/engine/Entity.o: compile src/engine/Entity.cc
@@ -23,5 +23,6 @@ build build/misc.o: compile src/misc.cc
 build build/views/MenuView.o: compile src/views/MenuView.cc
 build build/views/A1709View.o: compile src/views/A1709View.cc
 build build/views/ShadowView.o: compile src/views/ShadowView.cc
+build build/keyboard.o: compile src/keyboard.cc
 
-build shadow: link  build/Button.o build/engine/Entity.o build/engine/Timing.o build/engine/mobs/Mob.o build/graphics/BitmapFont.o build/graphics/Buffer.o build/graphics/Colours.o build/graphics/Graphics.o build/graphics/Layout.o build/graphics/Shaders.o build/graphics/Texture.o build/main.o build/map/PathFinder.o build/map/Map.o build/misc.o build/views/MenuView.o build/views/A1709View.o build/views/ShadowView.o
+build shadow: link  build/Button.o build/engine/Entity.o build/engine/Timing.o build/engine/mobs/Mob.o build/graphics/BitmapFont.o build/graphics/Buffer.o build/graphics/Colours.o build/graphics/Graphics.o build/graphics/Layout.o build/graphics/Shaders.o build/graphics/Texture.o build/main.o build/map/PathFinder.o build/map/Map.o build/misc.o build/views/MenuView.o build/views/A1709View.o build/views/ShadowView.o build/keyboard.o
