@@ -92,7 +92,7 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
     }
     try {
       this->points.push_back(point_read(line));
-    } catch (Exception e) {
+    } catch (Exception& e) {
       std::cerr << e.what() << std::endl;
     }
   }
@@ -104,7 +104,7 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
     }
     try {
       this->segments.push_back(segment_read(line));
-    } catch (Exception e) {
+    } catch (Exception& e) {
       std::cerr << e.what() << std::endl;
     }
   }
@@ -116,7 +116,7 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
     }
     try {
       this->polygons.push_back(polygon_read(line));
-    } catch (Exception e) {
+    } catch (Exception& e) {
       std::cerr << e.what() << std::endl;
     }
   }
