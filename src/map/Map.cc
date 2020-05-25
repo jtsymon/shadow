@@ -129,6 +129,8 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
     this->points[line.b].connected.push_back(&this->points[line.a]);
   }
 
+  printf("Points: %lu\nSegments: %lu\nPolygons: %lu\n", this->points.size(), this->segments.size(), this->polygons.size());
+
   this->pathfinder = PathFinder(this);
 }
 
@@ -158,9 +160,9 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
     if (ey >= min_y && ey <= max_y) {
       double dy = ey - p.y;
       double dx = s1.x - p.x;
-      double dist = std::sqrt(dy * dy + dx * dx);
+      double dist_sq = dy * dy + dx * dx;
 
-      return RayCollision(s1.x, ey, dist);
+      return RayCollision(s1.x, ey, dist_sq);
     }
     return NoCollision;
   }
@@ -193,16 +195,16 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
       if (p.y <= min_y && sina < 0) {
         double dx = min_x - p.x;
         double dy = min_y - p.y;
-        double dist = sqrt(dy * dy + dx * dx);
+        double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(min_x, min_y, dist);
+        return RayCollision(min_x, min_y, dist_sq);
       }
       if (p.y >= max_y && sina > 0) {
         double dx = min_x - p.x;
         double dy = p.y - max_y;
-        double dist = sqrt(dy * dy + dx * dx);
+        double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(min_x, max_y, dist);
+        return RayCollision(min_x, max_y, dist_sq);
       }
     }
     if (p.x >= max_x && cosa < 0) {
@@ -210,16 +212,16 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
       if (p.y <= min_y && sina < 0) {
         double dx = p.x - max_x;
         double dy = min_y - p.y;
-        double dist = sqrt(dy * dy + dx * dx);
+        double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(max_x, min_y, dist);
+        return RayCollision(max_x, min_y, dist_sq);
       }
       if (p.y >= max_y && sina > 0) {
         double dx = p.x - max_x;
         double dy = p.y - max_y;
-        double dist = sqrt(dy * dy + dx * dx);
+        double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(max_x, max_y, dist);
+        return RayCollision(max_x, max_y, dist_sq);
       }
     }
 
@@ -238,9 +240,9 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
   }
   double dx = ex - p.x;
   double dy = ey - p.y;
-  double dist = sqrt(dx * dx + dy * dy);
+  double dist_sq = dx * dx + dy * dy;
 
-  return RayCollision(ex, ey, dist);
+  return RayCollision(ex, ey, dist_sq);
 }
 
 /**
@@ -302,10 +304,7 @@ RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, doub
 
     RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
                                                  this->points[wall.a], this->points[wall.b]);
-    //            if(new_collision.dist != INFINITY) {
-    //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
-    //            }
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
   }
@@ -324,10 +323,7 @@ RayCollision Map::__raycast_v(Vector<int> p, double sina) {
 
     RayCollision new_collision = __ray_intersect_v(p, sina,
                                                    this->points[wall.a], this->points[wall.b]);
-    //            if(new_collision.dist != INFINITY) {
-    //                printf("%f, %f, %f\n", new_collision.x, new_collision.y, new_collision.dist);
-    //            }
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
   }
@@ -373,29 +369,29 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
     // top
     RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
                                                  Vector<int>(0, 0), Vector<int>(Graphics::width * MAP_SCALE, 0));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // right
     new_collision = __ray_intersect(p, m, c, cosa, sina,
                                     Vector<int>(Graphics::width * MAP_SCALE, 0), Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // bottom
     new_collision = __ray_intersect(p, m, c, cosa, sina,
                                     Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE), Vector<int>(0, Graphics::height * MAP_SCALE));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // left
     new_collision = __ray_intersect(p, m, c, cosa, sina,
                                     Vector<int>(0, Graphics::height * MAP_SCALE), Vector<int>(0, 0));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     new_collision = this->__raycast(p, m, c, cosa, sina);
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
   } else {
@@ -403,29 +399,29 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
     // top
     RayCollision new_collision = __ray_intersect_v(p, sina,
                                                    Vector<int>(0, 0), Vector<int>(Graphics::width * MAP_SCALE, 0));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // right
     new_collision = __ray_intersect_v(p, sina,
                                       Vector<int>(Graphics::width, 0), Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // bottom
     new_collision = __ray_intersect_v(p, sina,
                                       Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE), Vector<int>(0, Graphics::height * MAP_SCALE));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // left
     new_collision = __ray_intersect_v(p, sina,
                                       Vector<int>(0, Graphics::height * MAP_SCALE), Vector<int>(0, 0));
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     new_collision = this->__raycast_v(p, sina);
-    if (new_collision.dist < collision.dist) {
+    if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
   }
@@ -453,7 +449,6 @@ void Map::shadow(Vector<int> p) {
   angles.insert(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, -p.x)));
 
   int size = angles.size() + 3;
-  printf("COUNTED %d/%lu ANGLES\n\n\n", size, this->points.size());
 
   // Draw shadow mask
   mask.begin();
@@ -561,7 +556,7 @@ void Map::shadow(Vector<int> p) {
 }
 
 bool Map::can_see(Vector<int> start, Vector<int> end) {
-  double dist = start.dist(end);
+  double dist = start.dist_sq(end);
   double angle = angle_sanify(atan2(start.y - end.y, end.x - start.x));
   double cosa = cos(angle);
   double sina = -sin(angle);
@@ -572,7 +567,7 @@ bool Map::can_see(Vector<int> start, Vector<int> end) {
     __raycast(start, m, (double)start.y - m * start.x, cosa, sina) :
     __raycast_v(start, sina);
 
-  return (dist <= collision.dist);
+  return (dist <= collision.dist_sq);
 }
 
 void Map::draw(Graphics g) {

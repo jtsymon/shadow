@@ -40,10 +40,12 @@ MapSegment(int a, int b) : a(a), b(b) {
 struct RayCollision {
 public:
   int x, y;
-  double dist;
+  double dist_sq;
 
-RayCollision(int x, int y, double dist) : x(x), y(y), dist(dist) {
-}
+RayCollision(int x, int y, double dist_sq)
+  : x(x), y(y), dist_sq(dist_sq) { }
+
+  double dist() { return sqrt(dist_sq); }
 };
 
 class Map {
