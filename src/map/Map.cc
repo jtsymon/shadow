@@ -175,8 +175,8 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
   double sc = s1.y - sm * s1.x;
 
   // ray starts on the line case
-  if (float_equal((double) p.y, sm * p.x + sc) && float_equal((double) p.y, m * p.x + c)
-      && p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y) {
+  if (p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y &&
+      float_equal((double) p.y, sm * p.x + sc) && float_equal((double) p.y, m * p.x + c)) {
     // printf("p.y=%d=%d=%d, p.x=%d, min_x=%d, max_x=%d, min_y=%d, max_y=%d\n", p.y, sm * p.x + sc, m * p.x + c, p.x, min_x, max_x, min_y, max_y);
 
     return RayCollision(p.x, p.y, 0);
