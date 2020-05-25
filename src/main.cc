@@ -95,7 +95,6 @@ int main(int argc, char* argv[]) {
 
   // Enable VSync
   glfwSwapInterval(1);
-  glXSwapIntervalSGI(1);
 
   push_view(new MenuView);
 
