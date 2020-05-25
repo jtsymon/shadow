@@ -11,20 +11,22 @@ class Vector {
  Vector(T x, T y) : x(x), y(y) {
   }
 
-  double dist(Vector<T> v) {
-    double dx = x - v.x;
-    double dy = y - v.y;
-    return sqrt(dx * dx + dy * dy);
-  }
-
   T dist_sq(Vector<T> v) {
     double dx = x - v.x;
     double dy = y - v.y;
     return dx * dx + dy * dy;
   }
 
+  double dist(Vector<T> v) {
+    return sqrt(dist_sq(v));
+  }
+
+  T magnitude_sq() {
+    return x * x + y * y;
+  }
+
   double magnitude() {
-    return sqrt((double)(x * x + y * y));
+    return sqrt(magnitude_sq());
   }
 
   T dot(Vector v) {
