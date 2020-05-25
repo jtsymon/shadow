@@ -49,7 +49,9 @@ MapSegment Map::segment_read(const std::string &line) {
   if (*buf == '\n' || *buf == ' ') *buf = '\0';
   else if (*buf) throw Exception("Invalid line segment encountered: " + line);
 
-  MapSegment segment(atoi(a), atoi(b));
+  int ia = atoi(a);
+  int ib = atoi(b);
+  MapSegment segment(ia, ib, this->points[ia], this->points[ib]);
 
   std::cout << "Line Segment: " << segment.a << " (" <<
     this->points[segment.a].x << "," << this->points[segment.a].y <<
@@ -147,94 +149,83 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
  * @param s2    end of line-segment
  * @return      RayCollision object representing the collision with the line segment, if any
  */
-RayCollision __ray_intersect(Vector<int> p, double m, double c,
-                             double cosa, double sina, Vector<int> s1, Vector<int> s2) {
-
-  int min_y = std::min(s1.y, s2.y);
-  int max_y = std::max(s1.y, s2.y);
-
+RayCollision __ray_intersect(const Vector<int>& p, double m, double c,
+                             double cosa, double sina, const Segment& segment) {
   // vertical line segment case
-  if (s1.x == s2.x) {
-    if ((p.x <= s1.x && cosa <= 0) || (p.x > s1.x && cosa > 0)) return NoCollision;
-    double ey = c + s1.x * m;
-    if (ey >= min_y && ey <= max_y) {
+  if (segment.flat) {
+    if ((p.x <= segment.ap.x && cosa <= 0) || (p.x > segment.ap.x && cosa > 0)) return NoCollision;
+    double ey = c + segment.ap.x * m;
+    if (ey >= segment.min_y && ey <= segment.max_y) {
       double dy = ey - p.y;
-      double dx = s1.x - p.x;
+      double dx = segment.ap.x - p.x;
       double dist_sq = dy * dy + dx * dx;
 
-      return RayCollision(s1.x, ey, dist_sq);
+      return RayCollision(segment.ap.x, ey, dist_sq);
     }
     return NoCollision;
   }
 
-  int min_x = std::min(s1.x, s2.x);
-  int max_x = std::max(s1.x, s2.x);
-
-  // calculate the gradient now that we know it's non-zero
-  double sm = (double) (s2.y - s1.y) / (s2.x - s1.x);
-  double sc = s1.y - sm * s1.x;
-
   // ray starts on the line case
-  if (p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y &&
-      float_equal((double) p.y, sm * p.x + sc) && float_equal((double) p.y, m * p.x + c)) {
+  if (p.x >= segment.min_x && p.x <= segment.max_x && p.y >= segment.min_y && p.y <= segment.max_y &&
+      float_equal((double) p.y, segment.sm * p.x + segment.sc) && float_equal((double) p.y, m * p.x + c)) {
     // printf("p.y=%d=%d=%d, p.x=%d, min_x=%d, max_x=%d, min_y=%d, max_y=%d\n", p.y, sm * p.x + sc, m * p.x + c, p.x, min_x, max_x, min_y, max_y);
 
     return RayCollision(p.x, p.y, 0);
   }
   // parallel lines case
-  if (float_equal(m, sm)) {
+  if (float_equal(m, segment.sm)) {
     // check if they're from the same line
-    if (!float_equal(c, sc)) return NoCollision;
-    if (p.x >= min_x && p.x <= max_x) {
-      if (p.y >= min_y && p.y <= max_y) return RayCollision(p.x, p.y, 0);
-      if (p.y <= min_y && sina < 0) return RayCollision(p.x, min_y, min_y - p.y);
-      if (p.y >= max_y && sina > 0) return RayCollision(p.x, max_y, p.y - max_y);
+    if (!float_equal(c, segment.sc)) return NoCollision;
+    if (p.x >= segment.min_x && p.x <= segment.max_x) {
+      if (p.y >= segment.min_y && p.y <= segment.max_y) return RayCollision(p.x, p.y, 0);
+      if (p.y <= segment.min_y && sina < 0) return RayCollision(p.x, segment.min_y, segment.min_y - p.y);
+      if (p.y >= segment.max_y && sina > 0) return RayCollision(p.x, segment.max_y, p.y - segment.max_y);
     }
-    if (p.x <= min_x && cosa > 0) {
-      if (p.y >= min_y && p.y <= max_y) return RayCollision(min_x, p.y, min_x - p.x);
-      if (p.y <= min_y && sina < 0) {
-        double dx = min_x - p.x;
-        double dy = min_y - p.y;
+    if (p.x <= segment.min_x && cosa > 0) {
+      if (p.y >= segment.min_y && p.y <= segment.max_y) return RayCollision(segment.min_x, p.y, segment.min_x - p.x);
+      if (p.y <= segment.min_y && sina < 0) {
+        double dx = segment.min_x - p.x;
+        double dy = segment.min_y - p.y;
         double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(min_x, min_y, dist_sq);
+        return RayCollision(segment.min_x, segment.min_y, dist_sq);
       }
-      if (p.y >= max_y && sina > 0) {
-        double dx = min_x - p.x;
-        double dy = p.y - max_y;
+      if (p.y >= segment.max_y && sina > 0) {
+        double dx = segment.min_x - p.x;
+        double dy = p.y - segment.max_y;
         double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(min_x, max_y, dist_sq);
+        return RayCollision(segment.min_x, segment.max_y, dist_sq);
       }
     }
-    if (p.x >= max_x && cosa < 0) {
-      if (p.y >= min_y && p.y <= max_y) return RayCollision(max_x, p.y, p.x - max_x);
-      if (p.y <= min_y && sina < 0) {
-        double dx = p.x - max_x;
-        double dy = min_y - p.y;
+    if (p.x >= segment.max_x && cosa < 0) {
+      if (p.y >= segment.min_y && p.y <= segment.max_y) return RayCollision(segment.max_x, p.y, p.x - segment.max_x);
+      if (p.y <= segment.min_y && sina < 0) {
+        double dx = p.x - segment.max_x;
+        double dy = segment.min_y - p.y;
         double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(max_x, min_y, dist_sq);
+        return RayCollision(segment.max_x, segment.min_y, dist_sq);
       }
-      if (p.y >= max_y && sina > 0) {
-        double dx = p.x - max_x;
-        double dy = p.y - max_y;
+      if (p.y >= segment.max_y && sina > 0) {
+        double dx = p.x - segment.max_x;
+        double dy = p.y - segment.max_y;
         double dist_sq = dy * dy + dx * dx;
 
-        return RayCollision(max_x, max_y, dist_sq);
+        return RayCollision(segment.max_x, segment.max_y, dist_sq);
       }
     }
 
     return NoCollision;
   }
   // standard case
-  double ex = (sc - c) / (m - sm);
-  if (ex < min_x - M_DELTA || ex > max_x + M_DELTA ||
+  double ex = (segment.sc - c) / (m - segment.sm);
+  if (ex < segment.min_x - M_DELTA || ex > segment.max_x + M_DELTA ||
       (ex < p.x && cosa > 0) || (ex > p.x && cosa < 0)) {
     return NoCollision;
   }
   double ey = c + ex * m;
-  if (ey < min_y - M_DELTA || ey > max_y + M_DELTA ||
+  if (ey < segment.min_y - M_DELTA || ey > segment.max_y + M_DELTA ||
       (ey < p.y && sina > 0) || (ey > p.y && sina < 0)) {
     return NoCollision;
   }
@@ -253,7 +244,7 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
  * @param s2    end of line-segment
  * @return      RayCollision object representing the collision with the line segment, if any
  */
-RayCollision __ray_intersect_v(Vector<int> p, double sina, Vector<int> s1, Vector<int> s2) {
+RayCollision __ray_intersect_v(const Vector<int>& p, double sina, const Vector<int>& s1, const Vector<int>& s2) {
   // parallel lines (vertical line segment) case
 
   int min_x = std::min(s1.x, s2.x);
@@ -303,7 +294,7 @@ RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, doub
   for (const auto& wall : this->segments) {
 
     RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
-                                                 this->points[wall.a], this->points[wall.b]);
+                                                 wall);
     if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
@@ -322,7 +313,7 @@ RayCollision Map::__raycast_v(Vector<int> p, double sina) {
   for (const auto& wall : this->segments) {
 
     RayCollision new_collision = __ray_intersect_v(p, sina,
-                                                   this->points[wall.a], this->points[wall.b]);
+                                                   wall.ap, wall.bp);
     if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
@@ -368,25 +359,25 @@ RayCollision Map::shadow_raycast(Vector<int> p, double angle) {
     // check edges of the map
     // top
     RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
-                                                 Vector<int>(0, 0), Vector<int>(Graphics::width * MAP_SCALE, 0));
+                                                 { Vector<int>(0, 0), Vector<int>(Graphics::width * MAP_SCALE, 0) });
     if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // right
     new_collision = __ray_intersect(p, m, c, cosa, sina,
-                                    Vector<int>(Graphics::width * MAP_SCALE, 0), Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE));
+                                    { Vector<int>(Graphics::width * MAP_SCALE, 0), Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE) });
     if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // bottom
     new_collision = __ray_intersect(p, m, c, cosa, sina,
-                                    Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE), Vector<int>(0, Graphics::height * MAP_SCALE));
+                                    { Vector<int>(Graphics::width * MAP_SCALE, Graphics::height * MAP_SCALE), Vector<int>(0, Graphics::height * MAP_SCALE) });
     if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }
     // left
     new_collision = __ray_intersect(p, m, c, cosa, sina,
-                                    Vector<int>(0, Graphics::height * MAP_SCALE), Vector<int>(0, 0));
+                                    { Vector<int>(0, Graphics::height * MAP_SCALE), Vector<int>(0, 0) });
     if (new_collision.dist_sq < collision.dist_sq) {
       collision = new_collision;
     }

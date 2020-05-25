@@ -28,13 +28,38 @@
  * segmentid,segmentid,segmentid,segmentid:texture
  */
 
-struct MapSegment {
+class Segment {
+  public:
+  Vector<int> ap, bp;
+  int min_x, min_y;
+  int max_x, max_y;
+  bool flat;
+  double sm, sc;
+
+Segment(Vector<int> ap, Vector<int> bp)
+  : ap(ap), bp(bp) {
+  min_x = std::min(ap.x, bp.x);
+  min_y = std::min(ap.y, bp.y);
+  max_x = std::max(ap.x, bp.x);
+  max_y = std::max(ap.y, bp.y);
+  flat = (ap.x == bp.x);
+  if (flat) {
+    sm = 0;
+    sc = 0;
+  } else {
+    sm = (double) (bp.y - ap.y) / (bp.x - ap.x);
+    sc = ap.y - sm * ap.x;
+  }
+}
+};
+
+class MapSegment : public Segment {
 public:
   // indices into the point array
   int a, b;
 
-MapSegment(int a, int b) : a(a), b(b) {
-}
+MapSegment(int a, int b, Vector<int> ap, Vector<int> bp)
+  : Segment(ap, bp), a(a), b(b) {}
 };
 
 struct RayCollision {
