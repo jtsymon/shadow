@@ -63,7 +63,7 @@ class Map {
 
   Buffer mask;
   Buffer blur;
-  bool regen_buffers;
+  bool regen_buffers = false;
 
  public:
   // unique endpoints of line_segments
