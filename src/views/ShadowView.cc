@@ -29,7 +29,7 @@ void ShadowView::hide() {
 static bool update = true;
 void ShadowView::render() {
 
-  Graphics g = Graphics::get();
+  auto& g = Graphics::get();
 
   render_time = ticks_ms();
 
@@ -78,9 +78,8 @@ void ShadowView::render() {
 
   this->player.move(input);
 
-  for (std::vector<Mob>::iterator it = this->mobs.begin(), end = this->mobs.end();
-       it != end; it++) {
-    (*it).tick(this->player.pos);
+  for (auto& mob : this->mobs) {
+    mob.tick(this->player.pos);
   }
 
   // draw the map
@@ -120,7 +119,7 @@ void ShadowView::render() {
 
   // draw mobs
   Batch mob_batch(GL_TRIANGLES, RGBA(0, 255, 0, 255), Graphics::shaders[GRAPHICS_COLOUR_SHADER]);
-  for (Mob mob : this->mobs) {
+  for (const auto& mob : this->mobs) {
     float xa = Graphics::game_to_gl_x(mob.pos.x - 500), ya = Graphics::game_to_gl_y(mob.pos.y - 500),
       xb = Graphics::game_to_gl_x(mob.pos.x + 500), yb = Graphics::game_to_gl_y(mob.pos.y + 500);
 

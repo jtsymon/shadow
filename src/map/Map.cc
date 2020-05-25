@@ -5,6 +5,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <set>
 
 #include "../main.h"
 #include "../math/vector.h"
@@ -123,7 +124,7 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
   std::cout << "loaded " << filename << std::endl;
 
   // populate lists of connections between nodes
-  for (MapSegment line : this->segments) {
+  for (const auto& line : this->segments) {
     this->points[line.a].connected.push_back(&this->points[line.b]);
     this->points[line.b].connected.push_back(&this->points[line.a]);
   }
@@ -147,8 +148,6 @@ Map::Map(const std::string &filename) : mask(Graphics::width, Graphics::height),
 RayCollision __ray_intersect(Vector<int> p, double m, double c,
                              double cosa, double sina, Vector<int> s1, Vector<int> s2) {
 
-  int min_x = std::min(s1.x, s2.x);
-  int max_x = std::max(s1.x, s2.x);
   int min_y = std::min(s1.y, s2.y);
   int max_y = std::max(s1.y, s2.y);
 
@@ -165,6 +164,10 @@ RayCollision __ray_intersect(Vector<int> p, double m, double c,
     }
     return NoCollision;
   }
+
+  int min_x = std::min(s1.x, s2.x);
+  int max_x = std::max(s1.x, s2.x);
+
   // calculate the gradient now that we know it's non-zero
   double sm = (double) (s2.y - s1.y) / (s2.x - s1.x);
   double sc = s1.y - sm * s1.x;
@@ -295,7 +298,7 @@ RayCollision __ray_intersect_v(Vector<int> p, double sina, Vector<int> s1, Vecto
  */
 RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, double sina) {
   RayCollision collision = NoCollision;
-  for (MapSegment wall : this->segments) {
+  for (const auto& wall : this->segments) {
 
     RayCollision new_collision = __ray_intersect(p, m, c, cosa, sina,
                                                  this->points[wall.a], this->points[wall.b]);
@@ -317,7 +320,7 @@ RayCollision Map::__raycast(Vector<int> p, double m, double c, double cosa, doub
  */
 RayCollision Map::__raycast_v(Vector<int> p, double sina) {
   RayCollision collision = NoCollision;
-  for (MapSegment wall : this->segments) {
+  for (const auto& wall : this->segments) {
 
     RayCollision new_collision = __ray_intersect_v(p, sina,
                                                    this->points[wall.a], this->points[wall.b]);
@@ -436,23 +439,21 @@ void Map::shadow(Vector<int> p) {
     this->regen_buffers = false;
   }
 
-  std::list<double> angles;
-  for (Vector<int> point : this->points) {
+  std::set<double> angles;
+  for (const auto& point : this->points) {
     double angle = atan2(p.y - point.y, point.x - p.x);
-    angles.push_back(angle_sanify(angle - SHADOW_DELTA));
-    angles.push_back(angle_sanify(angle));
-    angles.push_back(angle_sanify(angle + SHADOW_DELTA));
+    angles.insert(angle_sanify(angle - SHADOW_DELTA));
+    angles.insert(angle_sanify(angle));
+    angles.insert(angle_sanify(angle + SHADOW_DELTA));
   }
   // check edges of the screen
-  angles.push_back(angle_sanify(atan2(p.y, -p.x)));
-  angles.push_back(angle_sanify(atan2(p.y, Graphics::width * MAP_SCALE - p.x)));
-  angles.push_back(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, Graphics::width * MAP_SCALE - p.x)));
-  angles.push_back(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, -p.x)));
-
-  // sort the list clockwise
-  angles.sort();
+  angles.insert(angle_sanify(atan2(p.y, -p.x)));
+  angles.insert(angle_sanify(atan2(p.y, Graphics::width * MAP_SCALE - p.x)));
+  angles.insert(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, Graphics::width * MAP_SCALE - p.x)));
+  angles.insert(angle_sanify(atan2(p.y - Graphics::height * MAP_SCALE, -p.x)));
 
   int size = angles.size() + 3;
+  printf("COUNTED %d/%lu ANGLES\n\n\n", size, this->points.size());
 
   // Draw shadow mask
   mask.begin();
@@ -463,20 +464,17 @@ void Map::shadow(Vector<int> p) {
   data[i++] = Graphics::game_to_gl_x(p.x);
   data[i++] = Graphics::game_to_gl_y(p.y);
 
-  RayCollision first = this->shadow_raycast(p, angles.front());
-  data[i++] = Graphics::game_to_gl_x(first.x);
-  data[i++] = Graphics::game_to_gl_y(first.y);
-  angles.pop_front();
-  for (double angle : angles) {
+  for (const auto angle : angles) {
     RayCollision collision = this->shadow_raycast(p, angle);
     data[i++] = Graphics::game_to_gl_x(collision.x);
     data[i++] = Graphics::game_to_gl_y(collision.y);
   }
 
-  data[i++] = Graphics::game_to_gl_x(first.x);
-  data[i++] = Graphics::game_to_gl_y(first.y);
-  data[i++] = Graphics::game_to_gl_x(p.x);
-  data[i++] = Graphics::game_to_gl_y(p.y);
+  // Finish with the original points to close the geometry.
+  data[i++] = data[2];
+  data[i++] = data[3];
+  data[i++] = data[0];
+  data[i++] = data[1];
 
   // background color
   glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
